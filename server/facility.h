@@ -5,49 +5,53 @@
 #include "vector"
 #include "daytime.h"
 #include "monitor.h"
+#include "string"
 
-namespace facility
+enum facilityType
 {
+    LECTURE_THEATRE,
+    TUTORIAL_ROOM,
+    MEETING_ROOM,
+    SPORTS_FACILITY
+};
 
-    enum facilityType{
-        LECTURE_THEATRE,
-        TUTORIAL_ROOM,
-        MEETING_ROOM,
-        SPORTS_FACILITY
-    };
+class facility
+{
+    std::string name;
+    facilityType type;
+    std::vector<std::vector<booking*>> bookings;
+    std::vector<monitor> monitors;
 
-    class facility
-    {
-        char *name;
-        facilityType type;
-        std::vector<std::vector<booking>> bookings;
-        std::vector<monitor> monitors;
+    std::string addBooking(booking *new_booking);
 
-        public:
+public:
+    facility(std::string facilityName, facilityType facilityType);
+    facility(std::string facilityName, int fType);
+    std::string getName();
+    facilityType getType();
 
-        char* getName();
-        facilityType getType();
+    bool isBooking(std::string bookingId);
+    booking* getBooking(std::string bookingId);
+    void updateBookings(daytime::day day, std::vector<booking*> u_bookings);
+    bool cancelBooking(std::string bookingId);
 
-        bool isBooking(char* bookingId);
-        booking getBooking(char* bookingId);
-        void cancelBooking(char* bookingId);
+    std::vector<booking*> getBookings(daytime::day day);
+    std::vector<std::vector<booking*>> getBookings();
 
-        std::vector<booking> getBookings(daytime::day day);
-        std::vector<std::vector<booking>> getBookings();
+    std::vector<daytime::duration> getAvailability(daytime::day day, std::string confirmationId = std::string());
+    void printAvailability(daytime::day day, std::string confirmationId = std::string());
+    std::vector<std::vector<daytime::duration>> getAvailability(daytime::day startDay, int numOfDays);
 
-        std::vector<daytime::duration> getAvailability(daytime::day day);
-        std::vector<std::vector<daytime::duration>> getAvailability(daytime::day startDay, daytime::day endDay);
+    bool checkBookingPossible(daytime::duration duration, std::string confirmationId = std::string());
+    std::string addBooking(std::string ipAddress, daytime::duration duration);
+    bool changeBooking(std::string ipAddress, std::string bookingId, int days, int hours, int minutes);
+    bool extendBooking(std::string ipAddress, std::string bookingId, int days, int hours, int minutes);
+    void printBookings();
 
-        void addBooking(daytime::duration duration);
-        void changeBooking(char* bookingId, int days, int hours, int minutes);
-        void extendBooking(char* bookingId, int days, int hours, int minutes);
+    void addMonitor(monitor monitor);
+    std::vector<monitor> getMonitors();
+    bool isMonitor(std::string ipAddress);
+    monitor getMonitor(std::string ipAddress);
+};
 
-        void addMonitor(monitor monitor);
-        std::vector<monitor> getMonitors();
-        bool isMonitor(char* ipAddress);
-        monitor getMonitor(char* ipAddress);
-    };
-
-}
-
-#endif FACILITY
+#endif

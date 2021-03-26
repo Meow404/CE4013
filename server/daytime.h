@@ -1,6 +1,8 @@
 #ifndef DAYTIME
 #define DAYTIME
 
+#include "string"
+
 namespace daytime
 {
     enum day
@@ -11,16 +13,20 @@ namespace daytime
         WEDNESDAY,
         THURSDAY,
         FRIDAY,
-        SATURDAY,        
+        SATURDAY,
         SUNDAY
     };
 
-    struct time{
+    std::string convertDay(day day);
+
+    struct time
+    {
         int hour;
         int minute;
     };
 
-    struct duration{
+    struct duration
+    {
         day startDay;
         time startTime;
         day endDay;
