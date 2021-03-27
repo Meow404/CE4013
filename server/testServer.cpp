@@ -22,5 +22,16 @@ int main() {
     marshalInt(15, &buffer[6]);
     marshalString("HI FROM SERVER!", &buffer[10]);
     server.sendMessage(buffer, 1024);
+    buffer[0] = 'd';
+    marshalInt(10, &buffer[1]);
+    buffer[5] = 's';
+    marshalInt(15, &buffer[6]);
+    marshalString("HI FROM SERVER!", &buffer[10]);
+    buffer[21] = 'd';
+    marshalInt(20, &buffer[22]);
+    buffer[26] = 's';
+    marshalInt(21, &buffer[27]);
+    marshalString("HI AGAIN FROM SERVER!", &buffer[31]);
+    server.sendMessage(buffer, 1024);
     return 0;
 }
