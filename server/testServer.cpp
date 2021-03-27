@@ -16,9 +16,16 @@ int main() {
     string message = unmarshalString(&buffer[8], size);
     std::cout << "Id : " << id << " message : " << message <<std::endl;
 
-    marshalInt(1, buffer);
+    marshalInt(10, buffer);
     marshalInt(15, &buffer[4]);
     marshalString("HI FROM SERVER!", &buffer[8]);
+    int num = unmarshalInt(buffer);
+    cout << num << endl;
+    num = unmarshalInt(&buffer[4]);
+    cout << num << endl;
+    message = unmarshalString(&buffer[8], num);
+    cout << message << endl;
+    cout << buffer << endl;
     server.sendMessage(buffer, 1024);
     return 0;
 }
