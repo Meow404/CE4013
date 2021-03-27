@@ -19,8 +19,8 @@ int main()
     struct sockaddr_in servaddr;
 
     marshalInt(1, hello);
-    marshalInt(15, hello[4]);
-    marshalString("HI FROM CLIENT!", hello[8]);
+    marshalInt(15, &hello[4]);
+    marshalString("HI FROM CLIENT!", &hello[8]);
     // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
@@ -49,8 +49,8 @@ int main()
     // printf("Server : %s\n", buffer);
 
     int id = unmarshalInt(hello);
-    int size = unmarshalInt(hello[4]);
-    string message = unmarshalString(hello[8], size);
+    int size = unmarshalInt(&hello[4]);
+    string message = unmarshalString(&hello[8], size);
     std::cout << "Id : " << id << " message : " << message <<std::endl;
 
     close(sockfd);
