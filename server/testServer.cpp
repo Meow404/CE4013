@@ -1,55 +1,57 @@
+#include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <stdlib.h>
 #include <netinet/in.h>
 #include <string.h>
-#include <unistd.h>
+#include <iostream>
+#define PORT     8080
+#define MAXLINE 1024
 
-void error(char *m)
-{
-    perror(m);
-}
+using namespace std;
 
-int main(int argc, char *argv[])
-{
-    int sockfd, newsockfd, port, clilen, n;
-    char buffer[256];
-    struct sockaddr_in serv_addr, cli_addr;
-
-    if (argc < 2)
-        error("Error, no port provided\n");
-    port = atoi(argv[1]);
-
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0)
-        error("ERROR opening socket");
-
-    memset((char *)&serv_addr, 0, sizeof(serv_addr));
-
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(port); //host to network
-
-    if (bind(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
-        error("Error binding to socket");
-
-    listen(sockfd, 2);
-    clilen = sizeof(cli_addr);
-
-    newsockfd = accept(sockfd, (struct sockaddr *)&cli_addr, &clilen);
-    if (newsockfd < 0)
-        error("ERROR on accept");
-
-    n = read(newsockfd, buffer, 255);
-    if (n < 0)
-        error("ERROR reading from socket");
-
-    printf("Message recieved : %s \n", buffer);
-
-    n = write(newsockfd, "Message acknowledged", 21);
-    if (n < 0)
-        error("ERROR writing back to socket");
-
+// Driver code
+int main() {
+    int sockfd;
+    char buffer[MAXLINE];
+    char *hello = "Hello from server";
+    struct sockaddr_in servaddr, cliaddr;
+      
+    // Creating socket file descriptor
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+        perror("socket creation failed");
+        exit(EXIT_FAILURE);
+    }
+      
+    // memset(&servaddr, 0, sizeof(servaddr));
+    // memset(&cliaddr, 0, sizeof(cliaddr));
+      
+    // Filling server information
+    servaddr.sin_family    = AF_INET; // IPv4
+    servaddr.sin_addr.s_addr = INADDR_ANY;
+    servaddr.sin_port = htons(PORT);
+      
+    // Bind the socket with the server address
+    if ( bind(sockfd, (const struct sockaddr *)&servaddr, 
+            sizeof(servaddr)) < 0 )
+    {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+      
+    int len, n;
+  
+    len = sizeof(cliaddr);  //len is value/resuslt
+  
+    n = recvfrom(sockfd, (char *)buffer, MAXLINE, 
+                MSG_WAITALL, ( struct sockaddr *) &cliaddr,
+                (socklen_t*)&len);
+    buffer[n] = '\0';
+    printf("Client : %s\n", buffer);
+    sendto(sockfd, (const char *)hello, strlen(hello), 
+        MSG_CONFIRM, (const struct sockaddr *) &cliaddr,
+            len);
+    printf("Hello message sent.\n"); 
+      
     return 0;
 }
