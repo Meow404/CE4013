@@ -15,7 +15,7 @@ int main()
 {
     int sockfd;
     char buffer[MAXLINE];
-    char hello = "Client Open For Buisness";
+    char hello[MAXLINE] = "Client Open For Buisness";
     struct sockaddr_in servaddr;
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
