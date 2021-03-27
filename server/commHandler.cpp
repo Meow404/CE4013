@@ -58,6 +58,7 @@ void commHandler::handleAddBooking(char *buffer, int index)
     cout << "Okay till here .." << endl;
     index = 0;
     setInt(buffer, &index, status);
+    cout << "Okay till here as well.." << endl;
     if (status == 0)
     {
         setString(buffer, &index, confirmationId);
