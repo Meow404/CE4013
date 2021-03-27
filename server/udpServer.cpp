@@ -48,7 +48,8 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
 void udpServer::sendMessage(const char *buffer, size_t bufferSize)
 {
     cout << "Sending Message";
-    sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
+    int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
+    if (n<0) error("ERROR writing back to socket");
 }
 
 string udpServer::getClientIP()
