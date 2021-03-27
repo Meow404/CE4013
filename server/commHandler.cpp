@@ -69,7 +69,6 @@ void commHandler::start()
     char buffer[BUFFER_SIZE];
     int funNum, index = 0;
     server->recieveMessage(buffer, BUFFER_SIZE);
-    server->sendMessage(buffer, BUFFER_SIZE);
 
     funNum = getInt(buffer, &index);
 

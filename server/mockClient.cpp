@@ -96,7 +96,7 @@ int main()
                 cout << message << endl;
                 break;
             default:
-                cout << "Did not recieve valid string"
+                cout << "Did not recieve valid string";
                 break;
             }
         }
