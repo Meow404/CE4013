@@ -26,6 +26,7 @@ int main()
     char buffer[MAXLINE];
     char hello[MAXLINE] = "Client Open For Buisness";
     struct sockaddr_in servaddr;
+    struct hostent *host;
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
@@ -36,9 +37,10 @@ int main()
     memset(&servaddr, 0, sizeof(servaddr));
 
     // Filling server information
+    host = gethostbyname(hostname);
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
+    servaddr.sin_addr = *(struct in_addr *) (host->h_addr);
 
     int n, len;
 
