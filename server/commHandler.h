@@ -13,8 +13,8 @@ using namespace std;
 
 class commHandler
 {
-    udpServer server;
-    facilityManager FM;
+    udpServer* server;
+    facilityManager* FM;
 
     int getInt(char * buffer, int* index);
     string getString(char * buffer, int* index);
@@ -22,7 +22,7 @@ class commHandler
     void setString(char * buffer, int* index, string value);
 
     public:
-    commHandler(int port, const char* file_name);
+    commHandler(udpServer* server, facilityManager* facility_manager);
     void handleAddBooking(char * buffer, int index);
     void start();
 
