@@ -1,8 +1,8 @@
 #ifndef UTILS
 #define UTILS
 
+#include <cstring>
 #include <string>
-#include <stdio.h>
 
 using namespace std;
 
