@@ -28,19 +28,32 @@ udpServer::udpServer(int port)
     clientLen = sizeof(clientAddress);
 }
 
-void udpServer::recieveMessage(char* buffer, int bufferSize)
+int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
 {
-    char* message;
+    if (timeout != 0)
+    {
+        struct timeval tv;
+        tv.tv_sec = timeout;
+        tv.tv_usec = 0;
+
+        setsockopt(socketFd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv));
+    }
+
     int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
     cout << "Client : " << getClientIP() << " Message : " << buffer << endl;
+
+    return n;
 }
+
 void udpServer::sendMessage(const char *buffer, size_t bufferSize)
 {
     sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
 }
+
 string udpServer::getClientIP()
 {
     char ip[16];
     inet_ntop(AF_INET, &clientAddress, ip, 16);
-    return (string) ip;
+    return (string)ip;
 }
+
