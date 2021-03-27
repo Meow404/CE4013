@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "monitor.h"
+#include "proxy.h"
 
 using namespace std;
 
@@ -27,9 +28,12 @@ char* craftNewMonitorReq() {
 
     monitorReq.push_back(facilityName.length());
     copy(facilityName.begin(), facilityName.end(), back_inserter(monitorReq));
-    monitorReq.push_back(days);
-    monitorReq.push_back(hours);
-    monitorReq.push_back(minutes);
+    char* dayBytes = marshalInt(days);
+    monitorReq.insert(monitorReq.end(), &dayBytes[0], &dayBytes[3]);
+    char* hourBytes = marshalInt(hours);
+    monitorReq.insert(monitorReq.end(), &hourBytes[0], &hourBytes[3]);
+    char* minBytes = marshalInt(minutes);
+    monitorReq.insert(monitorReq.end(), &minBytes[0], &minBytes[3]);
     return monitorReq.data();
 }
 
@@ -54,8 +58,13 @@ char* craftModMonitorReq() {
 
     modMonitorReq.push_back(facilityName.length());
     copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
-    modMonitorReq.push_back(days);
-    modMonitorReq.push_back(hours);
-    modMonitorReq.push_back(minutes);
+    modMonitorReq.push_back(facilityName.length());
+    copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
+    char* dayBytes = marshalInt(days);
+    modMonitorReq.insert(modMonitorReq.end(), &dayBytes[0], &dayBytes[3]);
+    char* hourBytes = marshalInt(hours);
+    modMonitorReq.insert(modMonitorReq.end(), &hourBytes[0], &hourBytes[3]);
+    char* minBytes = marshalInt(minutes);
+    modMonitorReq.insert(modMonitorReq.end(), &minBytes[0], &minBytes[3]);
     return modMonitorReq.data();
 }

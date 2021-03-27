@@ -51,7 +51,7 @@ char* craftNewBookingReq() {
     bookReq.push_back(facilityName.length());
     std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(bookReq));
     char* marshalledBookDT = marshalDuration(bookDayTime);
-    bookReq.insert(bookReq.end(), &marshalledBookDT[0], &marshalledBookDT[6]);
+    bookReq.insert(bookReq.end(), &marshalledBookDT[0], &marshalledBookDT[23]);
 
     return bookReq.data();
 }
@@ -62,7 +62,7 @@ char* craftNewBookingReq() {
 char* craftModBookingReq() {
     char confirmationID[26];
     char dayOffset, hourOffset, minOffset;
-    char modBookReq[CID_LENGTH + 3];
+    vector<char> modBookReq;
 
     cout << "Confirmation ID: ";
     cin >> confirmationID;
@@ -75,13 +75,15 @@ char* craftModBookingReq() {
 
     // Input Validity check
 
-    for (int i = 0; i < 26; i++) {
-        modBookReq[i] = confirmationID[i];
-    }
-    modBookReq[CID_LENGTH] = dayOffset;
-    modBookReq[CID_LENGTH + 1] = hourOffset;
-    modBookReq[CID_LENGTH + 2] = minOffset;
-    return modBookReq;
+    modBookReq.insert(modBookReq.end(), &confirmationID[0], &confirmationID[CID_LENGTH-1]);
+    char* day = marshalInt(dayOffset);
+    modBookReq.insert(modBookReq.end(), &day[0], &day[3]);
+    char* hour = marshalInt(hourOffset);
+    modBookReq.insert(modBookReq.end(), &hour[0], &hour[3]);
+    char* min = marshalInt(minOffset);
+    modBookReq.insert(modBookReq.end(), &min[0], &min[3]);
+
+    return modBookReq.data();
 }
 
 /** Request Format:

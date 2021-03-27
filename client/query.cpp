@@ -37,7 +37,8 @@ char* craftQueryReq() {
     std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(queryReq));
     
     for (std::vector<int>::iterator it = days.begin(); it != days.end(); ++it) {
-        queryReq.push_back(*it);
+        char* marshalledInt = marshalInt(*it);
+        queryReq.insert(queryReq.end(), &marshalledInt[0], &marshalledInt[2]);
     }
     return queryReq.data();
 }
