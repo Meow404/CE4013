@@ -16,10 +16,10 @@ char* craftNewBookingReq() {
     "[HOUR] -> 24-hour timing (0 = 12am, 23 = 11pm)"   \
     "[MIN] -> 0 to 59" \
     "Input start/end day & time as: [DAY] [HOUR] [MIN]";
-    string startDaytimeStr;
-    string endDaytimeStr;
+    string startDaytimeStr, endDaytimeStr;
     daytime::duration bookDayTime;
     string facilityName;  // Unknown size so use string instead of char array
+    std::vector<char> bookReq;
     int temp;
 
     cout << "Facility Name: ";
@@ -47,8 +47,13 @@ char* craftNewBookingReq() {
     bookDayTime.endTime.minute = temp;
 
     // Input Validity check
+    
+    bookReq.push_back(facilityName.length());
+    std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(bookReq));
+    char* marshalledBookDT = marshalDuration(bookDayTime);
+    bookReq.insert(bookReq.end(), &marshalledBookDT[0], &marshalledBookDT[6]);
 
-    return marshalNewBookingReq(facilityName, bookDayTime);
+    return bookReq.data();
 }
 
 /** Request Format:
@@ -56,9 +61,8 @@ char* craftNewBookingReq() {
  */
 char* craftModBookingReq() {
     char confirmationID[26];
-    char dayOffset;
-    char hourOffset;
-    char minOffset;
+    char dayOffset, hourOffset, minOffset;
+    char modBookReq[CID_LENGTH + 3];
 
     cout << "Confirmation ID: ";
     cin >> confirmationID;
@@ -71,7 +75,13 @@ char* craftModBookingReq() {
 
     // Input Validity check
 
-    return marshalModBookingReq(confirmationID, dayOffset, hourOffset, minOffset);
+    for (int i = 0; i < 26; i++) {
+        modBookReq[i] = confirmationID[i];
+    }
+    modBookReq[CID_LENGTH] = dayOffset;
+    modBookReq[CID_LENGTH + 1] = hourOffset;
+    modBookReq[CID_LENGTH + 2] = minOffset;
+    return modBookReq;
 }
 
 /** Request Format:

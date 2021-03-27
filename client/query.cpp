@@ -16,6 +16,7 @@ char* craftQueryReq() {
     std::string daysStr;
     std::string facilityName;  // Unknown size so use string instead of char array
     std::vector<int> days;
+    std::vector<char> queryReq;
 
     std::cout << "Facility Name: ";
     std::getline(std::cin, facilityName);
@@ -31,6 +32,12 @@ char* craftQueryReq() {
         std::cout << "No facility name or days specified";
         return "";
     }
-
-    return marshalQueryReq(facilityName, days);
+    
+    queryReq.push_back(facilityName.length());
+    std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(queryReq));
+    
+    for (std::vector<int>::iterator it = days.begin(); it != days.end(); ++it) {
+        queryReq.push_back(*it);
+    }
+    return queryReq.data();
 }
