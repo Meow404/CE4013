@@ -27,11 +27,11 @@ int main() {
     buffer[5] = 's';
     marshalInt(15, &buffer[6]);
     marshalString("HI FROM SERVER!", &buffer[10]);
-    buffer[21] = 'd';
-    marshalInt(20, &buffer[22]);
-    buffer[26] = 's';
-    marshalInt(21, &buffer[27]);
-    marshalString("HI AGAIN FROM SERVER!", &buffer[31]);
+    buffer[25] = 'd';
+    marshalInt(20, &buffer[26]);
+    buffer[30] = 's';
+    marshalInt(21, &buffer[31]);
+    marshalString("HI AGAIN FROM SERVER!", &buffer[35]);
     server.sendMessage(buffer, 1024);
     return 0;
 }
