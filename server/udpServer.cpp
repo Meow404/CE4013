@@ -1,4 +1,6 @@
 #include "udpServer.h"
+#include "iostream"
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -25,13 +27,16 @@ udpServer::udpServer(int port)
 
     clientLen = sizeof(clientAddress);
 }
-char *udpServer::recieveMessage()
+
+char* udpServer::recieveMessage()
 {
-    char buffer[1024];
+    char *message, *buffer;
     int n = recvfrom(socketFd, (char *)buffer, 1024, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
 
-    cout << "Client : " << getClientIP() << " Message : " << buffer;
-    return buffer;
+    *(buffer + n) = '\0';
+    printf("%s\n", buffer);
+    cout << "Client : " << getClientIP() << " Message : " << buffer << endl;
+    return (char*)buffer;
 }
 void udpServer::sendMessage(const char *buffer, int bufferSize)
 {

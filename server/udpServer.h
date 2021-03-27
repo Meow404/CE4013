@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
-#include <string.h>
+#include <string>
 #include <unistd.h>
 
 using namespace std;
@@ -18,9 +18,9 @@ class udpServer
 
     public:
     udpServer(int port);
-    char *udpServer::recieveMessage();
-    void udpServer::sendMessage(const char *buffer, int bufferSize);
-    string udpServer::getClientIP();
-}
+    char* recieveMessage();
+    void sendMessage(const char *buffer, int bufferSize);
+    string getClientIP();
+};
 
 #endif
