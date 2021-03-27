@@ -9,11 +9,6 @@ using namespace requests;
 int main(int argc, char *argv[]) {
     char *hostname;
     int portno, serverRes;
-
-    hostname = argv[0];
-    portno = atoi(argv[1]);
-    ClientSocket clientSock(hostname, portno);
-
     string promptMessage = "\nCOMMANDS\n"    \
                            "[1] Query Facility Availability\n"    \
                            "[2] Book Facility\n"    \
@@ -24,6 +19,10 @@ int main(int argc, char *argv[]) {
                            "[7] Exit\n"   \
                            "Input Command: ";
     int command;
+
+    hostname = argv[0];
+    portno = atoi(argv[1]);
+    ClientSocket clientSock(hostname, portno);
 
     while (command != request::EXIT) {
         cout << promptMessage << endl;

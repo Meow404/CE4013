@@ -4,7 +4,7 @@
 #include <winsock.h>
 
 class ClientSocket {
-    int sockfd, clientLen;
+    int sockfd, clientLen, serverLen;
     struct sockaddr_in clientAddr, serverAddr;
 
     void createLocalClientAddr(int portno);
@@ -12,6 +12,8 @@ class ClientSocket {
 
     public:
     ClientSocket(char *hostname, int portno);
+    int sendMsg(char *msg, int len);
+    int recvMsg(char *msg, int len);
 };
 
 #endif
