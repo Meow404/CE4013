@@ -37,7 +37,7 @@ int main()
     memset(&servaddr, 0, sizeof(servaddr));
 
     // Filling server information
-    host = gethostbyname(hostname);
+    host = gethostbyname("localhost");
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
     servaddr.sin_addr = *(struct in_addr *) (host->h_addr);
