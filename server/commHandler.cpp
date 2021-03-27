@@ -57,12 +57,15 @@ void commHandler::handleAddBooking(char *buffer, int index)
 
     status = FM->addFacilityBooking(server->getClientIP(), &confirmationId, facility_name, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
 
+    cout << "Okay till here .." << endl;
     index = 0;
     setInt(buffer, &index, status);
+    cout << "Okay till here as well.." << endl;
     if (status == 0)
     {
         setString(buffer, &index, confirmationId);
     }
+    cout << "Okay till here as well.." << endl;
     server->sendMessage(buffer, BUFFER_SIZE);
 }
 
