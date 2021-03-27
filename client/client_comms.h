@@ -6,6 +6,7 @@
 class ClientSocket {
     int sockfd, clientLen, serverLen;
     struct sockaddr_in clientAddr, serverAddr;
+    char buffer[MAX_BUFFSIZE];
 
     void createLocalClientAddr(int portno);
     void createRemoteServerAddr(char *hostname, int portno);
@@ -13,7 +14,7 @@ class ClientSocket {
     public:
     ClientSocket(char *hostname, int portno);
     int sendMsg(char *msg, int len);
-    int recvMsg(char *msg, int len);
+    int recvMsg(char *buffer, int len);
 };
 
 #endif

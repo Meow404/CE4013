@@ -7,5 +7,6 @@
 #include "query.h"
 #include "booking.h"
 #include "monitor.h"
+#include "response_handler.h"
 
 #endif

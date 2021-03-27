@@ -8,7 +8,7 @@
 /** Request Format:
  *  <facility name size><facility name><list of days>
  */
-char *craftQueryReq() {
+std::vector<char> craftQueryReq() {
     std::string daytimePrompt =
     "[DAY] -> 0 = Mon, 1 = Tues, 2 = Wed, 3 = Thurs, 4 = Fri, 5 = Sat, 6 = Sun\n"  \
     "Input multiple days as [DAY] [DAY] [DAY] (\"0 1 2\" for \"Mon Tues Wed\"\n)" \
@@ -30,7 +30,7 @@ char *craftQueryReq() {
 
     if (facilityName.empty() || days.empty()) {
         std::cout << "No facility name or days specified";
-        return "";
+        return queryReq;
     }
     
     queryReq.push_back(facilityName.length());
@@ -40,5 +40,5 @@ char *craftQueryReq() {
         char *marshalledInt = marshalInt(*it);
         queryReq.insert(queryReq.end(), &marshalledInt[0], &marshalledInt[2]);
     }
-    return queryReq.data();
+    return queryReq;
 }

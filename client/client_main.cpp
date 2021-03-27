@@ -8,7 +8,9 @@ using namespace requests;
 
 int main(int argc, char *argv[]) {
     char *hostname;
-    int portno, serverRes;
+    int portno;
+    int res = -1;
+    int reqId = 0;
     string promptMessage = "\nCOMMANDS\n"    \
                            "[1] Query Facility Availability\n"    \
                            "[2] Book Facility\n"    \
@@ -19,6 +21,7 @@ int main(int argc, char *argv[]) {
                            "[7] Exit\n"   \
                            "Input Command: ";
     int command;
+    char buffer[MAX_BUFFSIZE];
 
     hostname = argv[0];
     portno = atoi(argv[1]);
@@ -32,31 +35,50 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        char *requestMsg;
+        vector<char> requestMsg, payload;
         switch (command) {
             case request::QUERY:
-                requestMsg = craftQueryReq();
-                cout << requestMsg << endl;
+                payload = craftQueryReq();
+                // cout << payload.data() << endl;
                 // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
             case request::NEW_BOOK:
-                requestMsg = craftNewBookingReq();
+                payload = craftNewBookingReq();
                 break;
             case request::MOD_BOOK:
-                requestMsg = craftModBookingReq();
+                payload = craftModBookingReq();
                 break;
             case request::NEW_MONITOR:
-                requestMsg = craftNewMonitorReq();
+                payload = craftNewMonitorReq();
                 break;
             case request::CANCEL_BOOK:
-                requestMsg = craftCancelBookingReq();
+                payload = craftCancelBookingReq();
                 break;
             case request::MOD_MONITOR:
-                requestMsg = craftModMonitorReq();
+                payload = craftModMonitorReq();
                 break;
             default:
                 perror("Unknown Command");
                 break;
         }
+
+        requestMsg.push_back(command);
+        requestMsg.push_back(reqId);
+        // Do we really need client to send IP and port?
+        requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
+        requestMsg.push_back(portno);
+        requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
+
+        while (res < 0) {
+            res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
+        }
+        res = 0;
+
+        while (!res) {
+            res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
+        }
+        handleResponse(command, buffer);
+
+        reqId++;
     }
 }

@@ -1,7 +1,7 @@
 #ifndef _CONSTANTS_H_
 #define _CONSTANTS_H
 
-#define MAX_BUFFER 1024
+#define MAX_BUFFSIZE 1024
 #define CID_LENGTH 26
 #define MAX_HR 23
 #define MAX_MINUTES 59

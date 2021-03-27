@@ -10,7 +10,7 @@ using namespace std;
 /** Request Format:
  *  <facility name size><facility name>[<m_day><m_hr><m_min>]
  */
-char *craftNewMonitorReq() {
+vector<char> craftNewMonitorReq() {
     string facilityName;
     int days, hours, minutes;
     vector<char> monitorReq;
@@ -34,13 +34,13 @@ char *craftNewMonitorReq() {
     monitorReq.insert(monitorReq.end(), &hourBytes[0], &hourBytes[3]);
     char *minBytes = marshalInt(minutes);
     monitorReq.insert(monitorReq.end(), &minBytes[0], &minBytes[3]);
-    return monitorReq.data();
+    return monitorReq;
 }
 
 /** Request Format:
  *  <facility name size><facility name>[<e_day><e_hr><e_min>]
  */
-char *craftModMonitorReq() {
+vector<char> craftModMonitorReq() {
     string facilityName;
     int days, hours, minutes;
     vector<char> modMonitorReq;
@@ -66,5 +66,5 @@ char *craftModMonitorReq() {
     modMonitorReq.insert(modMonitorReq.end(), &hourBytes[0], &hourBytes[3]);
     char *minBytes = marshalInt(minutes);
     modMonitorReq.insert(modMonitorReq.end(), &minBytes[0], &minBytes[3]);
-    return modMonitorReq.data();
+    return modMonitorReq;
 }

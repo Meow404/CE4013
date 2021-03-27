@@ -46,8 +46,8 @@ int ClientSocket::sendMsg(char *msg, int len) {
     return res;
 }
 
-int ClientSocket::recvMsg(char *msg, int len) {
-    int res = recvfrom(this->sockfd, msg, len, 0, (struct sockaddr *) &serverAddr, &serverLen);
+int ClientSocket::recvMsg(char *buffer, int len) {
+    int res = recvfrom(this->sockfd, buffer, len, 0, (struct sockaddr *) &serverAddr, &serverLen);
     if (!res) {
         std::cout << "No message received" << std::endl;
     }

@@ -10,7 +10,7 @@ using namespace std;
 /** Request Format:
  *  <facility name size><facility name>[<s_day><s_hr><s_min>][<e_day><e_hr><e_min>]
  */
-char *craftNewBookingReq() {
+vector<char> craftNewBookingReq() {
     string bookDaytimePrompt =
     "[DAY] -> 0 = Mon, 1 = Tues, 2 = Wed, 3 = Thurs, 4 = Fri, 5 = Sat, 6 = Sun"    \
     "[HOUR] -> 24-hour timing (0 = 12am, 23 = 11pm)"   \
@@ -53,13 +53,13 @@ char *craftNewBookingReq() {
     char *marshalledBookDT = marshalDuration(bookDayTime);
     bookReq.insert(bookReq.end(), &marshalledBookDT[0], &marshalledBookDT[23]);
 
-    return bookReq.data();
+    return bookReq;
 }
 
 /** Request Format:
  *  <confirmationID>[<c_day><c_hr><c_min>]
  */
-char *craftModBookingReq() {
+vector<char> craftModBookingReq() {
     char confirmationID[26];
     char dayOffset, hourOffset, minOffset;
     vector<char> modBookReq;
@@ -83,18 +83,18 @@ char *craftModBookingReq() {
     char *min = marshalInt(minOffset);
     modBookReq.insert(modBookReq.end(), &min[0], &min[3]);
 
-    return modBookReq.data();
+    return modBookReq;
 }
 
 /** Request Format:
  *  <confirmationID>
  */
-char *craftCancelBookingReq() {
+vector<char> craftCancelBookingReq() {
     char confirmationID[26];
     cout << "Confirmation ID: ";
     cin >> confirmationID;
 
     // Input Validity check
-
-    return confirmationID;
+    
+    return vector<char>(confirmationID, confirmationID + 26);
 }
