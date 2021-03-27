@@ -18,6 +18,6 @@ int main()
     facilityManager FM("facilities.txt");
     udpServer server(8080);
     commHandler cm(&server, &FM);
-    cm.start()
+    cm.start();
 
 }
