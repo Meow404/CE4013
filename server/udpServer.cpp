@@ -49,7 +49,7 @@ void udpServer::sendMessage(const char *buffer, size_t bufferSize)
 {
     cout << "Sending Message";
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
-    if (n<0) error("ERROR writing back to socket");
+    if (n<0) cout << "ERROR writing back to socket" << endl;
 }
 
 string udpServer::getClientIP()
