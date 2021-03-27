@@ -10,7 +10,9 @@ int main() {
     udpServer server(8080);
     server.recieveMessage(buffer, 1024);
     int id = unmarshalInt(buffer);
+    cout << id << endl;
     int size = unmarshalInt(&buffer[4]);
+    cout << size << endl;
     string message = unmarshalString(&buffer[8], size);
     std::cout << "Id : " << id << " message : " << message <<std::endl;
 
