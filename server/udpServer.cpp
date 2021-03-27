@@ -41,5 +41,5 @@ string udpServer::getClientIP()
 {
     char ip[16];
     inet_ntop(AF_INET, &clientAddress, ip, 16);
-    return (string)ip;
+    return (string) ip;
 }
