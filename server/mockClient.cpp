@@ -15,20 +15,8 @@ int main()
 {
     int sockfd;
     char buffer[MAXLINE];
-    char hello[MAXLINE];
     struct sockaddr_in servaddr;
 
-    marshalInt(10, hello);
-    marshalInt(15, &hello[4]);
-    marshalString("HI FROM CLIENT!", &hello[8]);
-    int num = unmarshalInt(hello);
-    cout << num << endl;
-    num = unmarshalInt(&hello[4]);
-    cout << num << endl;
-    string message = unmarshalString(&hello[8], num);
-    cout << message <<endl;
-    cout << hello << endl;
-    // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
         perror("socket creation failed");
@@ -44,22 +32,41 @@ int main()
 
     int n, len;
 
-    sendto(sockfd, (const char *)hello, strlen(hello),
-           MSG_CONFIRM, (const struct sockaddr *)&servaddr,
-           sizeof(servaddr));
-    printf("Hello message sent.\n");
+    // sendto(sockfd, (const char *)hello, strlen(hello),
+    //        MSG_CONFIRM, (const struct sockaddr *)&servaddr,
+    //        sizeof(servaddr));
+    // printf("Hello message sent.\n");
 
-    n = recvfrom(sockfd, (char *)buffer, MAXLINE,
-                 MSG_WAITALL, (struct sockaddr *)&servaddr,
-                 (socklen_t *)&len);
-    buffer[n] = '\0';
-    // printf("Server : %s\n", buffer);
+    while (true)
+    {
 
-    int id = unmarshalInt(hello);
-    int size = unmarshalInt(&hello[4]);
-    message = unmarshalString(&hello[8], size);
-    std::cout << "Id : " << id << " message : " << message <<std::endl;
+        n = recvfrom(sockfd, (char *)buffer, MAXLINE,
+                     MSG_WAITALL, (struct sockaddr *)&servaddr,
+                     (socklen_t *)&len);
+        // buffer[n] = '\0';
+        // printf("Server : %s\n", buffer);
+        int i = 0, num;
+        string message;
+        while (i != n)
+        {
 
+            switch (buffer[i])
+            {
+            case 'd':
+                num = unmarshalInt(&buffer[i]);
+                cout << num << endl;
+                i += 4;
+                break;
+            case 's':
+                num = unmarshalInt(&buffer[i]);
+                i += 4;
+                message = unmarshalString(&hello[i], num);
+                i += num;
+                cout << message << endl;
+                break;
+            }
+        }
+    }
     close(sockfd);
     return 0;
 }
