@@ -8,7 +8,7 @@ using namespace std;
 int main() {
     char buffer[1024];
     udpServer server(8080);
-    // server.recieveMessage(buffer, 1024);
+    server.recieveMessage(buffer, 1024);
     // int id = unmarshalInt(buffer);
     // cout << id << endl;
     // int size = unmarshalInt(&buffer[4]);

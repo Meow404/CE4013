@@ -15,6 +15,7 @@ int main()
 {
     int sockfd;
     char buffer[MAXLINE];
+    char hello = "Client Open For Buisness";
     struct sockaddr_in servaddr;
 
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
@@ -32,10 +33,10 @@ int main()
 
     int n, len;
 
-    // sendto(sockfd, (const char *)hello, strlen(hello),
-    //        MSG_CONFIRM, (const struct sockaddr *)&servaddr,
-    //        sizeof(servaddr));
-    // printf("Hello message sent.\n");
+    sendto(sockfd, (const char *)hello, strlen(hello),
+           MSG_CONFIRM, (const struct sockaddr *)&servaddr,
+           sizeof(servaddr));
+    printf("Hello message sent.\n");
 
     while (true)
     {
