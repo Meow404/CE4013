@@ -27,12 +27,14 @@ string commHandler::getString(char *buffer, int *index)
     return value;
 }
 
-void commHandler::setInt(char * buffer, int* index, int value){
+void commHandler::setInt(char *buffer, int *index, int value)
+{
     buffer[(*index)++] = 'd';
     marshalInt(value, &buffer[*index]);
     *index += SIZE_INT;
 }
-void commHandler::setString(char * buffer, int* index, string value){
+void commHandler::setString(char *buffer, int *index, string value)
+{
     buffer[(*index)++] = 's';
     marshalInt(value.size(), &buffer[*index]);
     *index += SIZE_INT;
@@ -55,39 +57,103 @@ void commHandler::handleAddBooking(char *buffer, int index)
 
     status = FM->addFacilityBooking(server->getClientIP(), &confirmationId, facility_name, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
 
-    cout << "Okay till here .." << endl;
     index = 0;
     setInt(buffer, &index, status);
-    cout << "Okay till here as well.." << endl;
     if (status == 0)
     {
         setString(buffer, &index, confirmationId);
     }
-    cout << "Okay till here as well.." << endl;
     server->sendMessage(buffer, index);
-
-    index = 1;
-    getInt(buffer, &index);
-    getString(buffer, &(++index));
 }
+
+void commHandler::handleChangeBooking(char *buffer, int index)
+{
+    int status, days, hours, minutes;
+    string confirmationId;
+
+    confirmationId = getString(buffer, &index);
+    days = getInt(buffer, &index);
+    hours = getInt(buffer, &index);
+    minutes = getInt(buffer, &index);
+
+    status = FM->changeFacilityBooking(server->getClientIP(), &confirmationId, days, hours, minutes);
+
+    index = 0;
+    setInt(buffer, &index, status);
+    if (status == 0)
+    {
+        setString(buffer, &index, confirmationId);
+    }
+    server->sendMessage(buffer, index);
+}
+
+
+void commHandler::handleExtendBooking(char *buffer, int index)
+{
+    int status, days, hours, minutes;
+    string confirmationId;
+
+    confirmationId = getString(buffer, &index);
+    days = getInt(buffer, &index);
+    hours = getInt(buffer, &index);
+    minutes = getInt(buffer, &index);
+
+    status = FM->extendFacilityBooking(server->getClientIP(), &confirmationId, days, hours, minutes);
+
+    index = 0;
+    setInt(buffer, &index, status);
+    if (status == 0)
+    {
+        setString(buffer, &index, confirmationId);
+    }
+    server->sendMessage(buffer, index);
+}
+
+
+void commHandler::handleCancelBooking(char *buffer, int index)
+{
+    string confirmationId;
+    bool status;
+
+    confirmationId = getString(buffer, &index);
+    status = FM->cancelFacilityBooking(confirmationId);
+
+    index = 0;
+    setInt(buffer, &index, status);
+    server->sendMessage(buffer, index);
+}
+
+
 
 void commHandler::start()
 {
     char buffer[BUFFER_SIZE];
     int funNum, index = 0;
-    server->recieveMessage(buffer, BUFFER_SIZE);
-
-    funNum = getInt(buffer, &index);
-
-    switch (funNum)
+    while (true)
     {
-    case 1:
-        break;
-    case 2:
-        handleAddBooking(buffer, index);
-        break;
+        server->recieveMessage(buffer, BUFFER_SIZE);
 
-    default:
-        break;
+        funNum = getInt(buffer, &index);
+
+        switch (funNum)
+        {
+        case 1:
+            break;
+        case 2:
+            handleAddBooking(buffer, index);
+            break;
+        case 3:
+            handleChangeBooking(buffer, index);
+            break;
+        case 4:
+            break;
+        case 5:
+            handleExtendBooking(buffer, index);
+            break;
+        case 6:
+            handleCancelBooking(buffer, index);
+        default:
+            break;
+        }
     }
 }

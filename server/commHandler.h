@@ -24,6 +24,9 @@ class commHandler
     public:
     commHandler(udpServer* server, facilityManager* facility_manager);
     void handleAddBooking(char * buffer, int index);
+    void handleChangeBooking(char * buffer, int index);
+    void handleExtendBooking(char * buffer, int index);
+    void handleCancelBooking(char * buffer, int index);
     void start();
 
 };
