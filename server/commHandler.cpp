@@ -129,9 +129,10 @@ void commHandler::handleCancelBooking(char *buffer, int index)
 void commHandler::start()
 {
     char buffer[BUFFER_SIZE];
-    int funNum, index = 0;
+    int funNum, index;
     while (true)
     {
+        index = 0;
         server->recieveMessage(buffer, BUFFER_SIZE);
 
         funNum = getInt(buffer, &index);
