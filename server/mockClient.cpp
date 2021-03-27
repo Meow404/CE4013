@@ -50,7 +50,7 @@ int main()
     std::getline(std::cin, message);
 
     while(message.compare("q") != 0){
-        if (isNumber(message)){
+        if (message.size() < 6 && isNumber(message)){
             marshalInt(stoi(message), &hello[index]);
             index+=4;
         }
