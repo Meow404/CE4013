@@ -72,7 +72,7 @@ int main()
         cout << "Eaiting for message ..." <<endl;
 
         n = recvfrom(sockfd, (char *)buffer, MAXLINE,
-                     MSG_WAITALL, (struct sockaddr *)&servaddr,
+                     0, (struct sockaddr *)&servaddr,
                      (socklen_t *)&len);
         cout << "MESSAGE RECIEVED " <<n<<" bytes"<<endl;
         // buffer[n] = '\0';
