@@ -73,3 +73,16 @@ char* craftModBookingReq() {
 
     return marshalModBookingReq(confirmationID, dayOffset, hourOffset, minOffset);
 }
+
+/** Request Format:
+ *  <confirmationID>
+ */
+char* craftCancelBookingReq() {
+    char confirmationID[26];
+    cout << "Confirmation ID: ";
+    cin >> confirmationID;
+
+    // Input Validity check
+
+    return confirmationID;
+}
