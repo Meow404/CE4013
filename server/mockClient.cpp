@@ -21,6 +21,7 @@ int main()
     marshalInt(1, hello);
     marshalInt(15, &hello[4]);
     marshalString("HI FROM CLIENT!", &hello[8]);
+    cout << hello;
     // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
     {
