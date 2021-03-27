@@ -20,7 +20,7 @@ int main() {
     marshalInt(10, &buffer[1]);
     buffer[5] = 's';
     marshalInt(15, &buffer[6]);
-    marshalString("HI FROM SERVER!", &buffer[8]);
+    marshalString("HI FROM SERVER!", &buffer[10]);
     server.sendMessage(buffer, 1024);
     return 0;
 }
