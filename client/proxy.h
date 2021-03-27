@@ -1,15 +1,19 @@
 #ifndef _PROXY_H_
 #define _PROXY_H_
 
-#include <winsock.h>
+#include <iostream>
+#include <string>
 #include <vector>
 #include "../utilities/daytime.h"
 
-unsigned char* marshalIntArray();
+char* marshalIntArray();
 std::vector<int> unmarshalIntArray();
-unsigned char* marshalDayTime();
+char* marshalDayTime();
 daytime::day unmarshalDay();
 daytime::time unmarshalTime();
 daytime::duration unmarshalDuration();
+
+char* marshalQueryReq(std::string facilityName, std::vector<int> days);
+int unmarshalQueryResponse();
 
 #endif

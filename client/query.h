@@ -4,7 +4,8 @@
 #include <iostream>
 #include <vector>
 
-int queryAvailability(char* facility_name, std::vector<int> days);
-int craftQueryReq();
+#include "proxy.h"
+
+char* craftQueryReq();
 
 #endif

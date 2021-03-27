@@ -27,9 +27,12 @@ int main() {
             continue;
         }
 
+        char* requestMsg;
         switch (command) {
             case request::QUERY:
-                craftQueryReq();
+                requestMsg = craftQueryReq();
+                cout << requestMsg << endl;
+                // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
             case request::NEW_BOOK:
                 craftNewBookingReq();
