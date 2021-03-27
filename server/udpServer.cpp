@@ -28,17 +28,12 @@ udpServer::udpServer(int port)
     clientLen = sizeof(clientAddress);
 }
 
-char* udpServer::recieveMessage()
+char* udpServer::recieveMessage(char* buffer, size_t bufferSize)
 {
-    char *message, *buffer;
-    int n = recvfrom(socketFd, (char *)buffer, 1024, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
-
-    *(buffer + n) = '\0';
-    printf("%s\n", buffer);
+    int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
     cout << "Client : " << getClientIP() << " Message : " << buffer << endl;
-    return (char*)buffer;
 }
-void udpServer::sendMessage(const char *buffer, int bufferSize)
+void udpServer::sendMessage(const char *buffer, size_t bufferSize)
 {
     sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
 }
