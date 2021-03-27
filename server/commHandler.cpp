@@ -70,8 +70,7 @@ void commHandler::start()
     int funNum, index = 0;
     server->recieveMessage(buffer, BUFFER_SIZE);
 
-    funNum = unmarshalInt(&buffer[index]);
-    index += SIZE_INT;
+    funNum = getInt(buffer, &index);
 
     switch (funNum)
     {
