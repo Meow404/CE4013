@@ -91,12 +91,14 @@ int main()
             case 's':
                 num = unmarshalInt(&buffer[i]);
                 i += 4;
+                cout << num << endl;
                 message = unmarshalString(&buffer[i], num);
                 i += num;
                 cout << message << endl;
                 break;
             default:
                 cout << "Did not recieve valid string";
+                i=n;
                 break;
             }
         }
