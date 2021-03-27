@@ -28,7 +28,7 @@ udpServer::udpServer(int port)
     clientLen = sizeof(clientAddress);
 }
 
-void udpServer::recieveMessage(char* buffer, size_t bufferSize)
+void udpServer::recieveMessage(char* buffer, int bufferSize)
 {
     int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
     cout << "Client : " << getClientIP() << " Message : " << buffer << endl;
