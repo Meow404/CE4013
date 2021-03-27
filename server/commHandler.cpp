@@ -53,7 +53,7 @@ void commHandler::handleAddBooking(char *buffer, int index)
     e_hour = getInt(buffer, &index);
     e_minute = getInt(buffer, &index);
 
-    status = FM->addFacilityBooking(server.getClientIP(), &confirmationId, facility_name, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
+    status = FM->addFacilityBooking(server->getClientIP(), &confirmationId, facility_name, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
 
     index = 0;
     setInt(buffer, &index, status);
