@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "../utilities/constants.h"
 #include "../utilities/daytime.h"
 
 char* marshalIntArray();
@@ -15,6 +16,7 @@ daytime::duration unmarshalDuration();
 
 char* marshalQueryReq(std::string facilityName, std::vector<int> days);
 char* marshalNewBookingReq(std::string facilityName, daytime::duration bookDayTime);
+char* marshalModBookingReq(char* confirmationID, char dayOffset, char hourOffset, char minOffset);
 
 int unmarshalQueryResponse();
 

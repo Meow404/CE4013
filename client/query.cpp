@@ -5,10 +5,13 @@
 
 #include "query.h"
 
+/** Request Format:
+ *  <facility name size><facility name><list of days>
+ */
 char* craftQueryReq() {
     std::string daytimePrompt =
-    "Days -> 0 = Mon, 1 = Tues, 2 = Wed, 3 = Thurs, 4 = Fri, 5 = Sat, 6 = Sun\n"  \
-    "Input multiple days with spaces in between (\"0 1 2\" for \"Mon Tues Wed\"\n)" \
+    "[DAY] -> 0 = Mon, 1 = Tues, 2 = Wed, 3 = Thurs, 4 = Fri, 5 = Sat, 6 = Sun\n"  \
+    "Input multiple days as [DAY] [DAY] [DAY] (\"0 1 2\" for \"Mon Tues Wed\"\n)" \
     "Days To Check: ";
     std::string daysStr;
     std::string facilityName;  // Unknown size so use string instead of char array
