@@ -10,6 +10,15 @@
 #define PORT 8080
 #define MAXLINE 1024
 
+bool isNumber(string s)
+{
+    for (int i = 0; i < s.length(); i++)
+        if (isdigit(s[i]) == false)
+            return false;
+ 
+    return true;
+}
+
 // Driver code
 int main()
 {
@@ -33,7 +42,27 @@ int main()
 
     int n, len;
 
-    sendto(sockfd, (const char *)hello, strlen(hello),
+    string message;
+    int index = 0;
+    cout << "\nEnter Value : ";
+    cin >> message;
+
+    while(message.compare("q") != 0){
+        if (isNumber(message)){
+            marshalInt(stoi(message), &hello[index]);
+            index+=4;
+        }
+        else{
+            marshalInt(message.size(), &hello[index]);
+            index+=4;
+            marshalString(message, &hello[index]);
+            index+=message.size();
+        }
+        cout << "\nEnter Value : ";
+        cin >> message;
+    }
+
+    sendto(sockfd, (const char *)hello, index,
            MSG_CONFIRM, (const struct sockaddr *)&servaddr,
            sizeof(servaddr));
     printf("Hello message sent.\n");
