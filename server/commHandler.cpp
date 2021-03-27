@@ -65,6 +65,10 @@ void commHandler::handleAddBooking(char *buffer, int index)
     }
     cout << "Okay till here as well.." << endl;
     server->sendMessage(buffer, index);
+
+    index = 0;
+    getInt(buffer, &index);
+    getString(buffer, &index);
 }
 
 void commHandler::start()
