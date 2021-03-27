@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <iostream>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -45,8 +47,6 @@ string booking::generateConfirmationId(string ipAddress)
 
 booking::booking(string ipAddress, daytime::duration duration)
 {
-
-    cout << ipAddress << endl;
     this->duration = duration;
     this->confirmationId = generateConfirmationId(ipAddress);
 }

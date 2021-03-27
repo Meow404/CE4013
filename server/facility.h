@@ -15,6 +15,8 @@ enum facilityType
     SPORTS_FACILITY
 };
 
+std::string convertFacilityType(facilityType ftype);
+
 class facility
 {
     std::string name;
@@ -23,6 +25,7 @@ class facility
     std::vector<monitor> monitors;
 
     std::string addBooking(booking *new_booking);
+    std::string getFacilityType(facilityType ftype);
 
 public:
     facility(std::string facilityName, facilityType facilityType);
@@ -31,7 +34,7 @@ public:
     facilityType getType();
 
     bool isBooking(std::string bookingId);
-    booking* getBooking(std::string bookingId);
+    booking* getBooking(std::string* bookingId);
     void updateBookings(daytime::day day, std::vector<booking*> u_bookings);
     bool cancelBooking(std::string bookingId);
 
@@ -44,8 +47,8 @@ public:
 
     bool checkBookingPossible(daytime::duration duration, std::string confirmationId = std::string());
     std::string addBooking(std::string ipAddress, daytime::duration duration);
-    bool changeBooking(std::string ipAddress, std::string bookingId, int days, int hours, int minutes);
-    bool extendBooking(std::string ipAddress, std::string bookingId, int days, int hours, int minutes);
+    bool changeBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
+    bool extendBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
     void printBookings();
 
     void addMonitor(monitor monitor);

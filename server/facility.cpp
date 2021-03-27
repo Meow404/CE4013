@@ -36,18 +36,24 @@ facilityType facility::getType()
 bool facility::isBooking(string bookingId)
 {
     for (int i = 0; i < 7; i++)
-        for (int j = 0; j < bookings[i].size(); i++)
+        for (int j = 0; j < bookings[i].size(); j++)
             if (bookings[i][j]->getConfirmationId().compare(bookingId) == 0)
                 return true;
     return false;
 }
 
-booking *facility::getBooking(string bookingId)
+booking *facility::getBooking(string* bookingId)
 {
+    cout<<bookings.size()<<endl;
     for (int i = 0; i < 7; i++)
-        for (int j = 0; j < bookings[i].size(); i++)
-            if (bookings[i][j]->getConfirmationId().compare(bookingId) == 0)
+    {cout<<"i = "<<i<<" size : "<<bookings[i].size()<<endl;
+        for (int j = 0; j < bookings[i].size(); j++)
+            {
+            bookings[i][j]->print();
+            if (bookings[i][j]->getConfirmationId().compare(*bookingId) == 0)
                 return bookings[i][j];
+            }
+    }
     return nullptr;
 }
 
@@ -58,7 +64,7 @@ std::vector<booking *> facility::getBookings(daytime::day day)
 
 void facility::updateBookings(daytime::day day, std::vector<booking *> u_bookings)
 {
-    bookings[day] = u_bookings;
+    bookings.at(day) = u_bookings;
 }
 
 std::vector<std::vector<booking *>> facility::getBookings()
@@ -144,14 +150,21 @@ bool facility::checkBookingPossible(daytime::duration duration, string confirmat
             end = duration.endTime;
 
         availabilities = getAvailability(day, confirmationId);
-        for (int i = 0; i < availabilities.size(); i++)
+        int i;
+        for (i = 0; i < availabilities.size(); i++)
         {
+            // cout << "DURATION: " << start.hour << ":" << start.minute <<" - "<<end.hour<<":"<<end.minute<<endl;
+            // cout << "AVAILABILITY: "<< availabilities[i].startTime.hour << ":" << availabilities[i].startTime.minute <<" - "<<availabilities[i].endTime.hour<<":"<<availabilities[i].endTime.minute<<endl;
+
             if (availabilities[i].endTime.hour > start.hour || (availabilities[i].endTime.hour == start.hour && availabilities[i].endTime.minute > start.minute))
-                if ((availabilities[i].startTime.hour > start.hour || (availabilities[i].startTime.hour == start.hour && availabilities[i].startTime.minute > start.minute)) && (availabilities[i].endTime.hour < end.hour || (availabilities[i].endTime.hour == end.hour && availabilities[i].endTime.minute < end.minute)))
+                if ((availabilities[i].startTime.hour > start.hour || (availabilities[i].startTime.hour == start.hour && availabilities[i].startTime.minute > start.minute)) || (availabilities[i].endTime.hour < end.hour || (availabilities[i].endTime.hour == end.hour && availabilities[i].endTime.minute < end.minute)))
                     return false;
                 else
                     break;
         }
+
+        if (i == availabilities.size())
+            return false;
 
         day = static_cast<daytime::day>((day + 1) % 7);
         start = {0, 0};
@@ -177,14 +190,16 @@ string facility::addBooking(booking *new_booking)
         else
             end = duration.endTime;
 
-        day_bookings = getBookings(day);
+        // day_bookings = getBookings(day);
         int i = 0;
-        for (; i < day_bookings.size(); i++)
-            if (day_bookings[i]->getDuration().startTime.hour > end.hour || (day_bookings[i]->getDuration().startTime.hour == end.hour && day_bookings[i]->getDuration().startTime.minute > end.minute))
-                break;
-
-        day_bookings.insert(day_bookings.begin() + i, new_booking);
-        updateBookings(day, day_bookings);
+        for (; i < bookings[day].size(); i++){
+            daytime::duration b_duration = bookings[day][i]->getDuration();
+            if (b_duration.startDay == day)
+                if (b_duration.startTime.hour > end.hour || (b_duration.startTime.hour == end.hour && b_duration.startTime.minute > end.minute))
+                    break;
+        }
+        bookings[day].insert( bookings[day].begin() + i, new_booking);
+        // updateBookings(day, day_bookings);
 
         day = static_cast<daytime::day>((day + 1) % 7);
         start = {0, 0};
@@ -198,6 +213,7 @@ string facility::addBooking(booking *new_booking)
 
 string facility::addBooking(string ipAddress, daytime::duration duration)
 {
+    cout << "Adding Booking : " << daytime::getDurationStr(duration) << endl;
     string confirmationId = string();
 
     if (checkBookingPossible(duration))
@@ -211,7 +227,7 @@ string facility::addBooking(string ipAddress, daytime::duration duration)
 bool facility::cancelBooking(string bookingId)
 {
     bool bookingCancelled = false;
-    booking *booking = getBooking(bookingId);
+    booking *booking = getBooking(&bookingId);
     daytime::day day = booking->getDuration().startDay, endDay = booking->getDuration().endDay;
 
     if (booking)
@@ -225,28 +241,32 @@ bool facility::cancelBooking(string bookingId)
                     bookings[day].erase(bookings[day].begin() + j);
 
             day = static_cast<daytime::day>((day + 1) % 7);
-        } while (day != endDay + 1);
+
+        } while (day != (endDay + 1) % 7);
         bookingCancelled = true;
         delete booking;
     }
     return bookingCancelled;
 }
 
-bool facility::changeBooking(std::string ipAddress, string bookingId, int days, int hours, int minutes)
+bool facility::changeBooking(string ipAddress, string* bookingId, int days, int hours, int minutes)
 {
+    cout << "CHANGE BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
 
-    if (true)
+    if (p_booking)
     {
-        booking *new_booking = new booking(ipAddress, bookingId, p_booking->getDuration());
+        // cout << "change Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
+        booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
         new_booking->change(days, hours, minutes);
-        new_booking->print();
+        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) <<endl;
 
-        if (checkBookingPossible(new_booking->getDuration(), bookingId))
+        if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {
             p_booking = nullptr;
-            cancelBooking(bookingId);
+            cancelBooking(*bookingId);
             addBooking(new_booking);
+            printBookings();
             return true;
         }
         else
@@ -257,19 +277,23 @@ bool facility::changeBooking(std::string ipAddress, string bookingId, int days, 
     return true;
 }
 
-bool facility::extendBooking(std::string ipAddress, string bookingId, int days, int hours, int minutes)
+bool facility::extendBooking(string ipAddress, string* bookingId, int days, int hours, int minutes)
 {
+    cout << "EXTEND BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
 
     if (p_booking)
     {
-        booking *new_booking = new booking(ipAddress, bookingId, p_booking->getDuration());
+        // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
+        booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
         new_booking->extend(days, hours, minutes);
+        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) <<endl;
 
-        if (checkBookingPossible(new_booking->getDuration(), bookingId))
+        if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {
-            cancelBooking(bookingId);
+            cancelBooking(*bookingId);
             addBooking(new_booking);
+            printBookings();
             return true;
         }
         else
@@ -282,7 +306,7 @@ bool facility::extendBooking(std::string ipAddress, string bookingId, int days, 
 
 void facility::printBookings()
 {
-    cout << "Facility : " << name << endl;
+    cout << "Facility : " << name <<  " | " << convertFacilityType(type) << endl;;
     char buffer[40];
     for (int i = 0; i < 7; i++)
     {
@@ -292,6 +316,22 @@ void facility::printBookings()
         {
             bookings[i][j]->print();
         }
+    }
+}
+
+string convertFacilityType(facilityType ftype){
+    switch (ftype)
+    {
+    case facilityType::LECTURE_THEATRE:
+        return "Lecture Theatre";
+    case facilityType::TUTORIAL_ROOM:
+        return "Tutorial Room";
+    case facilityType::MEETING_ROOM:
+        return "Meeting Room";
+    case facilityType::SPORTS_FACILITY:
+        return "Sports Facility";
+    default:
+        return "Invalid Day";
     }
 }
 

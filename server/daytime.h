@@ -32,6 +32,8 @@ namespace daytime
         day endDay;
         time endTime;
     };
+
+    std::string getDurationStr(duration duration);
 }
 
 #endif
