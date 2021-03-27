@@ -15,7 +15,7 @@ int commHandler::getInt(char *buffer, int *index)
     return value;
 }
 
-string getString(char *buffer, int *index)
+string commHandler::getString(char *buffer, int *index)
 {
     int size = unmarshalInt(&buffer[*index]);
     *index += SIZE_INT;
@@ -27,12 +27,12 @@ string getString(char *buffer, int *index)
     return value;
 }
 
-void setInt(char * buffer, int* index, int value){
+void commHandler::setInt(char * buffer, int* index, int value){
     buffer[*index++] = 'd';
     marshalInt(value, &buffer[*index]);
     *index += SIZE_INT;
 }
-void setString(char * buffer, int* index, string value){
+void commHandler::setString(char * buffer, int* index, string value){
     buffer[*index++] = 's';
     marshalInt(value.size(), &buffer[*index]);
     *index += SIZE_INT;
