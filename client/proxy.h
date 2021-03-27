@@ -14,6 +14,8 @@ daytime::time unmarshalTime();
 daytime::duration unmarshalDuration();
 
 char* marshalQueryReq(std::string facilityName, std::vector<int> days);
+char* marshalNewBookingReq(std::string facilityName, daytime::duration bookDayTime);
+
 int unmarshalQueryResponse();
 
 #endif

@@ -35,19 +35,19 @@ int main() {
                 // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
             case request::NEW_BOOK:
-                craftNewBookingReq();
+                requestMsg = craftNewBookingReq();
                 break;
             case request::MOD_BOOK:
-                craftModBookingReq();
+                requestMsg = craftModBookingReq();
                 break;
             case request::NEW_MONITOR:
-                craftNewMonitorReq();
+                requestMsg = craftNewMonitorReq();
                 break;
             case request::CANCEL_BOOK:
-                craftCancelBookingReq();
+                requestMsg = craftCancelBookingReq();
                 break;
             case request::MOD_MONITOR:
-                craftModMonitorReq();
+                requestMsg = craftModMonitorReq();
                 break;
             default:
                 cout << "Unknown Command" << endl;

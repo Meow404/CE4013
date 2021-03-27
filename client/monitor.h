@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-int craftNewMonitorReq();
-int craftModMonitorReq();
+char* craftNewMonitorReq();
+char* craftModMonitorReq();
 
 #endif
