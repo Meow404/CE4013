@@ -7,6 +7,7 @@
 #include "udpServer.h"
 #include "facilityManager.h"
 #include "utils.h"
+#include <iostream>
 
 using namespace std;
 
@@ -21,7 +22,7 @@ class commHandler
     void setString(char * buffer, int* index, string value);
 
     public:
-    commHandler(udpServer server, facilityManager facility_manager);
+    commHandler(int port, const char* file_name);
     void handleAddBooking(char * buffer, int index);
     void start();
 

@@ -1,9 +1,9 @@
 #include "commHandler.h"
 
-commHandler::commHandler(udpServer server, facilityManager facility_manager)
+commHandler::commHandler(int port, const char* file_name)
 {
-    this->server = server;
-    this->FM = facility_manager;
+    server = udpServer(port);
+    FM = facilityManager(file_name);
 }
 
 int commHandler::getInt(char *buffer, int *index)
