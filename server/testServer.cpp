@@ -7,7 +7,7 @@ using namespace std;
 int main() {
     char* message;
     udpServer server(8080);
-    message = server.recieveMessage(message, 1024);
+    server.recieveMessage(message, 1024);
     cout << "Sending : " << message << endl;
     server.sendMessage(message, 1024);
     return 0;
