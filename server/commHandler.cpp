@@ -28,14 +28,12 @@ string commHandler::getString(char *buffer, int *index)
 }
 
 void commHandler::setInt(char * buffer, int* index, int value){
-    buffer[*index] = 'd';
-    *index += 1;
+    buffer[(*index)++] = 'd';
     marshalInt(value, &buffer[*index]);
     *index += SIZE_INT;
 }
 void commHandler::setString(char * buffer, int* index, string value){
-    buffer[*index] = 's';
-    *index += 1;
+    buffer[(*index)++] = 's';
     marshalInt(value.size(), &buffer[*index]);
     *index += SIZE_INT;
     marshalString(value, &buffer[*index]);
