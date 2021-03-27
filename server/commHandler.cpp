@@ -64,7 +64,7 @@ void commHandler::handleAddBooking(char *buffer, int index)
         setString(buffer, &index, confirmationId);
     }
     cout << "Okay till here as well.." << endl;
-    server->sendMessage(buffer, BUFFER_SIZE);
+    server->sendMessage(buffer, index);
 }
 
 void commHandler::start()

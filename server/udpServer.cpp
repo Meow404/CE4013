@@ -45,7 +45,7 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
     return n;
 }
 
-void udpServer::sendMessage(const char *buffer, size_t bufferSize)
+void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
     cout << "Sending Message";
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);

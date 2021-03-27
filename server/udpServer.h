@@ -19,7 +19,7 @@ class udpServer
     public:
     udpServer(int port);
     int recieveMessage(char* buffer,  int bufferSize, int timeout = 0);
-    void sendMessage(const char* buffer, size_t bufferSize);
+    void sendMessage(const char* buffer, int bufferSize);
     string getClientIP();
 };
 
