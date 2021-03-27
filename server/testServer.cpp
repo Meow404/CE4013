@@ -5,7 +5,7 @@ using namespace std;
 
 // Driver code
 int main() {
-    char* message;
+    char message[1024];
     udpServer server(8080);
     server.recieveMessage(message, 1024);
     cout << "Sending : " << message << endl;
