@@ -6,7 +6,14 @@
 using namespace std;
 using namespace requests;
 
-int main() {
+int main(int argc, char *argv[]) {
+    char *hostname;
+    int portno, serverRes;
+
+    hostname = argv[0];
+    portno = atoi(argv[1]);
+    ClientSocket clientSock(hostname, portno);
+
     string promptMessage = "\nCOMMANDS\n"    \
                            "[1] Query Facility Availability\n"    \
                            "[2] Book Facility\n"    \
@@ -16,18 +23,17 @@ int main() {
                            "[6] Modify Monitor Duration\n"    \
                            "[7] Exit\n"   \
                            "Input Command: ";
-    int init_sockfd, comm_sockfd, portno;
     int command;
 
     while (command != request::EXIT) {
         cout << promptMessage << endl;
         cin >> command;
         if (command < 1 || command > 7 || cin.fail()) {
-            cout << "Invalid Command!\n";
+            perror("Invalid Command!");
             continue;
         }
 
-        char* requestMsg;
+        char *requestMsg;
         switch (command) {
             case request::QUERY:
                 requestMsg = craftQueryReq();
@@ -50,7 +56,7 @@ int main() {
                 requestMsg = craftModMonitorReq();
                 break;
             default:
-                cout << "Unknown Command" << endl;
+                perror("Unknown Command");
                 break;
         }
     }

@@ -3,6 +3,6 @@
 
 #include "proxy.h"
 
-char* craftQueryReq();
+char *craftQueryReq();
 
 #endif

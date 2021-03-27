@@ -4,8 +4,8 @@
 #include "proxy.h"
 #include "../utilities/daytime.h"
 
-char* craftNewBookingReq();
-char* craftModBookingReq();
-char* craftCancelBookingReq();
+char *craftNewBookingReq();
+char *craftModBookingReq();
+char *craftCancelBookingReq();
 
 #endif

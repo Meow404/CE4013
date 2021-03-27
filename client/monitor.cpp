@@ -10,7 +10,7 @@ using namespace std;
 /** Request Format:
  *  <facility name size><facility name>[<m_day><m_hr><m_min>]
  */
-char* craftNewMonitorReq() {
+char *craftNewMonitorReq() {
     string facilityName;
     int days, hours, minutes;
     vector<char> monitorReq;
@@ -28,11 +28,11 @@ char* craftNewMonitorReq() {
 
     monitorReq.push_back(facilityName.length());
     copy(facilityName.begin(), facilityName.end(), back_inserter(monitorReq));
-    char* dayBytes = marshalInt(days);
+    char *dayBytes = marshalInt(days);
     monitorReq.insert(monitorReq.end(), &dayBytes[0], &dayBytes[3]);
-    char* hourBytes = marshalInt(hours);
+    char *hourBytes = marshalInt(hours);
     monitorReq.insert(monitorReq.end(), &hourBytes[0], &hourBytes[3]);
-    char* minBytes = marshalInt(minutes);
+    char *minBytes = marshalInt(minutes);
     monitorReq.insert(monitorReq.end(), &minBytes[0], &minBytes[3]);
     return monitorReq.data();
 }
@@ -40,7 +40,7 @@ char* craftNewMonitorReq() {
 /** Request Format:
  *  <facility name size><facility name>[<e_day><e_hr><e_min>]
  */
-char* craftModMonitorReq() {
+char *craftModMonitorReq() {
     string facilityName;
     int days, hours, minutes;
     vector<char> modMonitorReq;
@@ -60,11 +60,11 @@ char* craftModMonitorReq() {
     copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
     modMonitorReq.push_back(facilityName.length());
     copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
-    char* dayBytes = marshalInt(days);
+    char *dayBytes = marshalInt(days);
     modMonitorReq.insert(modMonitorReq.end(), &dayBytes[0], &dayBytes[3]);
-    char* hourBytes = marshalInt(hours);
+    char *hourBytes = marshalInt(hours);
     modMonitorReq.insert(modMonitorReq.end(), &hourBytes[0], &hourBytes[3]);
-    char* minBytes = marshalInt(minutes);
+    char *minBytes = marshalInt(minutes);
     modMonitorReq.insert(modMonitorReq.end(), &minBytes[0], &minBytes[3]);
     return modMonitorReq.data();
 }
