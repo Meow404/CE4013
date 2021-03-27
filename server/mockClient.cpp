@@ -79,6 +79,7 @@ int main()
         string message;
         while (i < n)
         {
+            cout << buffer[i] << endl;
 
             switch (buffer[i++])
             {
@@ -93,6 +94,9 @@ int main()
                 message = unmarshalString(&buffer[i], num);
                 i += num;
                 cout << message << endl;
+                break;
+            default:
+                cout << "Did not recieve valid string"
                 break;
             }
         }
