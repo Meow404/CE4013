@@ -48,10 +48,10 @@ int main()
         // printf("Server : %s\n", buffer);
         int i = 0, num;
         string message;
-        while (i != n)
+        while (i < n)
         {
 
-            switch (buffer[i])
+            switch (buffer[i++])
             {
             case 'd':
                 num = unmarshalInt(&buffer[i]);
