@@ -18,9 +18,15 @@ int main()
     char hello[MAXLINE];
     struct sockaddr_in servaddr;
 
-    marshalInt(1, hello);
+    marshalInt(10, hello);
     marshalInt(15, &hello[4]);
     marshalString("HI FROM CLIENT!", &hello[8]);
+    int num = unmarshalInt(hello);
+    cout << num << endl;
+    num = unmarshalInt(&hello[4]);
+    cout << num << endl;
+    string message = unmarshalString(&hello[8], num);
+    cout << message <<endl;
     cout << hello << endl;
     // Creating socket file descriptor
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
