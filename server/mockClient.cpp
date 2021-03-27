@@ -60,7 +60,7 @@ int main()
             case 's':
                 num = unmarshalInt(&buffer[i]);
                 i += 4;
-                message = unmarshalString(&hello[i], num);
+                message = unmarshalString(&buffer[i], num);
                 i += num;
                 cout << message << endl;
                 break;
