@@ -25,7 +25,7 @@ int main()
     cout << num << endl;
     num = unmarshalInt(&hello[4]);
     cout << num << endl;
-    string message = unmarshalString(&hello[8], num);
+    message = unmarshalString(&hello[8], num);
     cout << message <<endl;
     cout << hello << endl;
     // Creating socket file descriptor
