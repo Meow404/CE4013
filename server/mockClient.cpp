@@ -73,6 +73,7 @@ int main()
         n = recvfrom(sockfd, (char *)buffer, MAXLINE,
                      MSG_WAITALL, (struct sockaddr *)&servaddr,
                      (socklen_t *)&len);
+        cout << "MESSAGE RECIEVED" <<endl;
         // buffer[n] = '\0';
         // printf("Server : %s\n", buffer);
         int i = 0, num;
@@ -84,22 +85,23 @@ int main()
             switch (buffer[i++])
             {
             case 'd':
+            {
                 num = unmarshalInt(&buffer[i]);
                 cout << num << endl;
                 i += 4;
-                break;
-            case 's':
+                break;}
+            case 's':{
                 num = unmarshalInt(&buffer[i]);
                 i += 4;
                 cout << num << endl;
                 message = unmarshalString(&buffer[i], num);
                 i += num;
                 cout << message << endl;
-                break;
-            default:
+                break;}
+            default:{
                 cout << "Did not recieve valid string";
                 i=n;
-                break;
+                break;}
             }
         }
     }
