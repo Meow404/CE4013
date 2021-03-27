@@ -95,7 +95,7 @@ void booking::extend(int days, int hours, int minutes)
 
 void booking::print()
 {
-    char buffer[20];
+    char buffer[100];
     sprintf(buffer, "%s %2d:%2d - %s %2d:%2d", daytime::convertDay(duration.startDay).c_str(), duration.startTime.hour, duration.startTime.minute, daytime::convertDay(duration.endDay).c_str(), duration.endTime.hour, duration.endTime.minute);
     cout << "confirmation ID : " << confirmationId << " - "<< buffer << endl;
 }
