@@ -100,6 +100,7 @@ void facilityManager::extendMonitorForFacility(string facilityName, string ipAdd
 
 int facilityManager::addFacilityBooking(std::string ipAddress, std::string *confirmationId, string facilityName, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute)
 {
+    cout << facilityName << endl;
     facility *facility = getFacility(facilityName);
     if (!facility)
         return 1;
