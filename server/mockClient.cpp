@@ -45,7 +45,7 @@ int main()
     string message;
     int index = 0;
     cout << "\nEnter Value : ";
-    cin >> message;
+    std::getline(std::cin, message);
 
     while(message.compare("q") != 0){
         if (isNumber(message)){
@@ -59,7 +59,7 @@ int main()
             index+=message.size();
         }
         cout << "\nEnter Value : ";
-        cin >> message;
+        std::getline(std::cin, message);
     }
 
     sendto(sockfd, (const char *)hello, index,
