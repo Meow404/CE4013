@@ -72,6 +72,7 @@ void commHandler::handleChangeBooking(char *buffer, int index)
     string confirmationId;
 
     confirmationId = getString(buffer, &index);
+    cout << "Havent reached here yet";
     days = getInt(buffer, &index);
     hours = getInt(buffer, &index);
     minutes = getInt(buffer, &index);
