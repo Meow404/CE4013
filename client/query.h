@@ -5,6 +5,6 @@
 
 #include "proxy.h"
 
-std::vector<char> craftQueryReq();
+void craftQueryReq(std::vector<char> &payload);
 
 #endif

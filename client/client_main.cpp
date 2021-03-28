@@ -4,30 +4,34 @@
 #include "client_main.h"
 
 using namespace std;
-using namespace requests;
 
 int main(int argc, char *argv[]) {
-    char *hostname;
-    int portno;
+    char *hostname, *portno;
     int res = -1;
     int reqId = 0;
     string promptMessage = "\nCOMMANDS\n"    \
                            "[1] Query Facility Availability\n"    \
                            "[2] Book Facility\n"    \
-                           "[3] Modify Booking Time\n"    \
+                           "[3] Shift Booking Time\n"    \
                            "[4] Monitor Facility Availability\n"    \
                            "[5] Cancel Booking\n"    \
-                           "[6] Modify Monitor Duration\n"    \
+                           "[6] Extend Booking Period\n"    \
                            "[7] Exit\n"   \
                            "Input Command: ";
     int command;
     char buffer[MAX_BUFFSIZE];
 
-    hostname = argv[0];
-    portno = atoi(argv[1]);
+    if (argc < 3) {
+        cout << "Usage: ./Client [SERVER_ADDRESS] [PORT]" << endl;
+        exit(1);
+    }
+
+    hostname = argv[1];
+    portno = argv[2];
+    cout << hostname << " " << portno << endl;
     ClientSocket clientSock(hostname, portno);
 
-    while (command != request::EXIT) {
+    while (command != EXIT) {
         cout << promptMessage << endl;
         cin >> command;
         if (command < 1 || command > 7 || cin.fail()) {
@@ -37,45 +41,52 @@ int main(int argc, char *argv[]) {
 
         vector<char> requestMsg, payload;
         switch (command) {
-            case request::QUERY:
-                payload = craftQueryReq();
-                // cout << payload.data() << endl;
+            case QUERY:
+                craftQueryReq(payload);
                 // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
-            case request::NEW_BOOK:
-                payload = craftNewBookingReq();
+            case NEW_BOOK:
+                craftNewBookingReq(payload);
+                cout << "PAYLOAD OUT: " << payload.data() << endl;
                 break;
-            case request::MOD_BOOK:
-                payload = craftModBookingReq();
+            case MOD_BOOK:
+                craftModBookingReq(payload);
                 break;
-            case request::NEW_MONITOR:
-                payload = craftNewMonitorReq();
+            case NEW_MONITOR:
+                craftNewMonitorReq(payload);
                 break;
-            case request::CANCEL_BOOK:
-                payload = craftCancelBookingReq();
+            case CANCEL_BOOK:
+                craftCancelBookingReq(payload);
                 break;
-            case request::MOD_MONITOR:
-                payload = craftModMonitorReq();
+            case MOD_MONITOR:
+                craftModMonitorReq(payload);
                 break;
+            case EXIT:
+                exit(1);
             default:
                 perror("Unknown Command");
                 break;
         }
 
-        requestMsg.push_back(command);
+        // requestMsg.push_back(0); // Request message type
+        cout << 1;
         requestMsg.push_back(reqId);
+        cout << 2;
+        requestMsg.push_back(command);
+        cout << 3;
         // Do we really need client to send IP and port?
-        requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
-        requestMsg.push_back(portno);
+        // requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
+        // requestMsg.push_back(portno);
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
+        cout << "REQ MESSAGE" << requestMsg.data() << endl;
 
-        while (res < 0) {
-            res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
-        }
-        res = 0;
+        res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
+        if (res < 0) exit(1);
 
         while (!res) {
             res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
+            buffer[res] = '\0';
+            cout << buffer;
         }
         handleResponse(command, buffer);
 

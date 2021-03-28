@@ -4,10 +4,9 @@
 #include <vector>
 
 #include "proxy.h"
-#include "../utilities/daytime.h"
 
-std::vector<char> craftNewBookingReq();
-std::vector<char> craftModBookingReq();
-std::vector<char> craftCancelBookingReq();
+void craftNewBookingReq(std::vector<char> &payload);
+void craftModBookingReq(std::vector<char> &payload);
+void craftCancelBookingReq(std::vector<char> &payload);
 
 #endif

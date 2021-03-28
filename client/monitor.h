@@ -3,7 +3,7 @@
 
 #include <vector>
 
-std::vector<char> craftNewMonitorReq();
-std::vector<char> craftModMonitorReq();
+void craftNewMonitorReq(std::vector<char> &payload);
+void craftModMonitorReq(std::vector<char> &payload);
 
 #endif

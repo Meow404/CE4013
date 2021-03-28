@@ -7,7 +7,7 @@
 #include "../utilities/constants.h"
 #include "../utilities/daytime.h"
 
-char *marshalInt(int toMarshal);
+void marshalInt(int toMarshal, char marshalled[4]);
 char *marshalDuration(daytime::duration dr);
 daytime::day unmarshalDay();
 daytime::time unmarshalTime();

@@ -10,10 +10,9 @@ using namespace std;
 /** Request Format:
  *  <facility name size><facility name>[<m_day><m_hr><m_min>]
  */
-vector<char> craftNewMonitorReq() {
+void craftNewMonitorReq(std::vector<char> &payload) {
     string facilityName;
     int days, hours, minutes;
-    vector<char> monitorReq;
 
     cout << "Facility Name: ";
     getline(std::cin, facilityName);
@@ -26,24 +25,25 @@ vector<char> craftNewMonitorReq() {
 
     // Input Validity check
 
-    monitorReq.push_back(facilityName.length());
-    copy(facilityName.begin(), facilityName.end(), back_inserter(monitorReq));
-    char *dayBytes = marshalInt(days);
-    monitorReq.insert(monitorReq.end(), &dayBytes[0], &dayBytes[3]);
-    char *hourBytes = marshalInt(hours);
-    monitorReq.insert(monitorReq.end(), &hourBytes[0], &hourBytes[3]);
-    char *minBytes = marshalInt(minutes);
-    monitorReq.insert(monitorReq.end(), &minBytes[0], &minBytes[3]);
-    return monitorReq;
+    char dayBytes[4];
+    char hourBytes[4];
+    char minBytes[4];
+    payload.push_back(facilityName.length());
+    copy(facilityName.begin(), facilityName.end(), back_inserter(payload));
+    marshalInt(days, dayBytes);
+    payload.insert(payload.end(), &dayBytes[0], &dayBytes[3]);
+    marshalInt(hours, hourBytes);
+    payload.insert(payload.end(), &hourBytes[0], &hourBytes[3]);
+    marshalInt(minutes, minBytes);
+    payload.insert(payload.end(), &minBytes[0], &minBytes[3]);
 }
 
 /** Request Format:
  *  <facility name size><facility name>[<e_day><e_hr><e_min>]
  */
-vector<char> craftModMonitorReq() {
+void craftModMonitorReq(std::vector<char> &payload) {
     string facilityName;
     int days, hours, minutes;
-    vector<char> modMonitorReq;
 
     cout << "Facility Name: ";
     getline(std::cin, facilityName);
@@ -56,15 +56,15 @@ vector<char> craftModMonitorReq() {
 
     // Input Validity check
 
-    modMonitorReq.push_back(facilityName.length());
-    copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
-    modMonitorReq.push_back(facilityName.length());
-    copy(facilityName.begin(), facilityName.end(), back_inserter(modMonitorReq));
-    char *dayBytes = marshalInt(days);
-    modMonitorReq.insert(modMonitorReq.end(), &dayBytes[0], &dayBytes[3]);
-    char *hourBytes = marshalInt(hours);
-    modMonitorReq.insert(modMonitorReq.end(), &hourBytes[0], &hourBytes[3]);
-    char *minBytes = marshalInt(minutes);
-    modMonitorReq.insert(modMonitorReq.end(), &minBytes[0], &minBytes[3]);
-    return modMonitorReq;
+    char dayBytes[4];
+    char hourBytes[4];
+    char minBytes[4];
+    payload.push_back(facilityName.length());
+    copy(facilityName.begin(), facilityName.end(), back_inserter(payload));
+    marshalInt(days, dayBytes);
+    payload.insert(payload.end(), &dayBytes[0], &dayBytes[3]);
+    marshalInt(hours, hourBytes);
+    payload.insert(payload.end(), &hourBytes[0], &hourBytes[3]);
+    marshalInt(minutes, minBytes);
+    payload.insert(payload.end(), &minBytes[0], &minBytes[3]);
 }

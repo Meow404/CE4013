@@ -6,19 +6,12 @@
 #define MAX_HR 23
 #define MAX_MINUTES 59
 
-namespace requests
-{  
-    enum request
-    {
-        INVALID,
-        QUERY,
-        NEW_BOOK,
-        MOD_BOOK,
-        NEW_MONITOR,
-        CANCEL_BOOK,
-        MOD_MONITOR,
-        EXIT
-    };
-}
+#define QUERY 1
+#define NEW_BOOK 2
+#define MOD_BOOK 3
+#define NEW_MONITOR 4
+#define CANCEL_BOOK 5
+#define MOD_MONITOR 6
+#define EXIT 7
 
 #endif
