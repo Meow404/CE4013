@@ -23,13 +23,13 @@ void craftNewBookingReq(vector<char> &payload) {
     int temp;
 
     cout << "Facility Name: ";
-    std::cin.ignore();
-    getline(std::cin, facilityName);
+    cin.ignore();
+    getline(cin, facilityName);
     cout << bookDaytimePrompt;
     cout << "Start Day & Time: ";
-    getline(std::cin, startDaytimeStr);
+    getline(cin, startDaytimeStr);
     cout << "End Day & Time: ";
-    getline(std::cin, endDaytimeStr);
+    getline(cin, endDaytimeStr);
 
     istringstream startStm(startDaytimeStr);
     startStm >> temp;

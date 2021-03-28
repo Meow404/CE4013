@@ -15,6 +15,7 @@ void craftNewMonitorReq(std::vector<char> &payload) {
     int days, hours, minutes;
 
     cout << "Facility Name: ";
+    cin.ignore();
     getline(std::cin, facilityName);
     cout << "No. Days to Monitor: ";
     cin >> days;
@@ -46,6 +47,7 @@ void craftModMonitorReq(std::vector<char> &payload) {
     int days, hours, minutes;
 
     cout << "Facility Name: ";
+    cin.ignore();
     getline(std::cin, facilityName);
     cout << "No. Days to Extend Monitor: ";
     cin >> days;
