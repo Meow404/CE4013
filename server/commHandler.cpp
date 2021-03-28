@@ -42,7 +42,7 @@ void commHandler::setString(char *buffer, int *index, string value)
     *index += value.size();
 }
 
-void handleGetBooking(char * buffer, int index{
+void commHandler::handleGetBooking(char * buffer, int index){
     int status, day;
     string facility_name, confirmationId;
 
