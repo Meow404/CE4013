@@ -42,6 +42,16 @@ void commHandler::setString(char *buffer, int *index, string value)
     *index += value.size();
 }
 
+void handleGetBooking(char * buffer, int index{
+    int status, day;
+    string facility_name, confirmationId;
+
+    facility_name = getString(buffer, &index);
+    day = getInt(buffer, &index);
+
+
+}
+
 void commHandler::handleAddBooking(char *buffer, int index)
 {
     int status, s_day, s_hour, s_minute, e_day, e_hour, e_minute;
@@ -129,17 +139,21 @@ void commHandler::handleCancelBooking(char *buffer, int index)
 void commHandler::start()
 {
     char buffer[BUFFER_SIZE];
-    int funNum, index;
+    int funNum, index, messageType, reqId;
     while (true)
     {
         index = 0;
         server->recieveMessage(buffer, BUFFER_SIZE);
+
+        // messageType = getInt(buffer, &index);
+        // reqId = getInt(buffer, &index);
 
         funNum = getInt(buffer, &index);
 
         switch (funNum)
         {
         case 1:
+            handleGetBooking(buffer, index);
             break;
         case 2:
             handleAddBooking(buffer, index);
