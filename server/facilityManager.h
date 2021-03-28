@@ -24,6 +24,7 @@ public:
     void printFacilities();
     facility *getFacility(std::string facilityName);
     facility *getBookingFacility(std::string bookingId);
+    std::vector<daytime::duration> getFacilityAvailability(string facilityName, int day);
     std::vector<std::vector<daytime::duration>> getFacilityAvailability(std::string facilityName, std::vector<int> days);
 
     void addMonitorForFacility(std::string facilityName, std::string ipAddress, int port, int day, int hours, int minutes);

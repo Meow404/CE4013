@@ -79,6 +79,18 @@ facility *facilityManager::getBookingFacility(std::string bookingId)
     return nullptr;
 }
 
+std::vector<daytime::duration> facilityManager::getFacilityAvailability(string facilityName, int day)
+{
+    facility *facility = getFacility(facilityName);
+    if (day < 7)
+    {
+        daytime::day day = static_cast<daytime::day>(day);
+        return facility->getAvailability(day);
+    }
+    else
+    return {};
+}
+
 std::vector<std::vector<daytime::duration>> facilityManager::getFacilityAvailability(string facilityName, vector<int> days)
 {
     std::vector<std::vector<daytime::duration>> availabilities;

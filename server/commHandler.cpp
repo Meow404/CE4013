@@ -29,27 +29,46 @@ string commHandler::getString(char *buffer, int *index)
 
 void commHandler::setInt(char *buffer, int *index, int value)
 {
-    buffer[(*index)++] = 'd';
+    // buffer[(*index)++] = 'd';
     marshalInt(value, &buffer[*index]);
     *index += SIZE_INT;
 }
 void commHandler::setString(char *buffer, int *index, string value)
 {
-    buffer[(*index)++] = 's';
+    // buffer[(*index)++] = 's';
     marshalInt(value.size(), &buffer[*index]);
     *index += SIZE_INT;
     marshalString(value, &buffer[*index]);
     *index += value.size();
 }
 
-void commHandler::handleGetBooking(char * buffer, int index){
+void commHandler::handleGetBooking(char *buffer, int index)
+{
     int status, day;
     string facility_name, confirmationId;
 
     facility_name = getString(buffer, &index);
     day = getInt(buffer, &index);
 
-
+    index = 0;
+    if (FM->isFacility(facility_name))
+    {
+        std::vector<daytime::duration> availabilities = FM->getFacilityAvailability(facility_name, day);
+        setInt(buffer, &index, 0);
+        setInt(buffer, &index, availabilities.size());
+        for (int i = 0; i < availabilities.size(); i++)
+        {
+            setInt(buffer, &index, availabilities[i].startTime.hour);
+            setInt(buffer, &index, availabilities[i].startTime.minute);
+            setInt(buffer, &index, availabilities[i].endTime.hour);
+            setInt(buffer, &index, availabilities[i].endTime.minute);
+        }
+    }
+    else
+    {
+        setInt(buffer, &index, 1);
+    }
+    server->sendMessage(buffer, index);
 }
 
 void commHandler::handleAddBooking(char *buffer, int index)
@@ -98,7 +117,6 @@ void commHandler::handleChangeBooking(char *buffer, int index)
     server->sendMessage(buffer, index);
 }
 
-
 void commHandler::handleExtendBooking(char *buffer, int index)
 {
     int status, days, hours, minutes;
@@ -120,7 +138,6 @@ void commHandler::handleExtendBooking(char *buffer, int index)
     server->sendMessage(buffer, index);
 }
 
-
 void commHandler::handleCancelBooking(char *buffer, int index)
 {
     string confirmationId;
@@ -133,8 +150,6 @@ void commHandler::handleCancelBooking(char *buffer, int index)
     setInt(buffer, &index, status);
     server->sendMessage(buffer, index);
 }
-
-
 
 void commHandler::start()
 {
