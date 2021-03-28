@@ -27,15 +27,17 @@ void craftNewBookingReq(vector<char> &payload) {
     getline(std::cin, facilityName);
     cout << bookDaytimePrompt;
     cout << "Start Day & Time: ";
-    std::cin.ignore();
     getline(std::cin, startDaytimeStr);
     cout << "End Day & Time: ";
-    std::cin.ignore();
     getline(std::cin, endDaytimeStr);
 
     istringstream startStm(startDaytimeStr);
     startStm >> temp;
     bookDayTime.startDay = daytime::getDay(temp);
+    // if (bookDayTime.startDay == daytime::INVALID) {
+    //     perror("Invalid Day!\n");
+    //     exit(1);
+    // }
     startStm >> temp;
     bookDayTime.startTime.hour = temp;
     startStm >> temp;
@@ -54,14 +56,12 @@ void craftNewBookingReq(vector<char> &payload) {
     char facNameSize[4];
     marshalInt(facilityName.length(), facNameSize);
     payload.insert(payload.end(), &facNameSize[0], &facNameSize[4]);
-
     cout << "FACILITY NAME SIZE: " << unmarshalInt(facNameSize) << endl;
-
     std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(payload));
-    char *marshalledBookDT = marshalDuration(bookDayTime);
-
-    payload.insert(payload.end(), &marshalledBookDT[0], &marshalledBookDT[23]);
-    cout << "PAYLOAD: " << payload.data() << endl;
+    
+    char marshalledBookDT[24];
+    marshalDuration(bookDayTime, marshalledBookDT);
+    payload.insert(payload.end(), &marshalledBookDT[0], &marshalledBookDT[24]);
 }
 
 /** Request Format:
