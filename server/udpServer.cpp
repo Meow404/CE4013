@@ -1,13 +1,26 @@
 #include "udpServer.h"
-#include "iostream"
-#include <arpa/inet.h>
+#include <stdio.h>
+#include <iostream>
+#include <ws2tcpip.h>
+#include <windows.h>
+// #include <arpa/inet.h>
+
+#pragma comment(lib, "ws2_32.lib") //Winsock Library
 
 using namespace std;
 
 udpServer::udpServer(int port)
 {
+
+    struct sockaddr_in server;
+    cout << "Initialising Winsock..." << endl;
+    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
+    {
+        printf("Failed. Error Code : %d", WSAGetLastError());
+    }
+
     // Creating socket file descriptor
-    if ((socketFd = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+    if ((socketFd = socket(AF_INET, SOCK_DGRAM, 0)) == INVALID_SOCKET)
     {
         perror("SOCKET CREATION FAILED");
         exit(EXIT_FAILURE);
@@ -24,9 +37,9 @@ udpServer::udpServer(int port)
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
-    char ip[16];
-    inet_ntop(AF_INET, &serverAddress, ip, 16);
-    cout << "Server Listening @ " << ip << ":" << port << endl;
+
+    char *ip = inet_ntoa(serverAddress.sin_addr);
+    cout << "Server Listening @ " << (string)ip << ":" << port << endl;
 
     clientLen = sizeof(clientAddress);
 }
@@ -42,15 +55,15 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
         setsockopt(socketFd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv));
     }
 
-    int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, (socklen_t *)&clientLen);
-    cout << "Client : " << getClientIP() << " Message : " << buffer << endl;
+    int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, &clientLen);
+    cout << "Client : " << getClientIP() << " # of bytes : " << n << endl;
 
     return n;
 }
 
 void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
-    cout << "Sending Message";
+    cout << "Sending Message to "<< getClientIP() << endl;
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
     if (n < 0)
         cout << "ERROR writing back to socket" << endl;
@@ -58,7 +71,6 @@ void udpServer::sendMessage(const char *buffer, int bufferSize)
 
 string udpServer::getClientIP()
 {
-    char ip[16];
-    inet_ntop(AF_INET, &clientAddress, ip, 16);
+    char *ip = inet_ntoa(clientAddress.sin_addr);
     return (string)ip;
 }

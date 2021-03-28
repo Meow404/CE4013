@@ -3,17 +3,24 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
 #include <string>
-#include <unistd.h>
+
+#include <WinSock2.h>
+
+// #include <sys/types.h>
+// #include <sys/socket.h>
+// #include <netinet/in.h>
+// #include <unistd.h>
+
+#pragma comment(lib,"ws2_32.lib") //Winsock Library
 
 using namespace std;
 
 class udpServer
 {
-    int socketFd, clientLen;
+    int clientLen;
+    SOCKET socketFd;
+    WSADATA wsa;
     struct sockaddr_in serverAddress, clientAddress;
 
     public:
