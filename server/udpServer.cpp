@@ -24,6 +24,9 @@ udpServer::udpServer(int port)
         perror("bind failed");
         exit(EXIT_FAILURE);
     }
+    char ip[16];
+    inet_ntop(AF_INET, &serverAddress, ip, 16);
+    cout << "Server Listening @ " << ip << ":" << port << endl;
 
     clientLen = sizeof(clientAddress);
 }
@@ -49,7 +52,8 @@ void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
     cout << "Sending Message";
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
-    if (n<0) cout << "ERROR writing back to socket" << endl;
+    if (n < 0)
+        cout << "ERROR writing back to socket" << endl;
 }
 
 string udpServer::getClientIP()
@@ -58,4 +62,3 @@ string udpServer::getClientIP()
     inet_ntop(AF_INET, &clientAddress, ip, 16);
     return (string)ip;
 }
-
