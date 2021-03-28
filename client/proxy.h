@@ -9,6 +9,8 @@
 
 void marshalInt(int toMarshal, char marshalled[4]);
 char *marshalDuration(daytime::duration dr);
+int unmarshalInt(char *message);
+
 daytime::day unmarshalDay();
 daytime::time unmarshalTime();
 daytime::duration unmarshalDuration();

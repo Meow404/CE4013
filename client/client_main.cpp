@@ -69,15 +69,18 @@ int main(int argc, char *argv[]) {
         }
 
         // requestMsg.push_back(0); // Request message type
-        cout << 1;
-        requestMsg.push_back(reqId);
-        cout << 2;
-        requestMsg.push_back(command);
-        cout << 3;
+        // requestMsg.push_back(reqId);
+        char marshalledCommand[4];
+        marshalInt(command, marshalledCommand);
+        cout << "COMMAND: " << unmarshalInt(marshalledCommand) << endl;
+        requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
+        std::cout << "LENGTH 1: " << requestMsg.size() << std::endl;
         // Do we really need client to send IP and port?
         // requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
         // requestMsg.push_back(portno);
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
+        std::cout << "LENGTH 2: " << requestMsg.size() << std::endl;
+        char *reqArr = requestMsg.data();
         cout << "REQ MESSAGE" << requestMsg.data() << endl;
 
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());

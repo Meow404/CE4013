@@ -10,11 +10,8 @@ void ClientSocket::createLocalClientAddr(char *portno) {
 
 void ClientSocket::createRemoteServerAddr(char *hostname, char *portno) {
     this->serverAddr.sin_family = AF_INET;
-    std::cout << atoi(portno) << std::endl;
     this->serverAddr.sin_port = htons(atoi(portno));
-    this->serverAddr.sin_addr.S_un.S_addr = inet_addr(hostname);
-    std::cout << hostname << " " << portno << std::endl;
-    std::cout << this->serverAddr.sin_addr.s_addr << " " << this->serverAddr.sin_port << std::endl;
+    this->serverAddr.sin_addr.s_addr = inet_addr(hostname);
 
     // int iResult = getaddrinfo(hostname, portno, &serverAddr, &result);
     // if (iResult != 0) {
@@ -46,11 +43,11 @@ ClientSocket::ClientSocket(char *hostname, char *portno) {
     createRemoteServerAddr(hostname, portno);
 
     this->clientLen = sizeof(this->clientAddr);
-    this->serverLen = sizeof(this->serverLen);
+    this->serverLen = sizeof(this->serverAddr);
 }
 
 int ClientSocket::sendMsg(char *msg, int len) {
-    std::cout << this->serverAddr.sin_addr.s_addr << " " << this->serverAddr.sin_port;
+    std::cout << "LENGTH SENT: " << len << std::endl;
     int res = sendto(this->clientSocket, msg, len, 0, (struct sockaddr *) &serverAddr, serverLen);
     if (res == SOCKET_ERROR) {
         printf("Error sending message with error code %d", WSAGetLastError());

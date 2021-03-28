@@ -51,9 +51,15 @@ void craftNewBookingReq(vector<char> &payload) {
 
     // Input Validity check
     
-    payload.push_back(facilityName.length());
+    char facNameSize[4];
+    marshalInt(facilityName.length(), facNameSize);
+    payload.insert(payload.end(), &facNameSize[0], &facNameSize[4]);
+
+    cout << "FACILITY NAME SIZE: " << unmarshalInt(facNameSize) << endl;
+
     std::copy(facilityName.begin(), facilityName.end(), std::back_inserter(payload));
     char *marshalledBookDT = marshalDuration(bookDayTime);
+
     payload.insert(payload.end(), &marshalledBookDT[0], &marshalledBookDT[23]);
     cout << "PAYLOAD: " << payload.data() << endl;
 }
