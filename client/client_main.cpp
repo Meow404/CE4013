@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
         cout << promptMessage;
         cin >> command;
         if (command < 1 || command > 7 || cin.fail()) {
-            perror("Invalid Command!");
+            cerr << "ERROR: Invalid Command!";
             continue;
         }
 
@@ -47,7 +47,6 @@ int main(int argc, char *argv[]) {
                 break;
             case NEW_BOOK:
                 craftNewBookingReq(payload);
-                cout << "PAYLOAD OUT: " << payload.data() << endl;
                 break;
             case MOD_BOOK:
                 craftModBookingReq(payload);
@@ -64,15 +63,16 @@ int main(int argc, char *argv[]) {
             case EXIT:
                 exit(1);
             default:
-                perror("Unknown Command");
+                cerr << "ERROR: Unknown Command";
                 break;
         }
+        if (payload.size() == 0) continue;
 
         // requestMsg.push_back(0); // Request message type
         // requestMsg.push_back(reqId);
         char marshalledCommand[4];
         marshalInt(command, marshalledCommand);
-        cout << "COMMAND: " << unmarshalInt(marshalledCommand) << endl;
+        // cout << "COMMAND: " << unmarshalInt(marshalledCommand) << endl;
         requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
         // Do we really need client to send IP and port?
         // requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
@@ -80,11 +80,18 @@ int main(int argc, char *argv[]) {
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
 
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
-        if (res < 0) exit(1);
+        if (res < 0) {
+            cerr << "ERROR: Failed to send request.\n";
+            continue;
+        }
 
         res == 0;
         res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
-        cout << "SIZE RECEIVED: " << res << "\nBUFFER RECEIVED: " << buffer;
+        if (res <= 0) {
+            cerr << "ERROR: Error receiving response\n";
+            continue;
+        }
+        // cout << "SIZE RECEIVED: " << res << endl;
         handleResponse(command, buffer);
 
         reqId++;

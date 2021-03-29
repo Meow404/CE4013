@@ -11,17 +11,16 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE]) {
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
-        std::cout << "BOOKING SUCCESSFUL!" << std::endl;
-        std::string confirmID = getString(buffer, &ind);
-        std::cout << "Confirmation ID: " << confirmID << std::endl;
+        std::cout << "\nBOOKING SUCCESSFUL!" << std::endl;
+        std::cout << "Confirmation ID: " << getString(buffer, &ind) << std::endl;
     } else if (resCode == 1) {
-        std::cout << "BOOKING FAILED: No facility by that name exists." << std::endl;
+        std::cout << "\nBOOKING FAILED: No facility by that name exists." << std::endl;
     } else if (resCode == 2) {
-        std::cout << "BOOKING FAILED: Facility is unavailable." << std::endl;
+        std::cout << "\nBOOKING FAILED: Facility is unavailable." << std::endl;
     } else if (resCode == 3) {
-        std::cout << "BOOKING FAILED: Invalid time values." << std::endl;
+        std::cout << "\nBOOKING FAILED: Invalid time values." << std::endl;
     } else {
-        std::cout << "Unknown Response Code " << resCode << std::endl;
+        std::cout << "\nUnknown Response Code " << resCode << std::endl;
     }
 }
 
@@ -51,7 +50,7 @@ void handleResponse(int command, char buffer[MAX_BUFFSIZE]) {
         //     handleModMonitorRes(buffer);
         //     break;
         default:
-            perror("Unknown response");
+            std::cerr << "ERROR: Unknown response" << std::endl;
             break;
     }
 }

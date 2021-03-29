@@ -29,9 +29,9 @@ void marshalDuration(daytime::duration dr, char *result) {
     marshalInt(dr.startTime.minute, min);
     marshalledDr.insert(marshalledDr.end(), &min[0], &min[4]);
 
-    std::cout << "STARTDAY: " << unmarshalInt(day) << std::endl;
-    std::cout << "STARTHOUR: " << unmarshalInt(hour) << std::endl;
-    std::cout << "STARTMIN: " << unmarshalInt(min) << std::endl;
+    // std::cout << "STARTDAY: " << unmarshalInt(day) << std::endl;
+    // std::cout << "STARTHOUR: " << unmarshalInt(hour) << std::endl;
+    // std::cout << "STARTMIN: " << unmarshalInt(min) << std::endl;
 
     marshalInt(dr.endDay, day);
     marshalledDr.insert(marshalledDr.end(), &day[0], &day[4]);
@@ -40,10 +40,10 @@ void marshalDuration(daytime::duration dr, char *result) {
     marshalInt(dr.endTime.minute, min);
     marshalledDr.insert(marshalledDr.end(), &min[0], &min[4]);
 
-    std::cout << "ENDDAY: " << unmarshalInt(day) << std::endl;
-    std::cout << "ENDHOUR: " << unmarshalInt(hour) << std::endl;
-    std::cout << "ENDMIN: " << unmarshalInt(min) << std::endl;
-    std::cout << "MARSHALLED SIZE: " << marshalledDr.size() << std::endl;
+    // std::cout << "ENDDAY: " << unmarshalInt(day) << std::endl;
+    // std::cout << "ENDHOUR: " << unmarshalInt(hour) << std::endl;
+    // std::cout << "ENDMIN: " << unmarshalInt(min) << std::endl;
+    // std::cout << "MARSHALLED SIZE: " << marshalledDr.size() << std::endl;
 
     for (int i = 0; i < marshalledDr.size(); i++) {
         result[i] = marshalledDr[i];
