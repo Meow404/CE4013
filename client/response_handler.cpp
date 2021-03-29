@@ -49,28 +49,85 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE]) {
     }
 }
 
-void handleModBookingRes(char buffer[MAX_BUFFSIZE]);
-void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]);
-void handleCancelBookingRes(char buffer[MAX_BUFFSIZE]);
-void handleModMonitorRes(char buffer[MAX_BUFFSIZE]);
+void handleShiftBookingRes(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, resCode;
+
+    resCode = getInt(buffer, &ind);
+    if (resCode == 0) {
+        cout << "\nBOOKING SHIFT SUCCESSFUL!" << endl;
+    } else if (resCode == 1) {
+        cout << "\nBOOKING SHIFT FAILED: No such confirmation ID." << endl;
+    } else if (resCode == 2) {
+        cout << "\nBOOKING SHIFT FAILED: Facility is unavailable." << endl;
+    } else if (resCode == 3) {
+        cout << "\nBOOKING FAILED FAILED: Invalid time values." << endl;
+    } else {
+        cout << "\nUnknown Response Code " << resCode << endl;
+    }
+}
+
+void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, resCode;
+
+    resCode = getInt(buffer, &ind);
+    if (resCode == 0) {
+        cout << "\nMONITORING SUCCESSFUL!" << endl;
+    } else if (resCode == 1) {
+        cout << "\nMONITORING FAILED: No such facility." << endl;
+    } else if (resCode == 2) {
+        cout << "\nMONITORING FAILED: Invalid time values." << endl;
+    } else {
+        cout << "\nUnknown Response Code " << resCode << endl;
+    }
+}
+
+void handleCancelBookingRes(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, resCode;
+
+    resCode = getInt(buffer, &ind);
+    if (resCode == 0) {
+        cout << "\nBOOKING SUCCESSFULLY CANCELLED" << endl;
+    } else if (resCode == 1) {
+        cout << "\nBOOKING CANCEL FAILED: No such confirmation ID." << endl;
+    } else {
+        cout << "\nUnknown Response Code " << resCode << endl;
+    }
+}
+
+void handleExtendBookingRes(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, resCode;
+
+    resCode = getInt(buffer, &ind);
+    if (resCode == 0) {
+        cout << "\nBOOKING EXTEND SUCCESSFUL!" << endl;
+    } else if (resCode == 1) {
+        cout << "\nBOOKING EXTEND FAILED: No such confirmation ID." << endl;
+    } else if (resCode == 2) {
+        cout << "\nBOOKING EXTEND FAILED: Facility is unavailable." << endl;
+    } else if (resCode == 3) {
+        cout << "\nBOOKING EXTEND FAILED: Invalid time values." << endl;
+    } else {
+        cout << "\nUnknown Response Code " << resCode << endl;
+    }
+}
 
 void handleResponse(int command, char buffer[MAX_BUFFSIZE]) {
     switch (command) {
         case NEW_BOOK:
             handleNewBookingRes(buffer);
             break;
-        // case MOD_BOOK:
-        //     handleModBookingRes(buffer);
-        //     break;
-        // case NEW_MONITOR:
-        //     handleNewMonitorRes(buffer);
-        //     break;
-        // case CANCEL_BOOK:
-        //     handleCancelBookingRes(buffer);
-        //     break;
-        // case MOD_MONITOR:
-        //     handleModMonitorRes(buffer);
-        //     break;
+        case SHIFT_BOOK:
+            handleShiftBookingRes(buffer);
+            break;
+        case NEW_MONITOR:
+            handleNewMonitorRes(buffer);
+            break;
+        case CANCEL_BOOK:
+            handleCancelBookingRes(buffer);
+            break;
+        case EXTEND_BOOK:
+            handleExtendBookingRes(buffer);
+            break;
         default:
             std::cerr << "ERROR: Unknown response" << std::endl;
             break;

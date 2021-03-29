@@ -4,6 +4,5 @@
 #include <vector>
 
 void craftNewMonitorReq(std::vector<char> &payload);
-void craftModMonitorReq(std::vector<char> &payload);
 
 #endif

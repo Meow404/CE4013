@@ -58,8 +58,8 @@ int main(int argc, char *argv[]) {
             case NEW_BOOK:
                 craftNewBookingReq(payload);
                 break;
-            case MOD_BOOK:
-                craftModBookingReq(payload);
+            case SHIFT_BOOK:
+                craftShiftBookingReq(payload);
                 break;
             case NEW_MONITOR:
                 craftNewMonitorReq(payload);
@@ -67,8 +67,8 @@ int main(int argc, char *argv[]) {
             case CANCEL_BOOK:
                 craftCancelBookingReq(payload);
                 break;
-            case MOD_MONITOR:
-                craftModMonitorReq(payload);
+            case EXTEND_BOOK:
+                craftExtendBookingReq(payload);
                 break;
             case EXIT:
                 exit(1);

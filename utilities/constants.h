@@ -8,10 +8,10 @@
 
 #define QUERY 1
 #define NEW_BOOK 2
-#define MOD_BOOK 3
+#define SHIFT_BOOK 3
 #define NEW_MONITOR 4
 #define CANCEL_BOOK 5
-#define MOD_MONITOR 6
+#define EXTEND_BOOK 6
 #define EXIT 7
 
 #endif

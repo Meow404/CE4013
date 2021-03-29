@@ -102,9 +102,9 @@ void craftNewBookingReq(vector<char> &payload) {
 /** Request Format:
  *  <confirmationID>[<c_day><c_hr><c_min>]
  */
-void craftModBookingReq(vector<char> &payload) {
+void craftShiftBookingReq(vector<char> &payload) {
     char confirmID[26];
-    char dayOffset, hourOffset, minOffset;
+    int dayOffset, hourOffset, minOffset;
 
     cout << "Confirmation ID: ";
     cin >> confirmID;
@@ -120,13 +120,13 @@ void craftModBookingReq(vector<char> &payload) {
     char day[4];
     char hour[4];
     char min[4];
-    payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH-1]);
+    payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
     marshalInt(dayOffset, day);
-    payload.insert(payload.end(), &day[0], &day[3]);
+    payload.insert(payload.end(), &day[0], &day[4]);
     marshalInt(hourOffset, hour);
-    payload.insert(payload.end(), &hour[0], &hour[3]);
+    payload.insert(payload.end(), &hour[0], &hour[4]);
     marshalInt(minOffset, min);
-    payload.insert(payload.end(), &min[0], &min[3]);
+    payload.insert(payload.end(), &min[0], &min[4]);
 }
 
 /** Request Format:
@@ -139,5 +139,35 @@ void craftCancelBookingReq(vector<char> &payload) {
 
     // Input Validity check
 
-    payload.insert(payload.end(), &confirmID[0], &confirmID[25]);
+    payload.insert(payload.end(), &confirmID[0], &confirmID[26]);
+}
+
+/** Request Format:
+ *  <confirmationID>[<e_day><e_hr><e_min>]
+ */
+void craftExtendBookingReq(std::vector<char> &payload) {
+    char confirmID[26];
+    int dayOffset, hourOffset, minOffset;
+
+    cout << "Confirmation ID: ";
+    cin >> confirmID;
+    cout << "No. Days to Move Booking: ";
+    cin >> dayOffset;
+    cout << "No. Hours to Move Booking: ";
+    cin >> hourOffset;
+    cout << "No. Min to Move Booking: ";
+    cin >> minOffset;
+
+    // Input Validity check
+
+    char day[4];
+    char hour[4];
+    char min[4];
+    payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
+    marshalInt(dayOffset, day);
+    payload.insert(payload.end(), &day[0], &day[4]);
+    marshalInt(hourOffset, hour);
+    payload.insert(payload.end(), &hour[0], &hour[4]);
+    marshalInt(minOffset, min);
+    payload.insert(payload.end(), &min[0], &min[4]);
 }

@@ -6,7 +6,8 @@
 #include "proxy.h"
 
 void craftNewBookingReq(std::vector<char> &payload);
-void craftModBookingReq(std::vector<char> &payload);
+void craftShiftBookingReq(std::vector<char> &payload);
 void craftCancelBookingReq(std::vector<char> &payload);
+void craftExtendBookingReq(std::vector<char> &payload);
 
 #endif
