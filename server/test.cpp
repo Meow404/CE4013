@@ -16,7 +16,7 @@ using namespace std;
 int main()
 {
     facilityManager FM("facilities.txt");
-    udpServer server(8080);
+    udpServer server(8080, AT_MOST_ONCE);
     commHandler cm(&server, &FM);
     cm.start();
 

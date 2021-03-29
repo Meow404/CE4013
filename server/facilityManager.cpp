@@ -82,10 +82,10 @@ facility *facilityManager::getBookingFacility(std::string bookingId)
 std::vector<daytime::duration> facilityManager::getFacilityAvailability(string facilityName, int day)
 {
     facility *facility = getFacility(facilityName);
-    if (day < 7)
+    if (facility && day < 7)
     {
         daytime::day b_day = static_cast<daytime::day>((int)day);
-        cout << "Sending Bookings of " << daytime::convertDay(b_day);
+        cout << "Sending Bookings of " << daytime::convertDay(b_day) << endl;
         return facility->getAvailability(b_day);
     }
     else
