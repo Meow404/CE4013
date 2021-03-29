@@ -32,7 +32,7 @@ struct request_reply{
 
 class udpServer
 {
-    int clientLen, timeout;
+    int clientLen, timeout, port;
     SOCKET socketFd;
     WSADATA wsa;
     bool atMostOnce, atLeastOnce;
@@ -43,9 +43,12 @@ class udpServer
     udpServer(int port, bool invocation);
     int recieveMessage(char* buffer,  int bufferSize, int timeout = 0);
     void sendMessage(const char* buffer, int bufferSize);
+    void sendMessageToClient(const char* buffer, int bufferSize, sockaddr_in clientAddress);
     void addReply(int reqId, char* buffer, int bufferSize);
     bool resendReply(int reqId);
     string getClientIP();
+    int getClientPort();
+    struct sockaddr_in getClientSocketAddress();
 };
 
 #endif

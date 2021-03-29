@@ -2,17 +2,19 @@
 #define MONITOR
 
 #include "daytime.h"
+#include "string"
+#include <WinSock2.h>
 
 class monitor
 {
     daytime::duration duration;
-    char* ipAddress;
-    int port;
+    struct sockaddr_in clientAddress;
 
     public:
-    monitor(char* ipAddress, int port, daytime::duration duration);
-    char* getIpAddress();
-    int getPort();
+    monitor(struct sockaddr_in clientAddress, daytime::duration duration);
+    struct sockaddr_in getSocketAddress();
+    std::string getIpAddress();
+    daytime::duration getDuration();
     void extend(int days, int hours, int minutes);
 };
 

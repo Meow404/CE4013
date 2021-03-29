@@ -5,6 +5,8 @@
 #include "booking.h"
 #include "vector"
 #include "string"
+#include "daytime.h"
+#include "monitor.h"
 #include <fstream>
 #include <sstream>
 #include "vector"
@@ -24,16 +26,16 @@ public:
     void printFacilities();
     facility *getFacility(std::string facilityName);
     facility *getBookingFacility(std::string bookingId);
-    std::vector<daytime::duration> getFacilityAvailability(std::string facilityName, int day);
-    std::vector<std::vector<daytime::duration>> getFacilityAvailability(std::string facilityName, std::vector<int> days);
+    std::vector<daytime::duration> getFacilityAvailability(facility* facility, int day);
+    std::vector<std::vector<daytime::duration>> getFacilityAvailability(facility* facility, std::vector<int> days);
 
-    void addMonitorForFacility(std::string facilityName, std::string ipAddress, int port, int day, int hours, int minutes);
-    void extendMonitorForFacility(std::string facilityName, std::string ipAddress, int port, int day, int hours, int minutes);
+    int addMonitorForFacility(facility* facility, struct sockaddr_in clientAddress, int day, int hours, int minutes);
+    int extendMonitorForFacility(facility* facility, std::string ipAddress, int day, int hours, int minutes);
 
-    int addFacilityBooking(std::string ipAddress, std::string *confirmationId, std::string facilityName, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute);
-    int changeFacilityBooking(std::string ipAddress, std::string *confirmationId, int day, int hours, int minutes);
-    int extendFacilityBooking(std::string ipAddress, std::string *confirmationId, int day, int hours, int minutes);
-    bool cancelFacilityBooking(std::string confirmationId);
+    int addFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute);
+    int changeFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int day, int hours, int minutes);
+    int extendFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int day, int hours, int minutes);
+    bool cancelFacilityBooking(std::string confirmationId, facility* facility);
 };
 
 #endif
