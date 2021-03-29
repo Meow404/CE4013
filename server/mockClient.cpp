@@ -15,7 +15,7 @@ bool isNumber(string s)
     for (int i = 0; i < s.length(); i++)
         if (isdigit(s[i]) == false)
             return false;
- 
+
     return true;
 }
 
@@ -40,7 +40,7 @@ int main()
     host = gethostbyname("localhost");
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
-    servaddr.sin_addr = *(struct in_addr *) (host->h_addr);
+    servaddr.sin_addr = *(struct in_addr *)(host->h_addr);
 
     int n, len;
 
@@ -49,16 +49,19 @@ int main()
     cout << "\nEnter Value : ";
     std::getline(std::cin, message);
 
-    while(message.compare("q") != 0){
-        if (message.size() < 6 && isNumber(message)){
+    while (message.compare("q") != 0)
+    {
+        if (message.size() < 6 && isNumber(message))
+        {
             marshalInt(stoi(message), &hello[index]);
-            index+=4;
+            index += 4;
         }
-        else{
+        else
+        {
             marshalInt(message.size(), &hello[index]);
-            index+=4;
+            index += 4;
             marshalString(message, &hello[index]);
-            index+=message.size();
+            index += message.size();
         }
         cout << "\nEnter Value : ";
         std::getline(std::cin, message);
@@ -71,15 +74,15 @@ int main()
 
     while (true)
     {
-        cout << "Eaiting for message ..." <<endl;
+        cout << "Eaiting for message ..." << endl;
 
         n = recvfrom(sockfd, (char *)buffer, MAXLINE,
                      0, (struct sockaddr *)&servaddr,
                      (socklen_t *)&len);
-        cout << "MESSAGE RECIEVED " <<n<<" bytes"<<endl;
+        cout << "MESSAGE RECIEVED " << n << " bytes" << endl;
         // buffer[n] = '\0';
         // printf("Server : %s\n", buffer);
-        int i = 0, num;
+        int i = 0, num, date[4];
         string message;
         while (i < n)
         {
@@ -92,19 +95,37 @@ int main()
                 num = unmarshalInt(&buffer[i]);
                 cout << num << endl;
                 i += 4;
-                break;}
-            case 's':{
+                break;
+            }
+            case 's':
+            {
                 num = unmarshalInt(&buffer[i]);
                 i += 4;
                 cout << num << endl;
                 message = unmarshalString(&buffer[i], num);
                 i += num;
                 cout << message << endl;
-                break;}
-            default:{
+                break;
+            }
+            case 't':
+            {
+                date[0] = unmarshalInt(&buffer[i]);
+                i += 4;
+                date[1] = unmarshalInt(&buffer[i]);
+                i += 4;
+                date[2] = unmarshalInt(&buffer[i]);
+                i += 4;
+                date[3] = unmarshalInt(&buffer[i]);
+                i += 4;
+                cout << date[0] << ":" << date[1] << " - " << date[0] << ":" << date[1] << endl;
+                break;
+            }
+            default:
+            {
                 cout << "Did not recieve valid string";
-                i=n;
-                break;}
+                i = n;
+                break;
+            }
             }
         }
     }
