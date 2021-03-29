@@ -21,6 +21,8 @@ int main(int argc, char *argv[]) {
                            "Input Command: ";
     int command;
     char buffer[MAX_BUFFSIZE];
+    char marshalledMsgType[4];
+    marshalInt(0, marshalledMsgType);
 
     if (argc != 3) {
         cout << "Usage: ./Client [SERVER_ADDRESS] [PORT]" << endl;
@@ -78,8 +80,11 @@ int main(int argc, char *argv[]) {
         }
         if (payload.empty()) continue;
 
-        // requestMsg.push_back(0); // Request type message
-        // requestMsg.push_back(reqId);
+        requestMsg.insert(requestMsg.end(), &marshalledMsgType[0], &marshalledMsgType[4]); // Request type message
+        char marshalledReqId[4];
+        marshalInt(reqId, marshalledReqId);
+        requestMsg.insert(requestMsg.end(), &marshalledReqId[0], &marshalledReqId[4]);
+
         char marshalledCommand[4];
         marshalInt(command, marshalledCommand);
         requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
@@ -106,6 +111,7 @@ int main(int argc, char *argv[]) {
             handleResponse(command, buffer);
         }
         if (!queryDays.empty()) {
+            reqId++;
             goto nextQuery;
         }
 
