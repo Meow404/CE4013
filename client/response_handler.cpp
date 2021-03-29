@@ -55,6 +55,7 @@ void handleShiftBookingRes(char buffer[MAX_BUFFSIZE]) {
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
         cout << "\nBOOKING SHIFT SUCCESSFUL!" << endl;
+        cout << "New Confirmation ID: " << getString(buffer, &ind) << endl;
     } else if (resCode == 1) {
         cout << "\nBOOKING SHIFT FAILED: No such confirmation ID." << endl;
     } else if (resCode == 2) {
@@ -100,6 +101,7 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE]) {
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
         cout << "\nBOOKING EXTEND SUCCESSFUL!" << endl;
+        cout << "Confirmation ID: " << getString(buffer, &ind) << endl;
     } else if (resCode == 1) {
         cout << "\nBOOKING EXTEND FAILED: No such confirmation ID." << endl;
     } else if (resCode == 2) {

@@ -108,13 +108,13 @@ void craftShiftBookingReq(vector<char> &payload) {
 
     cout << "Confirmation ID: ";
     cin >> confirmID;
-    cout << "No. Days to Move Booking: ";
+    cout << "No. Days to Shift Booking: ";
     cin >> dayOffset;
     if (cin.fail()) return;
-    cout << "No. Hours to Move Booking: ";
+    cout << "No. Hours to Shift Booking: ";
     cin >> hourOffset;
     if (cin.fail()) return;
-    cout << "No. Min to Move Booking: ";
+    cout << "No. Min to Shift Booking: ";
     cin >> minOffset;
     if (cin.fail()) return;
 
@@ -125,10 +125,15 @@ void craftShiftBookingReq(vector<char> &payload) {
         return;
     }
 
+    char cidLen[4];
     char day[4];
     char hour[4];
     char min[4];
+
+    marshalInt(26, cidLen);
+    payload.insert(payload.end(), &cidLen[0], &cidLen[4]);
     payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
+
     marshalInt(dayOffset, day);
     payload.insert(payload.end(), &day[0], &day[4]);
     marshalInt(hourOffset, hour);
@@ -145,9 +150,10 @@ void craftCancelBookingReq(vector<char> &payload) {
     cout << "Confirmation ID: ";
     cin >> confirmID;
 
-    // Input Validity check
-
-    payload.insert(payload.end(), &confirmID[0], &confirmID[26]);
+    char cidLen[4];
+    marshalInt(26, cidLen);
+    payload.insert(payload.end(), &cidLen[0], &cidLen[4]);
+    payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
 }
 
 /** Request Format:
@@ -159,13 +165,13 @@ void craftExtendBookingReq(std::vector<char> &payload) {
 
     cout << "Confirmation ID: ";
     cin >> confirmID;
-    cout << "No. Days to Move Booking: ";
+    cout << "No. Days to Extend Booking: ";
     cin >> dayOffset;
     if (cin.fail()) return;
-    cout << "No. Hours to Move Booking: ";
+    cout << "No. Hours to Extend Booking: ";
     cin >> hourOffset;
     if (cin.fail()) return;
-    cout << "No. Min to Move Booking: ";
+    cout << "No. Min to Extend Booking: ";
     cin >> minOffset;
     if (cin.fail()) return;
 
@@ -176,10 +182,15 @@ void craftExtendBookingReq(std::vector<char> &payload) {
         return;
     }
 
+    char cidLen[4];
     char day[4];
     char hour[4];
     char min[4];
+
+    marshalInt(26, cidLen);
+    payload.insert(payload.end(), &cidLen[0], &cidLen[4]);
     payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
+
     marshalInt(dayOffset, day);
     payload.insert(payload.end(), &day[0], &day[4]);
     marshalInt(hourOffset, hour);
