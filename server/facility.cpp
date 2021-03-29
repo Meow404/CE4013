@@ -42,17 +42,18 @@ bool facility::isBooking(string bookingId)
     return false;
 }
 
-booking *facility::getBooking(string* bookingId)
+booking *facility::getBooking(string *bookingId)
 {
-    cout<<bookings.size()<<endl;
+    cout << bookings.size() << endl;
     for (int i = 0; i < 7; i++)
-    {cout<<"i = "<<i<<" size : "<<bookings[i].size()<<endl;
+    {
+        cout << "i = " << i << " size : " << bookings[i].size() << endl;
         for (int j = 0; j < bookings[i].size(); j++)
-            {
+        {
             bookings[i][j]->print();
             if (bookings[i][j]->getConfirmationId().compare(*bookingId) == 0)
                 return bookings[i][j];
-            }
+        }
     }
     return nullptr;
 }
@@ -192,13 +193,15 @@ string facility::addBooking(booking *new_booking)
 
         // day_bookings = getBookings(day);
         int i = 0;
-        for (; i < bookings[day].size(); i++){
+        for (; i < bookings[day].size(); i++)
+        {
             daytime::duration b_duration = bookings[day][i]->getDuration();
             if (b_duration.startDay == day)
-                if (b_duration.startTime.hour > end.hour || (b_duration.startTime.hour == end.hour && b_duration.startTime.minute > end.minute))
+                if (b_duration.startTime.hour > end.hour || (b_duration.startTime.hour == end.hour && b_duration.startTime.minute >= end.minute))
                     break;
         }
-        bookings[day].insert( bookings[day].begin() + i, new_booking);
+        cout << "Adding booking @ " << i << endl;
+        bookings[day].insert(bookings[day].begin() + i, new_booking);
         // updateBookings(day, day_bookings);
 
         day = static_cast<daytime::day>((day + 1) % 7);
@@ -249,7 +252,7 @@ bool facility::cancelBooking(string bookingId)
     return bookingCancelled;
 }
 
-bool facility::changeBooking(string ipAddress, string* bookingId, int days, int hours, int minutes)
+bool facility::changeBooking(string ipAddress, string *bookingId, int days, int hours, int minutes)
 {
     cout << "CHANGE BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -259,7 +262,7 @@ bool facility::changeBooking(string ipAddress, string* bookingId, int days, int 
         // cout << "change Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
         booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
         new_booking->change(days, hours, minutes);
-        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) <<endl;
+        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
         if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {
@@ -277,7 +280,7 @@ bool facility::changeBooking(string ipAddress, string* bookingId, int days, int 
     return true;
 }
 
-bool facility::extendBooking(string ipAddress, string* bookingId, int days, int hours, int minutes)
+bool facility::extendBooking(string ipAddress, string *bookingId, int days, int hours, int minutes)
 {
     cout << "EXTEND BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -287,7 +290,7 @@ bool facility::extendBooking(string ipAddress, string* bookingId, int days, int 
         // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
         booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
         new_booking->extend(days, hours, minutes);
-        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) <<endl;
+        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
         if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {
@@ -306,7 +309,8 @@ bool facility::extendBooking(string ipAddress, string* bookingId, int days, int 
 
 void facility::printBookings()
 {
-    cout << "Facility : " << name <<  " | " << convertFacilityType(type) << endl;;
+    cout << "Facility : " << name << " | " << convertFacilityType(type) << endl;
+    ;
     char buffer[40];
     for (int i = 0; i < 7; i++)
     {
@@ -319,7 +323,8 @@ void facility::printBookings()
     }
 }
 
-string convertFacilityType(facilityType ftype){
+string convertFacilityType(facilityType ftype)
+{
     switch (ftype)
     {
     case facilityType::LECTURE_THEATRE:
@@ -337,13 +342,59 @@ string convertFacilityType(facilityType ftype){
 
 void facility::addMonitor(monitor monitor)
 {
+    monitors.push_back(monitor);
 }
 std::vector<monitor> facility::getMonitors()
 {
+    updateMonitors();
+    return monitors;
 }
+
+void facility::updateMonitors()
+{
+
+    for (int i = 0; i < monitors.size(); i++)
+    {
+        daytime::day today = daytime::getDay();
+        daytime::duration duration = monitors[i].getDuration();
+        daytime::day day = duration.startDay, end = duration.endDay;
+        bool remove = true;
+
+        do
+        {
+            if (day == today)
+            {
+                daytime::time time = daytime::getTime();
+                if (time.hour < duration.endTime.hour || (time.hour == duration.endTime.hour && time.minute < duration.endTime.minute))
+                    remove = false;
+                break;
+            }
+
+            day = static_cast<daytime::day>((day + 1) % 7);
+        } while (day != (end + 1) % 7);
+
+        if (remove)
+        {
+            cout << "removing monitor : " << monitors[i].getIpAddress() << " as monitor time ended." << endl;
+            monitors.erase(monitors.begin() + i);
+            i--;
+        }
+    }
+}
+
 bool facility::isMonitor(string ipAddress)
 {
+    updateMonitors();
+    for (int i = 0; i < monitors.size(); i++)
+        if (monitors[i].getIpAddress().compare(ipAddress) == 0)
+            return true;
+    return false;
 }
+
 monitor facility::getMonitor(string ipAddress)
 {
+    updateMonitors();
+    for (int i = 0; i < monitors.size(); i++)
+        if (monitors[i].getIpAddress().compare(ipAddress) == 0)
+            return monitors[i];
 }

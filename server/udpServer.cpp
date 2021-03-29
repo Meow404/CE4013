@@ -10,6 +10,7 @@ udpServer::udpServer(int port, bool invocation)
 
     atMostOnce = invocation;
     atLeastOnce = !invocation;
+    this->port = port;
 
     cout << "Initialising Winsock..." << endl;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -53,13 +54,25 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
         setsockopt(socketFd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv));
     }
 
-    int n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, &clientLen);
+    int n;
+    do
+    {
+        n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, &clientLen);
+    } while (n == -1);
     cout << "Client : " << getClientIP() << " # of bytes : " << n << endl;
 
     return n;
 }
 
 void udpServer::sendMessage(const char *buffer, int bufferSize)
+{
+    cout << "Sending Message to " << getClientIP() << endl;
+    int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
+    if (n < 0)
+        cout << "ERROR writing back to socket" << endl;
+}
+
+void udpServer::sendMessageToClient(const char *buffer, int bufferSize, sockaddr_in clientAddress)
 {
     cout << "Sending Message to " << getClientIP() << endl;
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
@@ -101,10 +114,20 @@ bool udpServer::resendReply(int reqId)
         for (int i = replies.size() - 1; i >= 0; i--)
             if (replies[i].clientIp.compare(getClientIP()) == 0 && replies[i].reqId == reqId)
             {
-                sendMessage(replies[i].reply.c_str(), replies[i].replySize);
                 cout << "Resending reply ... ";
+                sendMessage(replies[i].reply.c_str(), replies[i].replySize);
                 return true;
             }
     }
     return false;
+}
+
+int udpServer::getClientPort()
+{
+    return port;
+}
+
+struct sockaddr_in udpServer::getClientSocketAddress()
+{
+    return clientAddress;
 }

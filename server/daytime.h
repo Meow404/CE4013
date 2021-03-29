@@ -2,6 +2,7 @@
 #define DAYTIME
 
 #include "string"
+#include "chrono"
 
 namespace daytime
 {
@@ -34,6 +35,8 @@ namespace daytime
     };
 
     std::string getDurationStr(duration duration);
+    time getTime();
+    day getDay();
 }
 
 #endif

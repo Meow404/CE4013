@@ -53,6 +53,7 @@ public:
 
     void addMonitor(monitor monitor);
     std::vector<monitor> getMonitors();
+    void updateMonitors();
     bool isMonitor(std::string ipAddress);
     monitor getMonitor(std::string ipAddress);
 };
