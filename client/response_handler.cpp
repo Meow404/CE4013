@@ -19,11 +19,9 @@ void handleQueryRes(char buffer[MAX_BUFFSIZE]) {
         for (int i = 0; i < numFreeSlots; i++) {
             getDurationTimeOnly(buffer, &ind, &resDuration);
             cout << daytime::getDayStr(resDuration.startDay) << " ";
-            cout << resDuration.startTime.hour << ":";
-            cout << resDuration.startTime.minute << " - ";
-            cout << daytime::getDayStr(resDuration.endDay) << " ";
-            cout << resDuration.endTime.hour << ":";
-            cout << resDuration.endTime.minute << endl;
+            printf("%02d:%02d - %02d:%02d\n",
+                    resDuration.startTime.hour, resDuration.startTime.minute,
+                    resDuration.endTime.hour, resDuration.endTime.minute);
         }
     } else if (resCode == 1) {
         cout << "\nQUERY FAILED: No facility by that name exists." << endl;
