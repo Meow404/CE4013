@@ -53,29 +53,19 @@ void marshalDuration(daytime::duration dr, char *result) {
 void unmarshalDuration(char *marshalled, daytime::duration *result) {
     int ind = 0;
     result->startDay = daytime::getDay(getInt(marshalled, &ind));
-    std::cout << "IND 1: " << ind << std::endl;
     result->startTime.hour = getInt(marshalled, &ind);
-    std::cout << "IND 2: " << ind << std::endl;
     result->startTime.minute = getInt(marshalled, &ind);
-    std::cout << "IND 3: " << ind << std::endl;
     result->endDay = daytime::getDay(getInt(marshalled, &ind));
-    std::cout << "IND 4: " << ind << std::endl;
     result->endTime.hour = getInt(marshalled, &ind);
-    std::cout << "IND 5: " << ind << std::endl;
     result->endTime.minute = getInt(marshalled, &ind);
-    std::cout << "IND 6: " << ind << std::endl;
 }
 
 void unmarshalDurationTimeOnly(char *marshalled, daytime::duration *result) {
     int ind = 0;
     result->startTime.hour = getInt(marshalled, &ind);
-    std::cout << "IND 1: " << ind << std::endl;
     result->startTime.minute = getInt(marshalled, &ind);
-    std::cout << "IND 2: " << ind << std::endl;
     result->endTime.hour = getInt(marshalled, &ind);
-    std::cout << "IND 3: " << ind << std::endl;
     result->endTime.minute = getInt(marshalled, &ind);
-    std::cout << "IND 4: " << ind << std::endl;
 }
 
 int getInt(char *buffer, int *index)
@@ -83,7 +73,6 @@ int getInt(char *buffer, int *index)
     int value = unmarshalInt(&buffer[*index]);
     *index += 4;
 
-    std::cout << value << std::endl;
     return value;
 }
 
@@ -95,34 +84,19 @@ std::string getString(char *buffer, int *index)
     std::string value = unmarshalString(&buffer[*index], size);
     *index += size;
 
-    std::cout << value << std::endl;
     return value;
 }
 
 void getDuration(char *buffer, int *index, daytime::duration *destination) {
-    std::cout << "INDEX FROM ABOVE 1: " << *index << std::endl;
     int size = 24;
     unmarshalDuration(&buffer[*index], destination);
     *index += size;
-    std::cout << "UNMAR START DAY: " << destination->startDay << std::endl;
-    std::cout << "UNMAR START HOUR: " << destination->startTime.hour << std::endl;
-    std::cout << "UNMAR START MIN: " << destination->startTime.minute << std::endl;
-    std::cout << "UNMAR END DAY: " << destination->endDay << std::endl;
-    std::cout << "UNMAR END HOUR: " << destination->endTime.hour << std::endl;
-    std::cout << "UNMAR END MIN: " << destination->endTime.minute << std::endl;
-    std::cout << "INDEX FROM ABOVE 2: " << *index << std::endl;
 }
 
 void getDurationTimeOnly(char *buffer, int *index, daytime::duration *destination) {
-    std::cout << "INDEX FROM ABOVE 1: " << *index << std::endl;
     int size = 16;
     unmarshalDurationTimeOnly(&buffer[*index], destination);
     *index += size;
-    std::cout << "UNMAR START HOUR: " << destination->startTime.hour << std::endl;
-    std::cout << "UNMAR START MIN: " << destination->startTime.minute << std::endl;
-    std::cout << "UNMAR END HOUR: " << destination->endTime.hour << std::endl;
-    std::cout << "UNMAR END MIN: " << destination->endTime.minute << std::endl;
-    std::cout << "INDEX FROM ABOVE 2: " << *index << std::endl;
 }
 
 daytime::day unmarshalDay();

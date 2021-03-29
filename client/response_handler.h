@@ -3,7 +3,7 @@
 
 #include "../utilities/constants.h"
 
-void handleQueryRes(char buffer[MAX_BUFFSIZE]);
+void handleQueryRes(int day, char buffer[MAX_BUFFSIZE]);
 void handleNewBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleModBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]);

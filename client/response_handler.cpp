@@ -6,19 +6,18 @@
 
 using namespace std;
 
-void handleQueryRes(char buffer[MAX_BUFFSIZE]) {
+void handleQueryRes(int day, char buffer[MAX_BUFFSIZE]) {
     int ind = 0, resCode;
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
         int numFreeSlots = getInt(buffer, &ind);
         struct daytime::duration resDuration;
-        resDuration.startDay = daytime::day::MONDAY;
-        resDuration.endDay = daytime::day::MONDAY;
-        cout << "UNAVAILABLE SLOTS:" << endl;
+        resDuration.startDay = daytime::getDay(day);
+        resDuration.endDay = daytime::getDay(day);
+        cout << endl << daytime::getDayStr(resDuration.startDay) << " Availability:" << endl;
         for (int i = 0; i < numFreeSlots; i++) {
             getDurationTimeOnly(buffer, &ind, &resDuration);
-            cout << daytime::getDayStr(resDuration.startDay) << " ";
             printf("%02d:%02d - %02d:%02d\n",
                     resDuration.startTime.hour, resDuration.startTime.minute,
                     resDuration.endTime.hour, resDuration.endTime.minute);
@@ -57,9 +56,6 @@ void handleModMonitorRes(char buffer[MAX_BUFFSIZE]);
 
 void handleResponse(int command, char buffer[MAX_BUFFSIZE]) {
     switch (command) {
-        case QUERY:
-            handleQueryRes(buffer);
-            break;
         case NEW_BOOK:
             handleNewBookingRes(buffer);
             break;

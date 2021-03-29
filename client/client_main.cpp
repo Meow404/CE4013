@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <deque>
 
 #include "client_main.h"
 
@@ -40,9 +41,18 @@ int main(int argc, char *argv[]) {
         }
 
         vector<char> requestMsg, payload;
+        deque<int> queryDays;
+        int day;
+        string facilityName;
         switch (command) {
             case QUERY:
-                craftQueryReq(payload);
+                getQueryInput(facilityName, queryDays);
+                nextQuery:
+                requestMsg.clear();
+                payload.clear();
+                day = queryDays.front();
+                craftQueryReq(payload, facilityName, day);
+                queryDays.pop_front();
                 // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
             case NEW_BOOK:
@@ -68,13 +78,11 @@ int main(int argc, char *argv[]) {
         }
         if (payload.size() == 0) continue;
 
-        // requestMsg.push_back(0); // Request message type
+        // requestMsg.push_back(0); // Request type message
         // requestMsg.push_back(reqId);
         char marshalledCommand[4];
         marshalInt(command, marshalledCommand);
-        // cout << "COMMAND: " << unmarshalInt(marshalledCommand) << endl;
         requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
-        // Do we really need client to send IP and port?
         // requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
         // requestMsg.push_back(portno);
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
@@ -92,7 +100,14 @@ int main(int argc, char *argv[]) {
             continue;
         }
         // cout << "SIZE RECEIVED: " << res << endl;
-        handleResponse(command, buffer);
+        if (command == QUERY) {
+            handleQueryRes(day, buffer);
+        } else {
+            handleResponse(command, buffer);
+        }
+        if (!queryDays.empty()) {
+            goto nextQuery;
+        }
 
         reqId++;
     }
