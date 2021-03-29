@@ -4,23 +4,51 @@
 #include "response_handler.h"
 #include "proxy.h"
 
-void handleQueryRes(char buffer[MAX_BUFFSIZE]);
+using namespace std;
+
+void handleQueryRes(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, resCode;
+
+    resCode = getInt(buffer, &ind);
+    if (resCode == 0) {
+        int numFreeSlots = getInt(buffer, &ind);
+        struct daytime::duration resDuration;
+        resDuration.startDay = daytime::day::MONDAY;
+        resDuration.endDay = daytime::day::MONDAY;
+        cout << "UNAVAILABLE SLOTS:" << endl;
+        for (int i = 0; i < numFreeSlots; i++) {
+            getDurationTimeOnly(buffer, &ind, &resDuration);
+            cout << daytime::getDayStr(resDuration.startDay) << " ";
+            cout << resDuration.startTime.hour << ":";
+            cout << resDuration.startTime.minute << " - ";
+            cout << daytime::getDayStr(resDuration.endDay) << " ";
+            cout << resDuration.endTime.hour << ":";
+            cout << resDuration.endTime.minute << endl;
+        }
+    } else if (resCode == 1) {
+        cout << "\nQUERY FAILED: No facility by that name exists." << endl;
+    } else if (resCode == 2) {
+        cout << "\nQUERY FAILED: Query Range Out Of Bounds" << endl;
+    } else {
+        cout << "\nUnknown Response Code " << resCode << endl;
+    }
+}
 
 void handleNewBookingRes(char buffer[MAX_BUFFSIZE]) {
     int ind = 0, resCode;
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
-        std::cout << "\nBOOKING SUCCESSFUL!" << std::endl;
-        std::cout << "Confirmation ID: " << getString(buffer, &ind) << std::endl;
+        cout << "\nBOOKING SUCCESSFUL!" << endl;
+        cout << "Confirmation ID: " << getString(buffer, &ind) << endl;
     } else if (resCode == 1) {
-        std::cout << "\nBOOKING FAILED: No facility by that name exists." << std::endl;
+        cout << "\nBOOKING FAILED: No facility by that name exists." << endl;
     } else if (resCode == 2) {
-        std::cout << "\nBOOKING FAILED: Facility is unavailable." << std::endl;
+        cout << "\nBOOKING FAILED: Facility is unavailable." << endl;
     } else if (resCode == 3) {
-        std::cout << "\nBOOKING FAILED: Invalid time values." << std::endl;
+        cout << "\nBOOKING FAILED: Invalid time values." << endl;
     } else {
-        std::cout << "\nUnknown Response Code " << resCode << std::endl;
+        cout << "\nUnknown Response Code " << resCode << endl;
     }
 }
 
@@ -31,9 +59,9 @@ void handleModMonitorRes(char buffer[MAX_BUFFSIZE]);
 
 void handleResponse(int command, char buffer[MAX_BUFFSIZE]) {
     switch (command) {
-        // case QUERY:
-        //     handleQueryRes(buffer);
-        //     break;
+        case QUERY:
+            handleQueryRes(buffer);
+            break;
         case NEW_BOOK:
             handleNewBookingRes(buffer);
             break;

@@ -1,6 +1,8 @@
 #ifndef DAYTIME
 #define DAYTIME
 
+#include <string>
+
 namespace daytime
 {
     enum day
@@ -29,6 +31,7 @@ namespace daytime
     };
 
     day getDay(int dayNum);
+    std::string getDayStr(int dayNum);
 }
 
 #endif

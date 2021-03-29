@@ -19,3 +19,22 @@ daytime::day daytime::getDay(int dayNum)
     }
     return daytime::day::INVALID;
 }
+
+std::string daytime::getDayStr(int dayNum) {
+    if (dayNum == daytime::day::MONDAY) {
+        return "MON";
+    } else if (dayNum == daytime::day::TUESDAY) {
+        return "TUES";
+    } else if (dayNum == daytime::day::WEDNESDAY) {
+        return "WED";
+    } else if (dayNum == daytime::day::THURSDAY) {
+        return "THURS";
+    } else if (dayNum == daytime::day::FRIDAY) {
+        return "FRI";
+    } else if (dayNum == daytime::day::SATURDAY) {
+        return "SAT";
+    } else if (dayNum == daytime::day::SUNDAY) {
+        return "SUN";
+    }
+    return "INVALID DAY";
+}
