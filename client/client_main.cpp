@@ -82,11 +82,9 @@ int main(int argc, char *argv[]) {
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
         if (res < 0) exit(1);
 
-        while (!res) {
-            res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
-            buffer[res] = '\0';
-            cout << buffer;
-        }
+        res == 0;
+        res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
+        cout << "SIZE RECEIVED: " << res << "\nBUFFER RECEIVED: " << buffer;
         handleResponse(command, buffer);
 
         reqId++;

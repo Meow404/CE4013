@@ -3,12 +3,12 @@
 
 #include "../utilities/constants.h"
 
-void handleQueryRes();
-void handleNewBookingRes();
-void handleModBookingRes();
-void handleNewMonitorRes();
-void handleCancelBookingRes();
-void handleModMonitorRes();
+void handleQueryRes(char buffer[MAX_BUFFSIZE]);
+void handleNewBookingRes(char buffer[MAX_BUFFSIZE]);
+void handleModBookingRes(char buffer[MAX_BUFFSIZE]);
+void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]);
+void handleCancelBookingRes(char buffer[MAX_BUFFSIZE]);
+void handleModMonitorRes(char buffer[MAX_BUFFSIZE]);
 void handleResponse(int command, char buffer[MAX_BUFFSIZE]);
 
 #endif

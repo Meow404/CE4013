@@ -47,12 +47,11 @@ ClientSocket::ClientSocket(char *hostname, char *portno) {
 }
 
 int ClientSocket::sendMsg(char *msg, int len) {
-    std::cout << "LENGTH SENT: " << len << std::endl;
     int res = sendto(this->clientSocket, msg, len, 0, (struct sockaddr *) &serverAddr, serverLen);
     if (res == SOCKET_ERROR) {
         printf("Error sending message with error code %d", WSAGetLastError());
     }
-    std::cout << "MSG SENT: " << msg << std::endl;
+    std::cout << "LENGTH SENT: " << len << std::endl;
     return res;
 }
 

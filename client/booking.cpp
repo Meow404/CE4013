@@ -68,11 +68,11 @@ void craftNewBookingReq(vector<char> &payload) {
  *  <confirmationID>[<c_day><c_hr><c_min>]
  */
 void craftModBookingReq(vector<char> &payload) {
-    char confirmationID[26];
+    char confirmID[26];
     char dayOffset, hourOffset, minOffset;
 
     cout << "Confirmation ID: ";
-    cin >> confirmationID;
+    cin >> confirmID;
     cout << "No. Days to Move Booking: ";
     cin >> dayOffset;
     cout << "No. Hours to Move Booking: ";
@@ -85,7 +85,7 @@ void craftModBookingReq(vector<char> &payload) {
     char day[4];
     char hour[4];
     char min[4];
-    payload.insert(payload.end(), &confirmationID[0], &confirmationID[CID_LENGTH-1]);
+    payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH-1]);
     marshalInt(dayOffset, day);
     payload.insert(payload.end(), &day[0], &day[3]);
     marshalInt(hourOffset, hour);
@@ -98,11 +98,11 @@ void craftModBookingReq(vector<char> &payload) {
  *  <confirmationID>
  */
 void craftCancelBookingReq(vector<char> &payload) {
-    char confirmationID[26];
+    char confirmID[26];
     cout << "Confirmation ID: ";
-    cin >> confirmationID;
+    cin >> confirmID;
 
     // Input Validity check
 
-    payload.insert(payload.end(), &confirmationID[0], &confirmationID[25]);
+    payload.insert(payload.end(), &confirmID[0], &confirmID[25]);
 }
