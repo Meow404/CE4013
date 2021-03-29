@@ -1,18 +1,16 @@
 #include "udpServer.h"
 #include <stdio.h>
 #include <iostream>
-#include <ws2tcpip.h>
-#include <windows.h>
 // #include <arpa/inet.h>
-
-#pragma comment(lib, "ws2_32.lib") //Winsock Library
 
 using namespace std;
 
-udpServer::udpServer(int port)
+udpServer::udpServer(int port, bool invocation)
 {
 
-    struct sockaddr_in server;
+    atMostOnce = invocation;
+    atLeastOnce = !invocation;
+
     cout << "Initialising Winsock..." << endl;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
     {
@@ -28,7 +26,7 @@ udpServer::udpServer(int port)
 
     // Filling server information
     serverAddress.sin_family = AF_INET; // IPv4
-    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    serverAddress.sin_addr.S_un.S_addr = INADDR_ANY;
     serverAddress.sin_port = htons(port);
 
     // Bind the socket with the server address
@@ -63,7 +61,7 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
 
 void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
-    cout << "Sending Message to "<< getClientIP() << endl;
+    cout << "Sending Message to " << getClientIP() << endl;
     int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
     if (n < 0)
         cout << "ERROR writing back to socket" << endl;
@@ -73,4 +71,40 @@ string udpServer::getClientIP()
 {
     char *ip = inet_ntoa(clientAddress.sin_addr);
     return (string)ip;
+}
+
+void udpServer::addReply(int reqId, char *buffer, int bufferSize)
+{
+
+    for (int i = replies.size() - 1; i >= 0; i--)
+        if (replies[i].clientIp.compare(getClientIP()) == 0)
+        {
+            replies[i].reqId = reqId;
+            replies[i].replySize = bufferSize;
+            replies[i].reply = string(buffer, bufferSize);
+            return;
+        }
+    request_reply req;
+    req.clientIp = getClientIP();
+    req.reqId = reqId;
+    req.replySize = bufferSize;
+    req.reply = string(buffer, bufferSize);
+
+    replies.push_back(req);
+}
+
+bool udpServer::resendReply(int reqId)
+{
+    if (atMostOnce)
+    {
+
+        for (int i = replies.size() - 1; i >= 0; i--)
+            if (replies[i].clientIp.compare(getClientIP()) == 0 && replies[i].reqId == reqId)
+            {
+                sendMessage(replies[i].reply.c_str(), replies[i].replySize);
+                cout << "Resending reply ... ";
+                return true;
+            }
+    }
+    return false;
 }
