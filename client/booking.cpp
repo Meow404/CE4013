@@ -110,12 +110,20 @@ void craftShiftBookingReq(vector<char> &payload) {
     cin >> confirmID;
     cout << "No. Days to Move Booking: ";
     cin >> dayOffset;
+    if (cin.fail()) return;
     cout << "No. Hours to Move Booking: ";
     cin >> hourOffset;
+    if (cin.fail()) return;
     cout << "No. Min to Move Booking: ";
     cin >> minOffset;
+    if (cin.fail()) return;
 
     // Input Validity check
+    if (dayOffset > 6 || dayOffset < 0 || hourOffset > MAX_HR ||
+        hourOffset < 0 || minOffset > MAX_MINUTES || minOffset < 0) {
+        cerr << "Invalid Time Value\n" << endl;
+        return;
+    }
 
     char day[4];
     char hour[4];
@@ -153,12 +161,20 @@ void craftExtendBookingReq(std::vector<char> &payload) {
     cin >> confirmID;
     cout << "No. Days to Move Booking: ";
     cin >> dayOffset;
+    if (cin.fail()) return;
     cout << "No. Hours to Move Booking: ";
     cin >> hourOffset;
+    if (cin.fail()) return;
     cout << "No. Min to Move Booking: ";
     cin >> minOffset;
+    if (cin.fail()) return;
 
     // Input Validity check
+    if (dayOffset > 6 || dayOffset < 0 || hourOffset > MAX_HR ||
+        hourOffset < 0 || minOffset > MAX_MINUTES || minOffset < 0) {
+        cerr << "Invalid Time Value\n" << endl;
+        return;
+    }
 
     char day[4];
     char hour[4];

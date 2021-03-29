@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     int command;
     char buffer[MAX_BUFFSIZE];
 
-    if (argc < 3) {
+    if (argc != 3) {
         cout << "Usage: ./Client [SERVER_ADDRESS] [PORT]" << endl;
         exit(1);
     }
@@ -35,9 +35,9 @@ int main(int argc, char *argv[]) {
     while (command != EXIT) {
         cout << promptMessage;
         cin >> command;
-        if (command < 1 || command > 7 || cin.fail()) {
-            cerr << "ERROR: Invalid Command!";
-            continue;
+        if (command < 1 || command > 7 || cin.fail() || !cin.good()) {
+            cerr << "ERROR: Invalid Command!\n";
+            break;
         }
 
         vector<char> requestMsg, payload;
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
                 cerr << "ERROR: Unknown Command";
                 break;
         }
-        if (payload.size() == 0) continue;
+        if (payload.empty()) continue;
 
         // requestMsg.push_back(0); // Request type message
         // requestMsg.push_back(reqId);

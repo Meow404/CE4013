@@ -19,12 +19,20 @@ void craftNewMonitorReq(std::vector<char> &payload) {
     getline(std::cin, facilityName);
     cout << "No. Days to Monitor: ";
     cin >> days;
+    if (cin.fail()) return;
     cout << "No. Hours to Monitor (Max 23): ";
     cin >> hours;
-    cout << "No. Min to Monitor (Max 60): ";
+    if (cin.fail()) return;
+    cout << "No. Min to Monitor (Max 59): ";
     cin >> minutes;
+    if (cin.fail()) return;
 
     // Input Validity check
+    if (days > 6 || days < 0 || hours > MAX_HR ||
+        hours < 0 || minutes > MAX_MINUTES || minutes < 0) {
+        cerr << "Invalid Time Value\n" << endl;
+        return;
+    }
 
     char dayBytes[4];
     char hourBytes[4];
