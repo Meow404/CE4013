@@ -6,13 +6,13 @@
 #define MAX_HR 23
 #define MAX_MINUTES 59
 
-// #define GET_FAC 1
-#define QUERY 1
-#define NEW_BOOK 2
-#define SHIFT_BOOK 3
-#define EXTEND_BOOK 4
-#define CANCEL_BOOK 5
-#define NEW_MONITOR 6
-#define EXIT 7
+#define GET_FAC 1
+#define QUERY 2
+#define NEW_BOOK 3
+#define SHIFT_BOOK 4
+#define EXTEND_BOOK 5
+#define CANCEL_BOOK 6
+#define NEW_MONITOR 7
+#define EXIT 8
 
 #endif

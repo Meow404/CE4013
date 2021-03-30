@@ -11,13 +11,14 @@ int main(int argc, char *argv[]) {
     int res = -1;
     int reqId = 0;
     string promptMessage = "\nCOMMANDS\n"    \
-                           "[1] Query Facility Availability\n"    \
-                           "[2] Book Facility\n"    \
-                           "[3] Shift Booking Time\n"    \
-                           "[4] Monitor Facility Availability\n"    \
+                           "[1] Get Facility Names\n"
+                           "[2] Query Facility Availability\n"    \
+                           "[3] Book Facility\n"    \
+                           "[4] Shift Booking Time\n"    \
                            "[5] Extend Booking Period\n"    \
                            "[6] Cancel Booking\n"    \
-                           "[7] Exit\n"   \
+                           "[7] Monitor Facility Availability\n"    \
+                           "[8] Exit\n"   \
                            "Input Command: ";
     int command;
     char buffer[MAX_BUFFSIZE];
@@ -48,6 +49,8 @@ int main(int argc, char *argv[]) {
         string facilityName;
         // Monitor expiry tracker
         switch (command) {
+            case GET_FAC:
+                break;
             case QUERY:
                 getQueryInput(facilityName, queryDays);
                 nextQuery:

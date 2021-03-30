@@ -139,7 +139,7 @@ void commHandler::handleAddBooking(char *buffer, int *index)
     e_minute = getInt(buffer, index);
 
     facility *facility = FM->getFacility(facility_name);
-    status = FM->addFacilityBooking(genRandom(12), &confirmationId, facility, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
+    status = FM->addFacilityBooking(server->getClientIP(), &confirmationId, facility, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
 
     *index = 0;
     setInt(buffer, index, status);
@@ -169,7 +169,7 @@ void commHandler::handleChangeBooking(char *buffer, int *index)
     minutes = getInt(buffer, index);
 
     facility *facility = FM->getBookingFacility(confirmationId);
-    status = FM->changeFacilityBooking(genRandom(12), &confirmationId, facility, days, hours, minutes);
+    status = FM->changeFacilityBooking(server->getClientIP(), &confirmationId, facility, days, hours, minutes);
 
     *index = 0;
     setInt(buffer, index, status);
@@ -198,7 +198,7 @@ void commHandler::handleExtendBooking(char *buffer, int *index)
     minutes = getInt(buffer, index);
 
     facility *facility = FM->getBookingFacility(confirmationId);
-    status = FM->extendFacilityBooking(genRandom(12), &confirmationId, facility, days, hours, minutes);
+    status = FM->extendFacilityBooking(server->getClientIP(), &confirmationId, facility, days, hours, minutes);
 
     *index = 0;
     setInt(buffer, index, status);
@@ -226,7 +226,7 @@ void commHandler::handleCancelBooking(char *buffer, int *index)
     status = FM->cancelFacilityBooking(confirmationId, facility);
 
     *index = 0;
-    setInt(buffer, index, status);
+    setInt(buffer, index, !status);
     server->sendMessage(buffer, *index);
 
     if (status == 0)
@@ -235,15 +235,6 @@ void commHandler::handleCancelBooking(char *buffer, int *index)
         setInt(buffer, index, 4);
         handleUpdateMonitors(facility, buffer, index);
     }
-}
-void commHandler::handleGetFaciltiyNames(char *buffer, int *index)
-{
-    vector<string> facilityNames = FM->getFacilityNames();
-    *index = 0;
-    setInt(buffer, index, facilityNames.size());
-    for (int i = 0; i < facilityNames.size(); i++)
-        setString(buffer, index, facilityNames[i]);
-    server->sendMessage(buffer, *index);
 }
 
 void commHandler::handleAllFunctions()
@@ -265,27 +256,23 @@ void commHandler::handleAllFunctions()
         switch (funNum)
         {
         case 1:
-            handleGetFaciltiyNames(buffer, &index);
-            break;
-        case 2:
             handleGetAvailability(buffer, &index);
             break;
-        case 3:
+        case 2:
             handleAddBooking(buffer, &index);
             break;
-        case 4:
+        case 3:
             handleChangeBooking(buffer, &index);
+            break;
+        case 4:
+            handleAddMonitor(buffer, &index);
             break;
         case 5:
             handleExtendBooking(buffer, &index);
             break;
         case 6:
             handleCancelBooking(buffer, &index);
-        case 7:
-            handleAddMonitor(buffer, &index);
-            break;
         default:
-            cout << "Incorrect Handler sent!" << endl;
             break;
         }
         server->addReply(reqId, buffer, index);
