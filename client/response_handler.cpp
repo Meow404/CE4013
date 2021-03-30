@@ -137,3 +137,22 @@ void handleResponse(int command, char buffer[MAX_BUFFSIZE]) {
             break;
     }
 }
+
+void handleMonitorNotify(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0;
+    for (int i = 0; i < 7; i++) {
+        int day = getInt(buffer, &ind);
+        string dayStr = daytime::getDayStr(day);
+        int numFreeSlots = getInt(buffer, &ind);
+        struct daytime::duration resDuration;
+        resDuration.startDay = daytime::getDay(day);
+        resDuration.endDay = daytime::getDay(day);
+        cout << endl << daytime::getDayStr(resDuration.startDay) << " Availability:" << endl;
+        for (int j = 0; j < numFreeSlots; j++) {
+            getDurationTimeOnly(buffer, &ind, &resDuration);
+            printf("%02d:%02d - %02d:%02d\n",
+                    resDuration.startTime.hour, resDuration.startTime.minute,
+                    resDuration.endTime.hour, resDuration.endTime.minute);
+        }
+    }
+}

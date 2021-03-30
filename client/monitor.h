@@ -3,6 +3,9 @@
 
 #include <vector>
 
-void craftNewMonitorReq(std::vector<char> &payload);
+void setMonitorEndTime(std::chrono::system_clock::time_point &monitorEnd,
+                       int days, int hours, int minutes);
+void craftNewMonitorReq(std::vector<char> &payload,
+                        std::chrono::system_clock::time_point &monitorEnd);
 
 #endif

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <deque>
+#include <chrono>
 
 #include "client_main.h"
 
@@ -47,7 +48,8 @@ int main(int argc, char *argv[]) {
         deque<int> queryDays;
         int day;
         string facilityName;
-        // Monitor expiry tracker
+        std::chrono::system_clock::time_point monitorEnd;
+        bool isMonitor = false;
         switch (command) {
             case GET_FAC:
                 break;
@@ -73,10 +75,11 @@ int main(int argc, char *argv[]) {
                 craftCancelBookingReq(payload);
                 break;
             case NEW_MONITOR:
-                craftNewMonitorReq(payload);
+                craftNewMonitorReq(payload, monitorEnd);
+                isMonitor = true;
                 break;
             case EXIT:
-                exit(1);
+                exit(0);
             default:
                 cerr << "ERROR: Unknown Command";
                 break;
@@ -102,7 +105,7 @@ int main(int argc, char *argv[]) {
         }
 
         res == 0;
-        res = clientSock.recvMsg(buffer, MAX_BUFFSIZE);
+        res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, CLIENT_TIMEOUT);
         if (res <= 0) {
             cerr << "ERROR: Error receiving response\n";
             continue;
@@ -116,6 +119,28 @@ int main(int argc, char *argv[]) {
         if (!queryDays.empty()) {
             reqId++;
             goto nextQuery;
+        }
+        if (isMonitor) {
+            std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+            int timeToEnd = std::chrono::duration_cast<std::chrono::minutes>(
+                                monitorEnd - now
+                            )
+                            .count();
+            cout << "TIME TO END: " << timeToEnd << endl;
+            while (timeToEnd > 0) {
+                res == 0;
+                res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd);
+                if (res <= 0) {
+                    cerr << "ERROR: Error receiving response\n";
+                    goto skipMonitorNotify;
+                }
+                handleMonitorNotify(buffer);
+                skipMonitorNotify:
+                now = std::chrono::system_clock::now();
+                timeToEnd = std::chrono::duration_cast<std::chrono::minutes>(monitorEnd - now)
+                            .count();
+                cout << "TIME TO END: " << timeToEnd << endl;
+            }
         }
 
         reqId++;

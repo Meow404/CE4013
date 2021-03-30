@@ -10,5 +10,6 @@ void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]);
 void handleCancelBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleExtendBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleResponse(int command, char buffer[MAX_BUFFSIZE]);
+void handleMonitorNotify(char buffer[MAX_BUFFSIZE]);
 
 #endif

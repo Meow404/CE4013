@@ -15,4 +15,6 @@
 #define NEW_MONITOR 7
 #define EXIT 8
 
+#define CLIENT_TIMEOUT 5
+
 #endif
