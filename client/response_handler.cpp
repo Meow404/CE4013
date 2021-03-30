@@ -12,6 +12,7 @@ void handleQueryRes(int day, char buffer[MAX_BUFFSIZE]) {
     resCode = getInt(buffer, &ind);
     if (resCode == 0) {
         int numFreeSlots = getInt(buffer, &ind);
+        cout << "FREE SLOTS: " << numFreeSlots <<  endl;
         struct daytime::duration resDuration;
         resDuration.startDay = daytime::getDay(day);
         resDuration.endDay = daytime::getDay(day);

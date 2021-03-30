@@ -1,7 +1,4 @@
 #include "facilityManager.h"
-#include "string"
-#include "facility.h"
-#include "daytime.h"
 #include "iostream"
 
 using namespace std;
@@ -79,9 +76,8 @@ facility *facilityManager::getBookingFacility(std::string bookingId)
     return nullptr;
 }
 
-std::vector<daytime::duration> facilityManager::getFacilityAvailability(string facilityName, int day)
+std::vector<daytime::duration> facilityManager::getFacilityAvailability(facility *facility, int day)
 {
-    facility *facility = getFacility(facilityName);
     if (facility && day < 7)
     {
         daytime::day b_day = static_cast<daytime::day>((int)day);
@@ -92,10 +88,9 @@ std::vector<daytime::duration> facilityManager::getFacilityAvailability(string f
         return {};
 }
 
-std::vector<std::vector<daytime::duration>> facilityManager::getFacilityAvailability(string facilityName, vector<int> days)
+std::vector<std::vector<daytime::duration>> facilityManager::getFacilityAvailability(facility *facility, vector<int> days)
 {
     std::vector<std::vector<daytime::duration>> availabilities;
-    facility *facility = getFacility(facilityName);
     for (int i = 0; i < days.size(); i++)
     {
         daytime::day day = static_cast<daytime::day>(days[i]);
@@ -104,17 +99,36 @@ std::vector<std::vector<daytime::duration>> facilityManager::getFacilityAvailabi
     return availabilities;
 }
 
-void facilityManager::addMonitorForFacility(string facilityName, string ipAddress, int port, int day, int hours, int minutes)
+int facilityManager::addMonitorForFacility(facility *facility, struct sockaddr_in clientAddress, int day, int hours, int minutes)
 {
+    if (!facility)
+        return 1;
+
+    if (!checkDayTime(day, hours, minutes))
+        return 2;
+
+    daytime::duration duration;
+    duration.startDay = daytime::getDay();
+    duration.startTime = daytime::getTime();
+
+    duration.endTime.minute = duration.startTime.minute + minutes;
+    duration.endTime.hour = duration.startTime.hour + hours + duration.endTime.minute / 60;
+    duration.endDay = static_cast<daytime::day>((duration.startDay + day + duration.endTime.hour / 24) % 7);
+    duration.endTime.minute %= 60;
+    duration.endTime.hour %= 24;
+
+    daytime::date expiryDate = daytime::getFutureDate(day, hours, minutes);
+    facility->addMonitor(clientAddress, duration, expiryDate);
+
+    return 0;
 }
-void facilityManager::extendMonitorForFacility(string facilityName, string ipAddress, int port, int day, int hours, int minutes)
+
+int facilityManager::extendMonitorForFacility(facility *facility, string ipAddress, int day, int hours, int minutes)
 {
 }
 
-int facilityManager::addFacilityBooking(std::string ipAddress, std::string *confirmationId, string facilityName, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute)
+int facilityManager::addFacilityBooking(std::string ipAddress, std::string *confirmationId, facility *facility, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute)
 {
-    cout << facilityName << endl;
-    facility *facility = getFacility(facilityName);
     if (!facility)
         return 1;
 
@@ -132,10 +146,8 @@ int facilityManager::addFacilityBooking(std::string ipAddress, std::string *conf
         return 0;
 }
 
-int facilityManager::changeFacilityBooking(std::string ipAddress, string *confirmationId, int days, int hours, int minutes)
+int facilityManager::changeFacilityBooking(std::string ipAddress, string *confirmationId, facility *facility, int days, int hours, int minutes)
 {
-    facility *facility = getBookingFacility(*confirmationId);
-
     if (!facility)
         return 1;
 
@@ -148,10 +160,8 @@ int facilityManager::changeFacilityBooking(std::string ipAddress, string *confir
         return 0;
 }
 
-int facilityManager::extendFacilityBooking(std::string ipAddress, string *confirmationId, int days, int hours, int minutes)
+int facilityManager::extendFacilityBooking(std::string ipAddress, string *confirmationId, facility *facility, int days, int hours, int minutes)
 {
-    facility *facility = getBookingFacility(*confirmationId);
-
     if (!facility)
         return 1;
 
@@ -164,9 +174,8 @@ int facilityManager::extendFacilityBooking(std::string ipAddress, string *confir
         return 0;
 }
 
-bool facilityManager::cancelFacilityBooking(string confirmationId)
+bool facilityManager::cancelFacilityBooking(string confirmationId, facility *facility)
 {
-    facility *facility = getBookingFacility(confirmationId);
     if (!facility)
         return false;
     facility->cancelBooking(confirmationId);

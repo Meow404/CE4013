@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     while (command != EXIT) {
         cout << promptMessage;
         cin >> command;
-        if (command < 1 || command > 7 || cin.fail() || !cin.good()) {
+        if (command < 1 || command > 8 || cin.fail() || !cin.good()) {
             cerr << "ERROR: Invalid Command!\n";
             break;
         }
@@ -46,6 +46,7 @@ int main(int argc, char *argv[]) {
         deque<int> queryDays;
         int day;
         string facilityName;
+        // Monitor expiry tracker
         switch (command) {
             case QUERY:
                 getQueryInput(facilityName, queryDays);
@@ -55,7 +56,6 @@ int main(int argc, char *argv[]) {
                 day = queryDays.front();
                 craftQueryReq(payload, facilityName, day);
                 queryDays.pop_front();
-                // send sizeof(requestMsg)/sizeof(unsigned char)
                 break;
             case NEW_BOOK:
                 craftNewBookingReq(payload);
@@ -63,14 +63,14 @@ int main(int argc, char *argv[]) {
             case SHIFT_BOOK:
                 craftShiftBookingReq(payload);
                 break;
-            case NEW_MONITOR:
-                craftNewMonitorReq(payload);
-                break;
             case EXTEND_BOOK:
                 craftExtendBookingReq(payload);
                 break;
             case CANCEL_BOOK:
                 craftCancelBookingReq(payload);
+                break;
+            case NEW_MONITOR:
+                craftNewMonitorReq(payload);
                 break;
             case EXIT:
                 exit(1);
