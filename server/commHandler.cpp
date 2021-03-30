@@ -104,6 +104,7 @@ void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *in
 
     vector<monitor> monitors = facility->getMonitors();
     if (monitors.size() != 0)
+    {
         for (int day = 0; day < 7; day++)
         {
             std::vector<daytime::duration> availabilities = FM->getFacilityAvailability(facility, day);
@@ -122,11 +123,12 @@ void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *in
                 }
             }
         }
-    if (*index > startIndex)
-        for (int j = 0; j < monitors.size(); j++)
-        {
-            server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
-        }
+        if (*index > startIndex)
+            for (int j = 0; j < monitors.size(); j++)
+            {
+                server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
+            }
+    }
 }
 
 /**
