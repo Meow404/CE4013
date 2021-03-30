@@ -5,12 +5,20 @@
 
 using namespace std;
 
-udpServer::udpServer(int port, bool invocation)
+/**
+ * @brief  Constructor for UDP server
+ * @param  port: port of the UDP server
+ * @param  invocation: At most once or at least once invocation
+ * @param  failureRate: failure rate of server
+ * @retval None
+ */
+udpServer::udpServer(int port, bool invocation, double failureRate)
 {
 
     atMostOnce = invocation;
     atLeastOnce = !invocation;
     this->port = port;
+    this->failureRate = failureRate;
 
     cout << "Initialising Winsock..." << endl;
     if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
@@ -43,7 +51,14 @@ udpServer::udpServer(int port, bool invocation)
     clientLen = sizeof(clientAddress);
 }
 
-int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
+/**
+ * @brief  Wait for message from socket
+ * @param  buffer: buffer to store the message
+ * @param  bufferSize: size of the buffer
+ * @param  timeout: time before which we stop waiting for a message
+ * @retval number of bytes recieved
+ */
+int udpServer::recieveMessage(char* buffer, int bufferSize, int timeout)
 {
     if (timeout != 0)
     {
@@ -58,20 +73,42 @@ int udpServer::recieveMessage(char *buffer, int bufferSize, int timeout)
     do
     {
         n = recvfrom(socketFd, buffer, bufferSize, 0, (struct sockaddr *)&clientAddress, &clientLen);
+        if (n < 0)
+            cout << "ERROR reading from socket. Trying again ..." << endl;
     } while (n == -1);
     cout << "Client : " << getClientIP() << " # of bytes : " << n << endl;
 
     return n;
 }
 
+/**
+ * @brief  Send message to client
+ * @param  buffer: buffer to store of the message to be sent
+ * @param  bufferSize: size of buffer
+ * @retval None
+ */
 void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
-    cout << "Sending Message to " << getClientIP() << endl;
-    int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
-    if (n < 0)
-        cout << "ERROR writing back to socket" << endl;
+    srand(time(0));
+    if (static_cast <float> (rand()) / RAND_MAX > failureRate)
+    {
+
+        cout << "Sending Message to " << getClientIP() << endl;
+        int n = sendto(socketFd, buffer, bufferSize, 0, (const struct sockaddr *)&clientAddress, clientLen);
+        if (n < 0)
+            cout << "ERROR writing back to socket" << endl;
+    }
+    else
+        cout << "[ RETURN FAILURE GENERATED ]" << endl;
 }
 
+/**
+ * @brief  Send message to a client based on socket address of the client
+ * @param  buffer: the buffer to store the message to be sent
+ * @param  bufferSize: size of the message of te buffer
+ * @param  clientAddress: socket address of the client
+ * @retval None
+ */
 void udpServer::sendMessageToClient(const char *buffer, int bufferSize, sockaddr_in clientAddress)
 {
     cout << "Sending Message to " << getClientIP() << endl;
@@ -80,12 +117,23 @@ void udpServer::sendMessageToClient(const char *buffer, int bufferSize, sockaddr
         cout << "ERROR writing back to socket" << endl;
 }
 
+/**
+ * @brief  Get IP Address of the client
+ * @retval client IP
+ */
 string udpServer::getClientIP()
 {
     char *ip = inet_ntoa(clientAddress.sin_addr);
     return (string)ip;
 }
 
+/**
+ * @brief  Add reply buffer based on request ID
+ * @param  reqId: ID of request 
+ * @param  buffer: buffer that stores the reply
+ * @param  bufferSize: size of the buffer to be stored
+ * @retval None
+ */
 void udpServer::addReply(int reqId, char *buffer, int bufferSize)
 {
 
@@ -106,6 +154,11 @@ void udpServer::addReply(int reqId, char *buffer, int bufferSize)
     replies.push_back(req);
 }
 
+/**
+ * @brief  Resend reply for At most once invocation
+ * @param  reqId: request ID for the reply
+ * @retval true if reply is resent
+ */
 bool udpServer::resendReply(int reqId)
 {
     if (atMostOnce)
@@ -122,11 +175,19 @@ bool udpServer::resendReply(int reqId)
     return false;
 }
 
+/**
+ * @brief  Port of the client
+ * @retval client port
+ */
 int udpServer::getClientPort()
 {
     return port;
 }
 
+/**
+ * @brief  Get socket address of the client
+ * @retval socket address of the client
+ */
 struct sockaddr_in udpServer::getClientSocketAddress()
 {
     return clientAddress;

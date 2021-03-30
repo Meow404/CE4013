@@ -9,6 +9,11 @@
 
 using namespace std;
 
+/**
+ * @brief  Generates unique confirmation ID for booking by making use of client Id, data & time of booking
+ * @param  clientId: Unique ID provided to each client
+ * @retval unique confirmation ID generated for each booking
+ */
 string booking::generateConfirmationId(string clientId)
 {
 
@@ -28,6 +33,12 @@ string booking::generateConfirmationId(string clientId)
     return confirmationId;
 }
 
+/**
+ * @brief  Created an instance of booking with the help of client Id and booking duration
+ * @param  clientId: Unique ID provided to each client
+ * @param  duration: Duration of booking
+ * @retval None
+ */
 booking::booking(string clientId, daytime::duration duration)
 {
     this->duration = duration;
@@ -35,6 +46,13 @@ booking::booking(string clientId, daytime::duration duration)
     this->clientId = clientId;
 }
 
+/**
+ * @brief  Created an instance of booking with the help of client Id and booking duration
+ * @param  clientId: Unique ID provided to each client
+ * @param  duration: Duration of booking
+ * @param  confirmationId: Previous confirmation ID if applicable
+ * @retval None
+ */
 booking::booking(string clientId, string confirmationId, daytime::duration duration)
 {
     this->duration = duration;
@@ -44,26 +62,51 @@ booking::booking(string clientId, string confirmationId, daytime::duration durat
         this->confirmationId = confirmationId;
 }
 
+/**
+ * @brief  Copy constructor to copy one booking object to another
+ * @param  &obj: booking object to be copied
+ * @retval None
+ */
 booking::booking(const booking &obj){
     this->duration = obj.duration;
     this->confirmationId = obj.confirmationId;
     this->clientId = obj.clientId;
 }
 
+/**
+ * @brief  Returns confirmation ID
+ * @retval confirmation ID
+ */
 string booking::getConfirmationId()
 {
     return confirmationId;
 }
 
+/**
+ * @brief  Returns booking duration
+ * @retval duration of booking
+ */
 daytime::duration booking::getDuration()
 {
     return duration;
 }
 
+/**
+ * @brief  Update duration of booking
+ * @param  duration: new duration of booking
+ * @retval None
+ */
 void booking::updateDuration(daytime::duration duration){
     this->duration = duration;
 }
 
+/**
+ * @brief  Change booking duration by time specified (shifting the booking)
+ * @param  days: number of days to be changed by
+ * @param  hours: number of hours to be changed by
+ * @param  minutes: number of minutes to be changed by
+ * @retval None
+ */
 void booking::change(int days, int hours, int minutes)
 {
     daytime::day today = daytime::getDay();
@@ -83,6 +126,14 @@ void booking::change(int days, int hours, int minutes)
     duration.endTime.hour %= 24;
     duration.endDate = daytime::getFutureDate((duration.endDay + 7 - today) % 7, 0, 0);
 }
+
+/**
+ * @brief  Extend booking duration by some time
+ * @param  days: number of days to be extended by
+ * @param  hours: number of hours to be extended by
+ * @param  minutes: numbed to minuted to be extended by
+ * @retval None
+ */
 void booking::extend(int days, int hours, int minutes)
 {
     daytime::day today = daytime::getDay();
@@ -95,10 +146,25 @@ void booking::extend(int days, int hours, int minutes)
     duration.endDate = daytime::getFutureDate((duration.endDay + 7 - today) % 7, 0, 0);
 }
 
+/**
+ * @brief  Print booking information
+ * @retval None
+ */
 void booking::print()
 {
-    char buffer1[100], buffer2[100];
-    sprintf(buffer1, "%s %2d:%2d - %s %2d:%2d", daytime::convertDay(duration.startDay).c_str(), duration.startTime.hour, duration.startTime.minute, daytime::convertDay(duration.endDay).c_str(), duration.endTime.hour, duration.endTime.minute);
-    sprintf(buffer2, " %d/%d/%d - %d/%d/%d", duration.startDate.day, duration.startDate.month, duration.startDate.year, duration.endDate.day, duration.endDate.month, duration.endDate.year);
-    cout << "confirmation ID : " << confirmationId << " - " << buffer1 << buffer2 << endl;
+    char buffer[100];
+    sprintf(buffer, "%s %2d:%2d %d/%d/%d  - %s %2d:%2d %d/%d/%d", 
+    daytime::convertDay(duration.startDay).c_str(), 
+    duration.startTime.hour, 
+    duration.startTime.minute, 
+    duration.startDate.day, 
+    duration.startDate.month, 
+    duration.startDate.year,
+    daytime::convertDay(duration.endDay).c_str(), 
+    duration.endTime.hour, 
+    duration.endTime.minute, 
+    duration.endDate.day, 
+    duration.endDate.month, 
+    duration.endDate.year);
+    cout << "confirmation ID : " << confirmationId << " : " << buffer  << endl;
 }

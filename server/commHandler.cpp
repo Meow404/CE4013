@@ -1,11 +1,23 @@
 #include "commHandler.h"
 
+/**
+ * @brief  communication handler constructor
+ * @param  server: UDP server
+ * @param  facility_manager: facility manager
+ * @retval None
+ */
 commHandler::commHandler(udpServer *server, facilityManager *facility_manager)
 {
     this->server = server;
     this->FM = facility_manager;
 }
 
+/**
+ * @brief  Unmarshal integer  
+ * @param  buffer: buffer in which int is stored
+ * @param  index: index of buffer in which integer is stored
+ * @retval unmarshalled int
+ */
 int commHandler::getInt(char *buffer, int *index)
 {
     int value = unmarshalInt(&buffer[*index]);
@@ -15,6 +27,12 @@ int commHandler::getInt(char *buffer, int *index)
     return value;
 }
 
+/**
+ * @brief  Unmarshal string  
+ * @param  buffer: buffer in which string is stored
+ * @param  index: index of buffer in which string is stored
+ * @retval unmarshalled string
+ */
 string commHandler::getString(char *buffer, int *index)
 {
     int size = unmarshalInt(&buffer[*index]);
@@ -27,12 +45,27 @@ string commHandler::getString(char *buffer, int *index)
     return value;
 }
 
+/**
+ * @brief  Marshall integer into the message
+ * @param  buffer: message in which integer is stored
+ * @param  index: index from which value is to be stored
+ * @param  value: value of int
+ * @retval None
+ */
 void commHandler::setInt(char *buffer, int *index, int value)
 {
     buffer[(*index)++] = 'd';
     marshalInt(value, &buffer[*index]);
     *index += SIZE_INT;
 }
+
+/**
+ * @brief  Marshall string into the message
+ * @param  buffer: message in which string is stored
+ * @param  index: index from which value is to be stored
+ * @param  value: value of string
+ * @retval None
+ */
 void commHandler::setString(char *buffer, int *index, string value)
 {
     buffer[(*index)++] = 's';
@@ -41,6 +74,14 @@ void commHandler::setString(char *buffer, int *index, string value)
     marshalString(value, &buffer[*index]);
     *index += value.size();
 }
+
+/**
+ * @brief  Marshall duration into the message
+ * @param  buffer: message in which duration is stored
+ * @param  index: index from which duration is to be stored
+ * @param  value: value of duration
+ * @retval None
+ */
 void commHandler::setDuration(char *buffer, int *index, daytime::duration value)
 {
     buffer[(*index)++] = 't';
@@ -50,29 +91,37 @@ void commHandler::setDuration(char *buffer, int *index, daytime::duration value)
     setInt(buffer, index, value.endTime.minute);
 }
 
+/**
+ * @brief  Update monitors of a facility 
+ * @param  facility: pointer to facility of which monitors is to be updated
+ * @param  buffer: message to be sent to monitors
+ * @param  index: index from which buffer starts
+ * @retval None
+ */
 void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *index)
 {
     int startIndex = *index;
 
     vector<monitor> monitors = facility->getMonitors();
-    for (int day = 0; day < 7; day++)
-    {
-        std::vector<daytime::duration> availabilities = FM->getFacilityAvailability(facility, day);
-        setInt(buffer, index, day);
-        setInt(buffer, index, availabilities.size());
-        for (int i = 0; i < availabilities.size(); i++)
+    if (monitors.size() != 0)
+        for (int day = 0; day < 7; day++)
         {
-            setDuration(buffer, index, availabilities[i]);
-            if (*index >= BUFFER_SIZE - 20)
+            std::vector<daytime::duration> availabilities = FM->getFacilityAvailability(facility, day);
+            setInt(buffer, index, day);
+            setInt(buffer, index, availabilities.size());
+            for (int i = 0; i < availabilities.size(); i++)
             {
-                for (int j = 0; j < monitors.size(); j++)
+                setDuration(buffer, index, availabilities[i]);
+                if (*index >= BUFFER_SIZE - 20)
                 {
-                    server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
+                    for (int j = 0; j < monitors.size(); j++)
+                    {
+                        server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
+                    }
+                    *index = startIndex;
                 }
-                *index = startIndex;
             }
         }
-    }
     if (*index > startIndex)
         for (int j = 0; j < monitors.size(); j++)
         {
@@ -80,6 +129,12 @@ void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *in
         }
 }
 
+/**
+ * @brief  Add monitor for the facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleAddMonitor(char *buffer, int *index)
 {
     int status, days, hours, minutes;
@@ -98,6 +153,12 @@ void commHandler::handleAddMonitor(char *buffer, int *index)
     server->sendMessage(buffer, *index);
 }
 
+/**
+ * @brief  Get availabilities of a facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleGetAvailability(char *buffer, int *index)
 {
     int status, day;
@@ -125,6 +186,12 @@ void commHandler::handleGetAvailability(char *buffer, int *index)
     server->sendMessage(buffer, *index);
 }
 
+/**
+ * @brief  Add a booking for a facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleAddBooking(char *buffer, int *index)
 {
     int status, s_day, s_hour, s_minute, e_day, e_hour, e_minute;
@@ -157,6 +224,12 @@ void commHandler::handleAddBooking(char *buffer, int *index)
     }
 }
 
+/**
+ * @brief  Change a booking of a facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleChangeBooking(char *buffer, int *index)
 {
     int status, days, hours, minutes;
@@ -187,6 +260,12 @@ void commHandler::handleChangeBooking(char *buffer, int *index)
     }
 }
 
+/**
+ * @brief  extend the booking of a facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleExtendBooking(char *buffer, int *index)
 {
     int status, days, hours, minutes;
@@ -216,6 +295,12 @@ void commHandler::handleExtendBooking(char *buffer, int *index)
     }
 }
 
+/**
+ * @brief  cancel booking of a facility 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleCancelBooking(char *buffer, int *index)
 {
     string confirmationId;
@@ -236,6 +321,13 @@ void commHandler::handleCancelBooking(char *buffer, int *index)
         handleUpdateMonitors(facility, buffer, index);
     }
 }
+
+/**
+ * @brief  Get names of all facilities 
+ * @param  buffer: to store message
+ * @param  index: index from which message is to be stored
+ * @retval None
+ */
 void commHandler::handleGetFaciltiyNames(char *buffer, int *index)
 {
     vector<string> facilityNames = FM->getFacilityNames();
@@ -246,6 +338,10 @@ void commHandler::handleGetFaciltiyNames(char *buffer, int *index)
     server->sendMessage(buffer, *index);
 }
 
+/**
+ * @brief  Handle all functions 
+ * @retval None
+ */
 void commHandler::handleAllFunctions()
 {
     char buffer[BUFFER_SIZE];
@@ -293,6 +389,10 @@ void commHandler::handleAllFunctions()
     }
 }
 
+/**
+ * @brief  Start command handling
+ * @retval None
+ */
 void commHandler::start()
 {
 

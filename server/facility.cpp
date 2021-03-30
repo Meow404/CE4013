@@ -1,13 +1,13 @@
 #include "facility.h"
 
-#include "booking.h"
-#include "vector"
-#include "daytime.h"
-#include "monitor.h"
-#include "iostream"
-
 using namespace std;
 
+/**
+ * @brief  Create facility object which will hold all bookings and related information
+ * @param  facilityName: Name of the facility
+ * @param  facilityType: Type of the facility
+ * @retval None
+ */
 facility::facility(string facilityName, facilityType facilityType)
 {
 
@@ -16,6 +16,12 @@ facility::facility(string facilityName, facilityType facilityType)
     bookings = std::vector<std::vector<booking *>>(7);
 }
 
+/**
+ * @brief  Created facility object with type specified as an integer
+ * @param  facilityName: Name of the facility
+ * @param  fType: Type of the facility specified as an integer
+ * @retval None
+ */
 facility::facility(string facilityName, int fType)
 {
     name = facilityName;
@@ -23,16 +29,30 @@ facility::facility(string facilityName, int fType)
     bookings = std::vector<std::vector<booking *>>(7);
 }
 
+/**
+ * @brief  Return the name of the facility
+ * @retval facility name
+ */
 string facility::getName()
 {
     return name;
 }
 
+/**
+ * @brief  Return type of the facility
+ * @retval facility type
+ */
 facilityType facility::getType()
 {
     return type;
 }
 
+/**
+ * @brief  Check of booking exists for facility with confirmation ID brovided
+ * @note  booking ID = Confirmation ID
+ * @param  bookingId: confirmation ID of bookinf
+ * @retval True of confirmation ID exists
+ */
 bool facility::isBooking(string bookingId)
 {
     for (int i = 0; i < 7; i++)
@@ -42,6 +62,11 @@ bool facility::isBooking(string bookingId)
     return false;
 }
 
+/**
+ * @brief  Get booking corresponding to bookingId from the facility
+ * @param  *bookingId: Confirmation ID provided when booking the facility
+ * @retval pointer to booking object
+ */
 booking *facility::getBooking(string *bookingId)
 {
     cout << bookings.size() << endl;
@@ -58,11 +83,21 @@ booking *facility::getBooking(string *bookingId)
     return nullptr;
 }
 
+/**
+ * @brief  Returns all the bookings on a particular day for the facility
+ * @param  day: day for which bookings are required
+ * @retval vector of pointers for booking objects for each day
+ */
 std::vector<booking *> facility::getBookings(daytime::day day)
 {
     return bookings[day];
 }
 
+/**
+ * @brief  Updates all booking by checking if they are still valid or have passed their expiration date
+ * @note   This function is to be called atthe end of each day but is not used as it is out of scope
+ * @retval None
+ */
 void facility::updateBookings()
 {
 
@@ -116,11 +151,21 @@ void facility::updateBookings()
     }
 }
 
+/**
+ * @brief  Return bookings of all days for the facility
+ * @retval 2D vector containing pointers to bookings for all days
+ */
 std::vector<std::vector<booking *>> facility::getBookings()
 {
     return bookings;
 }
 
+/**
+ * @brief  Get availabile slots for booking every day
+ * @param  day: day for which booking slots are required
+ * @param  confirmationId: All bookings linked to this confirmation ID will not be considered
+ * @retval vector of durations for empty slots
+ */
 vector<daytime::duration> facility::getAvailability(daytime::day day, string confirmationId)
 {
     vector<daytime::duration> availabilities;
@@ -164,6 +209,12 @@ vector<daytime::duration> facility::getAvailability(daytime::day day, string con
     return availabilities;
 }
 
+/**
+ * @brief  Print availabilities for a particular day
+ * @param  day: day for which booking slots are required
+ * @param  confirmationId: All bookings linked to this confirmation ID will not be considered
+ * @retval None
+ */
 void facility::printAvailability(daytime::day day, string confirmationId)
 {
     vector<daytime::duration> availabilities = getAvailability(day, confirmationId);
@@ -177,6 +228,12 @@ void facility::printAvailability(daytime::day day, string confirmationId)
     }
 }
 
+/**
+ * @brief  Get availability for a continuous range of days
+ * @param  startDay: day on which booking is required
+ * @param  numOfDays: number of days from start day for which booking is required
+ * @retval 2D vector of available durations for individual days
+ */
 vector<vector<daytime::duration>> facility::getAvailability(daytime::day startDay, int numOfDays)
 {
     vector<vector<daytime::duration>> availabilities;
@@ -185,6 +242,12 @@ vector<vector<daytime::duration>> facility::getAvailability(daytime::day startDa
     return availabilities;
 }
 
+/**
+ * @brief  Check if booking is possible for given duration
+ * @param  duration: duration for which booking is required
+ * @param  confirmationId: All bookings linked to this confirmation ID will not be considered
+ * @retval True if booking is possible
+ */
 bool facility::checkBookingPossible(daytime::duration duration, string confirmationId)
 {
     daytime::day day = duration.startDay;
@@ -224,6 +287,11 @@ bool facility::checkBookingPossible(daytime::duration duration, string confirmat
     return true;
 }
 
+/**
+ * @brief  Additition of new booking object to facility
+ * @param  *new_booking: pointer to booking object
+ * @retval confirmation ID of booking
+ */
 string facility::addBooking(booking *new_booking)
 {
     string confirmationId = string();
@@ -263,19 +331,31 @@ string facility::addBooking(booking *new_booking)
     return confirmationId;
 }
 
-string facility::addBooking(string ipAddress, daytime::duration duration)
+/**
+ * @brief  Add booking to facility
+ * @note   Use client ID and duration to first create a booking obejct before adding it
+ * @param  clientId: Unique ID for each client
+ * @param  duration: duration of booking
+ * @retval confirmation ID linked to booking
+ */
+string facility::addBooking(string clientId, daytime::duration duration)
 {
     cout << "Adding Booking : " << daytime::getDurationStr(duration) << endl;
     string confirmationId = string();
 
     if (checkBookingPossible(duration))
     {
-        booking *new_booking = new booking(ipAddress, duration);
+        booking *new_booking = new booking(clientId, duration);
         confirmationId = addBooking(new_booking);
     }
     return confirmationId;
 }
 
+/**
+ * @brief  Remove booking from facility
+ * @param  *booking: pointer to booking
+ * @retval None
+ */
 void facility::removeBooking(booking *booking)
 {
     daytime::day day = booking->getDuration().startDay, endDay = booking->getDuration().endDay;
@@ -295,6 +375,13 @@ void facility::removeBooking(booking *booking)
     } while (day != (endDay + 1) % 7);
     delete booking;
 }
+
+/**
+ * @brief  Cancel a booking
+ * @note   Removes a booking if it is valid
+ * @param  bookingId: confirmation ID linked to each booking
+ * @retval true of cancellation is successful
+ */
 bool facility::cancelBooking(string bookingId)
 {
     bool bookingCancelled = false;
@@ -307,7 +394,16 @@ bool facility::cancelBooking(string bookingId)
     return false;
 }
 
-bool facility::changeBooking(string ipAddress, string *bookingId, int days, int hours, int minutes)
+/**
+ * @brief  Change booking be given number of days, hour & minutes 
+ * @param  clientId: Unique ID for each client
+ * @param  bookingId: Confirmation ID linked to each booking
+ * @param  days: days by which booking is to offset
+ * @param  hours: hours by which booking is to be offset
+ * @param  minutes: minutes by which booking is to be offset
+ * @retval true if booking is sucessfully changed
+ */
+bool facility::changeBooking(string clientId, string* bookingId, int days, int hours, int minutes)
 {
     cout << "CHANGE BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -315,7 +411,7 @@ bool facility::changeBooking(string ipAddress, string *bookingId, int days, int 
     if (p_booking)
     {
         // cout << "change Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
-        booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
+        booking *new_booking = new booking(clientId, *bookingId, p_booking->getDuration());
         new_booking->change(days, hours, minutes);
         cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
@@ -335,7 +431,16 @@ bool facility::changeBooking(string ipAddress, string *bookingId, int days, int 
     return true;
 }
 
-bool facility::extendBooking(string ipAddress, string *bookingId, int days, int hours, int minutes)
+/**
+ * @brief  Extend booking period by given number of days, hours and minutes
+ * @param  clientId: Unique ID of each client
+ * @param  bookingId: confirmation ID linked to each booking
+ * @param  days: days by which booking is to be extended
+ * @param  hours: hours by which booking is to be extended
+ * @param  minutes: minutes by which booking is to be extended
+ * @retval true if booking is successfully extended
+ */
+bool facility::extendBooking(string clientId, string* bookingId, int days, int hours, int minutes)
 {
     cout << "EXTEND BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -343,7 +448,7 @@ bool facility::extendBooking(string ipAddress, string *bookingId, int days, int 
     if (p_booking)
     {
         // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
-        booking *new_booking = new booking(ipAddress, *bookingId, p_booking->getDuration());
+        booking *new_booking = new booking(clientId, *bookingId, p_booking->getDuration());
         new_booking->extend(days, hours, minutes);
         cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
@@ -362,11 +467,15 @@ bool facility::extendBooking(string ipAddress, string *bookingId, int days, int 
     return true;
 }
 
+/**
+ * @brief  Print all booking of the facility
+ * @retval None
+ */
 void facility::printBookings()
 {
     cout << "Facility : " << name << " | " << convertFacilityType(type) << endl;
-    ;
     char buffer[40];
+
     for (int i = 0; i < 7; i++)
     {
         daytime::day day = static_cast<daytime::day>(i);
@@ -378,6 +487,11 @@ void facility::printBookings()
     }
 }
 
+/**
+ * @brief  Convert facility type to a string
+ * @param  ftype: facilityType object
+ * @retval string stating type of facility
+ */
 string convertFacilityType(facilityType ftype)
 {
     switch (ftype)
@@ -395,18 +509,33 @@ string convertFacilityType(facilityType ftype)
     }
 }
 
+/**
+ * @brief  Add a monitor to the facility
+ * @param  clientAddress: Socket address of monitoring client
+ * @param  duration: duration of monitoring period
+ * @retval None
+ */
 void facility::addMonitor(sockaddr_in clientAddress, daytime::duration duration)
 {
     monitor monitor(clientAddress, duration);
     monitor.print();
     monitors.push_back(monitor);
 }
+
+/**
+ * @brief  Get all monitors of the facility
+ * @retval vector consisting of all monitors of the facility
+ */
 std::vector<monitor> facility::getMonitors()
 {
     updateMonitors();
     return monitors;
 }
 
+/**
+ * @brief  Update list of monitors by removing any monitors that have passed expiration date
+ * @retval None
+ */
 void facility::updateMonitors()
 {
     daytime::date today = daytime::getDate();
@@ -433,6 +562,11 @@ void facility::updateMonitors()
     }
 }
 
+/**
+ * @brief  Check if IP Address is a monitor of the facility 
+ * @param  ipAddress: address of monitor 
+ * @retval true of ipAddress is a monitor
+ */
 bool facility::isMonitor(string ipAddress)
 {
     updateMonitors();
@@ -442,6 +576,11 @@ bool facility::isMonitor(string ipAddress)
     return false;
 }
 
+/**
+ * @brief  Get monitor based on ipAddress
+ * @param  ipAddress: Ipaddress of monitor required
+ * @retval monitor object
+ */
 monitor facility::getMonitor(string ipAddress)
 {
     updateMonitors();

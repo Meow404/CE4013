@@ -4,6 +4,9 @@
 #include "daytime.h"
 #include "string"
 
+/**
+ * @brief  Booking object holds relevant booking information
+ */
 class booking
 {
     daytime::duration duration;
