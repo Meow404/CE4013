@@ -363,16 +363,16 @@ void commHandler::handleAllFunctions()
         switch (funNum)
         {
         case 1:
+            handleGetFaciltiyNames(buffer, &index);
+            break;  
+        case 2:
             handleGetAvailability(buffer, &index);
             break;
-        case 2:
+        case 3:
             handleAddBooking(buffer, &index);
             break;
-        case 3:
-            handleChangeBooking(buffer, &index);
-            break;
         case 4:
-            handleAddMonitor(buffer, &index);
+            handleChangeBooking(buffer, &index);
             break;
         case 5:
             handleExtendBooking(buffer, &index);
