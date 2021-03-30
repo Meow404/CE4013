@@ -2,6 +2,7 @@
 #define UTILS
 
 #include <cstring>
+#include <ctime>
 #include <string>
 
 using namespace std;
@@ -11,5 +12,7 @@ void marshalString(string value, char* message);
 
 int unmarshalInt(char* message);
 string unmarshalString(char* message, int length);
+
+string genRandom(const int len);
 
 #endif

@@ -15,11 +15,11 @@ bool facilityManager::checkDuration(int s_day, int s_hour, int s_minute, int e_d
 }
 bool facilityManager::checkDayTime(int day, int hour, int minute)
 {
-    if (day >= 7)
+    if (day >= 7 && day < 0)
         return false;
-    if (hour >= 24)
+    if (hour >= 24 && hour < 0)
         return false;
-    if (minute >= 60)
+    if (minute >= 60 && hour < 0)
         return false;
     return true;
 }
@@ -108,17 +108,19 @@ int facilityManager::addMonitorForFacility(facility *facility, struct sockaddr_i
         return 2;
 
     daytime::duration duration;
+
     duration.startDay = daytime::getDay();
     duration.startTime = daytime::getTime();
+    duration.startDate = daytime::getDate();
 
     duration.endTime.minute = duration.startTime.minute + minutes;
     duration.endTime.hour = duration.startTime.hour + hours + duration.endTime.minute / 60;
     duration.endDay = static_cast<daytime::day>((duration.startDay + day + duration.endTime.hour / 24) % 7);
     duration.endTime.minute %= 60;
     duration.endTime.hour %= 24;
+    duration.endDate = daytime::getFutureDate(day, hours, minutes);
 
-    daytime::date expiryDate = daytime::getFutureDate(day, hours, minutes);
-    facility->addMonitor(clientAddress, duration, expiryDate);
+    facility->addMonitor(clientAddress, duration);
 
     return 0;
 }
@@ -134,11 +136,18 @@ int facilityManager::addFacilityBooking(std::string ipAddress, std::string *conf
 
     if (!checkDuration(s_day, s_hour, s_minute, e_day, e_hour, e_minute))
         return 3;
+
     daytime::duration duration;
+    daytime::day today = daytime::getDay();
+
     duration.startDay = static_cast<daytime::day>(s_day);
     duration.startTime = {s_hour, s_minute};
+    duration.startDate = daytime::getFutureDate((duration.startDay + 7 - today) % 7, 0, 0);
+
     duration.endDay = static_cast<daytime::day>(e_day);
     duration.endTime = {e_hour, e_minute};
+    duration.endDate = daytime::getFutureDate((duration.endDay + 7 - today) % 7, 0, 0);
+
     *confirmationId = facility->addBooking(ipAddress, duration);
     if (confirmationId->size() == 0)
         return 2;
@@ -167,7 +176,6 @@ int facilityManager::extendFacilityBooking(std::string ipAddress, string *confir
 
     if (!checkDayTime(days, hours, minutes))
         return 3;
-
     if (!facility->extendBooking(ipAddress, confirmationId, days, hours, minutes))
         return 2;
     else
@@ -188,4 +196,22 @@ void facilityManager::printFacilities()
     {
         facilities[i]->printBookings();
     }
+}
+
+void facilityManager::updateAllFacilityBookings()
+{
+    for (int i = 0; i < facilities.size(); i++)
+    {
+        facilities[i]->updateBookings();
+    }
+}
+
+std::vector<std::string> facilityManager::getFacilityNames()
+{
+    std::vector<std::string> names;
+    for (int i = 0; i < facilities.size(); i++)
+    {
+        names.push_back(facilities[i]->getName());
+    }
+    return names;
 }

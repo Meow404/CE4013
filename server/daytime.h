@@ -37,8 +37,10 @@ namespace daytime
     {
         day startDay;
         time startTime;
+        date startDate;
         day endDay;
         time endTime;
+        date endDate;
     };
 
     std::string getDurationStr(duration duration);
