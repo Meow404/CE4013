@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
                            "[2] Book Facility\n"    \
                            "[3] Shift Booking Time\n"    \
                            "[4] Monitor Facility Availability\n"    \
-                           "[5] Cancel Booking\n"    \
-                           "[6] Extend Booking Period\n"    \
+                           "[5] Extend Booking Period\n"    \
+                           "[6] Cancel Booking\n"    \
                            "[7] Exit\n"   \
                            "Input Command: ";
     int command;
@@ -66,11 +66,11 @@ int main(int argc, char *argv[]) {
             case NEW_MONITOR:
                 craftNewMonitorReq(payload);
                 break;
-            case CANCEL_BOOK:
-                craftCancelBookingReq(payload);
-                break;
             case EXTEND_BOOK:
                 craftExtendBookingReq(payload);
+                break;
+            case CANCEL_BOOK:
+                craftCancelBookingReq(payload);
                 break;
             case EXIT:
                 exit(1);
