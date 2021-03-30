@@ -117,9 +117,8 @@ int facilityManager::addMonitorForFacility(facility *facility, struct sockaddr_i
     duration.endTime.minute %= 60;
     duration.endTime.hour %= 24;
 
-    monitor monitor(clientAddress, duration);
-    cout << "adding monitor " << monitor.getIpAddress() << " for facility " << facility->getName() << endl;
-    facility->addMonitor(monitor);
+    daytime::date expiryDate = daytime::getFutureDate(day, hours, minutes);
+    facility->addMonitor(clientAddress, duration, expiryDate);
 
     return 0;
 }

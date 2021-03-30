@@ -340,8 +340,10 @@ string convertFacilityType(facilityType ftype)
     }
 }
 
-void facility::addMonitor(monitor monitor)
+void facility::addMonitor(sockaddr_in clientAddress, daytime::duration duration, daytime::date expiryDate)
 {
+    monitor monitor(clientAddress, duration, expiryDate);
+    monitor.print();
     monitors.push_back(monitor);
 }
 std::vector<monitor> facility::getMonitors()
@@ -352,30 +354,23 @@ std::vector<monitor> facility::getMonitors()
 
 void facility::updateMonitors()
 {
+    daytime::date today = daytime::getDate();
+    daytime::time time = daytime::getTime();
 
     for (int i = 0; i < monitors.size(); i++)
     {
-        daytime::day today = daytime::getDay();
-        daytime::duration duration = monitors[i].getDuration();
-        daytime::day day = duration.startDay, end = duration.endDay;
-        bool remove = true;
+        daytime::date m_exp = monitors[i].getExpiryDate();
+        daytime::duration m_duration = monitors[i].getDuration();
+        bool remove = false;
+        if (m_exp.year < today.year || m_exp.month < today.month || m_exp.day < today.day)
+            remove = true;
 
-        do
-        {
-            if (day == today)
-            {
-                daytime::time time = daytime::getTime();
-                if (time.hour < duration.endTime.hour || (time.hour == duration.endTime.hour && time.minute < duration.endTime.minute))
-                    remove = false;
-                break;
-            }
-
-            day = static_cast<daytime::day>((day + 1) % 7);
-        } while (day != (end + 1) % 7);
+        if (m_exp.day == today.day && (m_duration.endTime.hour < time.hour || m_duration.endTime.minute < time.minute))
+            remove = true;
 
         if (remove)
         {
-            cout << "removing monitor : " << monitors[i].getIpAddress() << " as monitor time ended." << endl;
+            cout << "Removing monitor : " << monitors[i].getIpAddress() << " for facility '" << name << "' as monitoring period has expired" << endl;
             monitors.erase(monitors.begin() + i);
             i--;
         }

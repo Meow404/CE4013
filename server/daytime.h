@@ -20,6 +20,13 @@ namespace daytime
 
     std::string convertDay(day day);
 
+    struct date
+    {
+        int day;
+        int month;
+        int year;
+    };
+
     struct time
     {
         int hour;
@@ -37,6 +44,8 @@ namespace daytime
     std::string getDurationStr(duration duration);
     time getTime();
     day getDay();
+    date getDate();
+    date getFutureDate(int days, int hours, int minutes);
 }
 
 #endif
