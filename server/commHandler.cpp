@@ -240,6 +240,7 @@ void commHandler::handleGetFaciltiyNames(char *buffer, int *index)
 {
     vector<string> facilityNames = FM->getFacilityNames();
     *index = 0;
+    setInt(buffer, index, facilityNames.size());
     for (int i = 0; i < facilityNames.size(); i++)
         setString(buffer, index, facilityNames[i]);
     server->sendMessage(buffer, *index);
