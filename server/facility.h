@@ -25,6 +25,7 @@ class facility
     std::vector<monitor> monitors;
 
     std::string addBooking(booking *new_booking);
+    void removeBooking(booking* booking);
     std::string getFacilityType(facilityType ftype);
 
 public:
@@ -35,8 +36,9 @@ public:
 
     bool isBooking(std::string bookingId);
     booking* getBooking(std::string* bookingId);
-    void updateBookings(daytime::day day, std::vector<booking*> u_bookings);
+    void updateBookings();
     bool cancelBooking(std::string bookingId);
+    
 
     std::vector<booking*> getBookings(daytime::day day);
     std::vector<std::vector<booking*>> getBookings();
@@ -51,7 +53,7 @@ public:
     bool extendBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
     void printBookings();
 
-    void addMonitor(sockaddr_in clientAddress, daytime::duration duration, daytime::date expiryDate);
+    void addMonitor(sockaddr_in clientAddress, daytime::duration duration);
     std::vector<monitor> getMonitors();
     void updateMonitors();
     bool isMonitor(std::string ipAddress);
