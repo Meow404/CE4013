@@ -281,6 +281,7 @@ void commHandler::handleAllFunctions()
             break;
         case 6:
             handleCancelBooking(buffer, &index);
+            break;
         case 7:
             handleAddMonitor(buffer, &index);
             break;

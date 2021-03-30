@@ -185,9 +185,9 @@ int facilityManager::extendFacilityBooking(std::string ipAddress, string *confir
 bool facilityManager::cancelFacilityBooking(string confirmationId, facility *facility)
 {
     if (!facility)
-        return false;
+        return 1;
     facility->cancelBooking(confirmationId);
-    return true;
+    return 0;
 }
 
 void facilityManager::printFacilities()
