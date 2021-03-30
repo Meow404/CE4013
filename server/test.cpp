@@ -20,4 +20,16 @@ int main()
     commHandler cm(&server, &FM);
     cm.start();
 
+    // facility* f = FM.getFacility("Lecture Theatre 1");
+    // string cid1, cid2, cid3;
+    // FM.addFacilityBooking("192.168.1.46", &cid1, f, 1, 2, 30, 2, 3, 30);
+    // FM.addFacilityBooking("192.168.1.47", &cid2, f, 2, 3, 30, 3, 2, 30);
+    // FM.addFacilityBooking("192.168.1.48", &cid3, f, 3, 2, 30, 4, 3, 30);
+    // f->printAvailability(daytime::TUEDAY);
+    // f->printAvailability(daytime::WEDNESDAY);
+    // f->printAvailability(daytime::THURSDAY);
+    // f->printAvailability(daytime::FRIDAY);
+    // f->printBookings();
+    // FM.cancelFacilityBooking(cid1, f);
+    // f->printBookings();
 }

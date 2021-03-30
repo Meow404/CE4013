@@ -6,7 +6,11 @@
 #include "daytime.h"
 #include "monitor.h"
 #include "string"
+#include "iostream"
 
+/**
+ * @brief  facility types stored as an emuerated
+ */
 enum facilityType
 {
     LECTURE_THEATRE,
@@ -14,6 +18,7 @@ enum facilityType
     MEETING_ROOM,
     SPORTS_FACILITY
 };
+
 
 std::string convertFacilityType(facilityType ftype);
 
