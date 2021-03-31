@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         res = 0;
         res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, CLIENT_TIMEOUT);
         if (res <= 0) {
-            cerr << "ERROR: Error receiving response\n";
+            cerr << "ERROR: Timeout Occurred\n";
             goto retransmit;
         }
 
@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
                     res = 0;
                     res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
                     if (res <= 0) {
-                        cerr << "ERROR: Error receiving response\n";
+                        cerr << "ERROR: Timeout Occurred\n";
                         goto skipMonitorNotify;
                     }
                     handleMonitorNotify(buffer);
