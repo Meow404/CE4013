@@ -144,33 +144,6 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
-void handleResponse(int command, char buffer[MAX_BUFFSIZE])
-{
-    switch (command)
-    {
-    case GET_FAC:
-        break;
-    case NEW_BOOK:
-        handleNewBookingRes(buffer);
-        break;
-    case SHIFT_BOOK:
-        handleShiftBookingRes(buffer);
-        break;
-    case NEW_MONITOR:
-        handleNewMonitorRes(buffer);
-        break;
-    case CANCEL_BOOK:
-        handleCancelBookingRes(buffer);
-        break;
-    case EXTEND_BOOK:
-        handleExtendBookingRes(buffer);
-        break;
-    default:
-        std::cerr << "ERROR: Unknown response" << std::endl;
-        break;
-    }
-}
-
 void handleNewMonitorRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -236,5 +209,43 @@ void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
                    resDuration.startTime.hour, resDuration.startTime.minute,
                    resDuration.endTime.hour, resDuration.endTime.minute);
         }
+    }
+}
+
+void handleGetFacNames(char buffer[MAX_BUFFSIZE]) {
+    int ind = 0, numFac;
+    cout << "\nFACILITIES:" << endl;;
+    numFac = getInt(buffer, &ind);
+    for (int i = 0; i < numFac; i++) {
+        cout << getString(buffer, &ind) << endl;
+    }
+    cout << endl;
+}
+
+void handleResponse(int command, char buffer[MAX_BUFFSIZE])
+{
+    switch (command)
+    {
+    case GET_FAC:
+        handleGetFacNames(buffer);
+        break;
+    case NEW_BOOK:
+        handleNewBookingRes(buffer);
+        break;
+    case SHIFT_BOOK:
+        handleShiftBookingRes(buffer);
+        break;
+    case NEW_MONITOR:
+        handleNewMonitorRes(buffer);
+        break;
+    case CANCEL_BOOK:
+        handleCancelBookingRes(buffer);
+        break;
+    case EXTEND_BOOK:
+        handleExtendBookingRes(buffer);
+        break;
+    default:
+        std::cerr << "ERROR: Unknown response" << std::endl;
+        break;
     }
 }

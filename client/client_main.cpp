@@ -52,6 +52,7 @@ int main(int argc, char *argv[]) {
         bool isMonitor = false;
         switch (command) {
             case GET_FAC:
+                goto constructMsg;
                 break;
             case QUERY:
                 getQueryInput(facilityName, queryDays);
@@ -86,6 +87,7 @@ int main(int argc, char *argv[]) {
         }
         if (payload.empty()) continue;
 
+        constructMsg:
         requestMsg.insert(requestMsg.end(), &marshalledMsgType[0], &marshalledMsgType[4]); // Request type message
         char marshalledReqId[4];
         marshalInt(reqId, marshalledReqId);

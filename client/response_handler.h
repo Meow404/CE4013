@@ -4,6 +4,7 @@
 #include "../utilities/constants.h"
 
 void handleQueryRes(int day, char buffer[MAX_BUFFSIZE]);
+void handleGetFacNames(char buffer[MAX_BUFFSIZE]);
 void handleNewBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleShiftBookingRes(char buffer[MAX_BUFFSIZE]);
 void handleNewMonitorRes(char buffer[MAX_BUFFSIZE]);
