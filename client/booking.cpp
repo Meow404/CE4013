@@ -8,8 +8,10 @@
 
 using namespace std;
 
-/** Request Format:
- *  <facility name size><facility name>[<s_day><s_hr><s_min>][<e_day><e_hr><e_min>]
+/**
+ * @brief  Write a request message for New Booking to payload buffer
+ * @param  payload Buffer to store request message
+ * @retval None
  */
 void craftNewBookingReq(vector<char> &payload) {
     string bookDaytimePrompt =
@@ -99,8 +101,10 @@ void craftNewBookingReq(vector<char> &payload) {
     payload.insert(payload.end(), &marshalledBookDT[0], &marshalledBookDT[24]);
 }
 
-/** Request Format:
- *  <confirmationID>[<c_day><c_hr><c_min>]
+/**
+ * @brief  Write a request message for Shift Booking Time to payload buffer
+ * @param  payload Buffer to store request message
+ * @retval None
  */
 void craftShiftBookingReq(vector<char> &payload) {
     char confirmID[26];
@@ -142,8 +146,10 @@ void craftShiftBookingReq(vector<char> &payload) {
     payload.insert(payload.end(), &min[0], &min[4]);
 }
 
-/** Request Format:
- *  <confirmationID>
+/**
+ * @brief  Write a request message for Cancel Booking to payload buffer
+ * @param  payload Buffer to store request message
+ * @retval None
  */
 void craftCancelBookingReq(vector<char> &payload) {
     char confirmID[26];
@@ -156,8 +162,10 @@ void craftCancelBookingReq(vector<char> &payload) {
     payload.insert(payload.end(), &confirmID[0], &confirmID[CID_LENGTH]);
 }
 
-/** Request Format:
- *  <confirmationID>[<e_day><e_hr><e_min>]
+/**
+ * @brief  Write a request message for Extend Booking End Time to payload buffer
+ * @param  payload Buffer to store request message
+ * @retval None
  */
 void craftExtendBookingReq(std::vector<char> &payload) {
     char confirmID[26];

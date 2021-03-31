@@ -6,6 +6,14 @@
 #include "monitor.h"
 #include "proxy.h"
 
+/**
+ * @brief  Set the end time for a monitor listening operation
+ * @param  monitorEnd The time_point object to write monitor expire time representation to
+ * @param  days Number of days to monitor
+ * @param  hours Number of hours to monitor
+ * @param  minutes Number of minutes to monitor
+ * @retval None
+ */
 void setMonitorEndTime(std::chrono::system_clock::time_point &monitorEnd,
                       int days, int hours, int minutes) {
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
@@ -13,8 +21,11 @@ void setMonitorEndTime(std::chrono::system_clock::time_point &monitorEnd,
     monitorEnd = now + durationInMin;
 }
 
-/** Request Format:
- *  <facility name size><facility name>[<m_day><m_hr><m_min>]
+/**
+ * @brief  Write a request message for new Monitor Operation to payload buffer
+ * @param  payload Buffer to store request message
+ * @param  monitorEnd The time_point object to write monitor expire time representation to
+ * @retval None
  */
 void craftNewMonitorReq(std::vector<char> &payload,
                         std::chrono::system_clock::time_point &monitorEnd) {
