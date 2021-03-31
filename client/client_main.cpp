@@ -96,19 +96,20 @@ int main(int argc, char *argv[]) {
         requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
 
+        retransmit:
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
         if (res < 0) {
             cerr << "ERROR: Failed to send request.\n";
             continue;
         }
 
-        res == 0;
+        res = 0;
         res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, CLIENT_TIMEOUT);
         if (res <= 0) {
             cerr << "ERROR: Error receiving response\n";
-            continue;
+            goto retransmit;
         }
-        // cout << "SIZE RECEIVED: " << res << endl;
+
         if (command == QUERY) {
             handleQueryRes(day, buffer);
         } else {
@@ -128,7 +129,7 @@ int main(int argc, char *argv[]) {
             auto n = std::chrono::system_clock::to_time_t(now);
             auto t = std::chrono::system_clock::to_time_t(monitorEnd);
             while (timeToEnd > 0) {
-                    res == 0;
+                    res = 0;
                     res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
                     if (res <= 0) {
                         cerr << "ERROR: Error receiving response\n";
