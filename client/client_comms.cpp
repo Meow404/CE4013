@@ -51,7 +51,6 @@ int ClientSocket::sendMsg(char *msg, int len) {
     if (res == SOCKET_ERROR) {
         printf("Error sending message with error code %d", WSAGetLastError());
     }
-    std::cout << "LENGTH SENT: " << len << std::endl;
     return res;
 }
 

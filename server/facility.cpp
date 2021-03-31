@@ -550,11 +550,16 @@ void facility::updateMonitors()
         if (m_exp.year < today.year || m_exp.month < today.month || m_exp.day < today.day)
             remove = true;
 
-        if (m_exp.day == today.day && (m_duration.endTime.hour < time.hour || m_duration.endTime.minute < time.minute))
+        if (m_exp.day == today.day &&
+            (m_duration.endTime.hour < time.hour ||
+            (m_duration.endTime.hour == time.hour && m_duration.endTime.minute < time.minute)))
+            // Same day, curr hr > expiry hr or (curr hr = expiry hr, curr min > expiry min)
             remove = true;
 
         if (remove)
         {
+            cout << today.year << today.month << today.day << time.hour << time.minute;
+            cout << m_exp.year << m_exp.month << m_exp.day << m_duration.endTime.hour << m_duration.endTime.minute;
             cout << "Removing monitor : " << monitors[i].getIpAddress() << " for facility '" << name << "' as monitoring period has expired!" << endl;
             monitors.erase(monitors.begin() + i);
             i--;

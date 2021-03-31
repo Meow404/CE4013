@@ -94,8 +94,6 @@ int main(int argc, char *argv[]) {
         char marshalledCommand[4];
         marshalInt(command, marshalledCommand);
         requestMsg.insert(requestMsg.end(), &marshalledCommand[0], &marshalledCommand[4]);
-        // requestMsg.insert(requestMsg.end(), &hostname[0], &hostname[sizeof(hostname)/sizeof(char)]);
-        // requestMsg.push_back(portno);
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
 
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
@@ -126,28 +124,24 @@ int main(int argc, char *argv[]) {
                                 monitorEnd - now
                             )
                             .count();
-            cout << "TIME TO END: " << timeToEnd << endl;
+            cout << "Monitoring for " << timeToEnd << "more minutes..." << endl;
             auto n = std::chrono::system_clock::to_time_t(now);
             auto t = std::chrono::system_clock::to_time_t(monitorEnd);
-            cout << "MONITOR TIME: " << ctime(&n) << endl;
-            cout << "MONITOR TIME: " << ctime(&t) << endl;
             while (timeToEnd > 0) {
-                res == 0;
-                res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
-                if (res <= 0) {
-                    cerr << "ERROR: Error receiving response\n";
-                    goto skipMonitorNotify;
-                }
-                handleMonitorNotify(buffer);
+                    res == 0;
+                    res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
+                    if (res <= 0) {
+                        cerr << "ERROR: Error receiving response\n";
+                        goto skipMonitorNotify;
+                    }
+                    handleMonitorNotify(buffer);
                 skipMonitorNotify:
                 now = std::chrono::system_clock::now();
                 timeToEnd = std::chrono::duration_cast<std::chrono::minutes>(monitorEnd - now)
                             .count();
-                cout << "TIME TO END: " << timeToEnd << endl;
+                cout << "Monitoring for " << timeToEnd << "more minutes..." << endl;
                 auto n = std::chrono::system_clock::to_time_t(now);
                 auto t = std::chrono::system_clock::to_time_t(monitorEnd);
-                cout << "MONITOR TIME: " << ctime(&n) << endl;
-                cout << "MONITOR TIME: " << ctime(&t) << endl;
             }
         }
 

@@ -57,4 +57,6 @@ void craftNewMonitorReq(std::vector<char> &payload,
     payload.insert(payload.end(), &hourBytes[0], &hourBytes[4]);
     marshalInt(minutes, minBytes);
     payload.insert(payload.end(), &minBytes[0], &minBytes[4]);
+
+    std::cout << std::endl << facilityName;
 }
