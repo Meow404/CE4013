@@ -127,9 +127,13 @@ int main(int argc, char *argv[]) {
                             )
                             .count();
             cout << "TIME TO END: " << timeToEnd << endl;
+            auto n = std::chrono::system_clock::to_time_t(now);
+            auto t = std::chrono::system_clock::to_time_t(monitorEnd);
+            cout << "MONITOR TIME: " << ctime(&n) << endl;
+            cout << "MONITOR TIME: " << ctime(&t) << endl;
             while (timeToEnd > 0) {
                 res == 0;
-                res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd);
+                res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
                 if (res <= 0) {
                     cerr << "ERROR: Error receiving response\n";
                     goto skipMonitorNotify;
@@ -140,6 +144,10 @@ int main(int argc, char *argv[]) {
                 timeToEnd = std::chrono::duration_cast<std::chrono::minutes>(monitorEnd - now)
                             .count();
                 cout << "TIME TO END: " << timeToEnd << endl;
+                auto n = std::chrono::system_clock::to_time_t(now);
+                auto t = std::chrono::system_clock::to_time_t(monitorEnd);
+                cout << "MONITOR TIME: " << ctime(&n) << endl;
+                cout << "MONITOR TIME: " << ctime(&t) << endl;
             }
         }
 

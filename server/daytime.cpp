@@ -104,7 +104,7 @@ daytime::date daytime::getDate(){
  */
 daytime::date daytime::getFutureDate(int days, int hours, int minutes){
     system_clock::time_point t = std::chrono::system_clock::now();
-    system_clock::time_point new_t = t + std::chrono::minutes(days*24*60 + hours*24 + minutes);
+    system_clock::time_point new_t = t + std::chrono::minutes(days*24*60 + hours*60 + minutes);
 
     time_t now = system_clock::to_time_t(new_t);
     tm *ltm = localtime(&now);

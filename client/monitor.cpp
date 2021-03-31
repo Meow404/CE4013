@@ -9,7 +9,7 @@
 void setMonitorEndTime(std::chrono::system_clock::time_point &monitorEnd,
                       int days, int hours, int minutes) {
     std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-    std::chrono::minutes durationInMin = std::chrono::minutes(days*24*60 + hours*24 + minutes);
+    std::chrono::minutes durationInMin = std::chrono::minutes(days*24*60 + hours*60 + minutes);
     monitorEnd = now + durationInMin;
 }
 
