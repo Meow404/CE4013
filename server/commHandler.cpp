@@ -98,9 +98,13 @@ void commHandler::setDuration(char *buffer, int *index, daytime::duration value)
  * @param  index: index from which buffer starts
  * @retval None
  */
-void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *index)
-{
-    int startIndex = *index;
+void commHandler::handleUpdateMonitors(facility *facility, int function)
+{   
+    int index = 0;
+    char buffer[BUFFER_SIZE];
+    setInt(buffer, &index, function);
+
+    int startIndex = index;
 
     vector<monitor> monitors = facility->getMonitors();
     if (monitors.size() != 0)
@@ -108,25 +112,25 @@ void commHandler::handleUpdateMonitors(facility *facility, char *buffer, int *in
         for (int day = 0; day < 7; day++)
         {
             std::vector<daytime::duration> availabilities = FM->getFacilityAvailability(facility, day);
-            setInt(buffer, index, day);
-            setInt(buffer, index, availabilities.size());
+            setInt(buffer, &index, day);
+            setInt(buffer, &index, availabilities.size());
             for (int i = 0; i < availabilities.size(); i++)
             {
-                setDuration(buffer, index, availabilities[i]);
-                if (*index >= BUFFER_SIZE - 20)
+                setDuration(buffer, &index, availabilities[i]);
+                if (index >= BUFFER_SIZE - 20)
                 {
                     for (int j = 0; j < monitors.size(); j++)
                     {
-                        server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
+                        server->sendMessageToClient(buffer, index, monitors[j].getSocketAddress());
                     }
-                    *index = startIndex;
+                    index = startIndex;
                 }
             }
         }
-        if (*index > startIndex)
+        if (index > startIndex)
             for (int j = 0; j < monitors.size(); j++)
             {
-                server->sendMessageToClient(buffer, *index, monitors[j].getSocketAddress());
+                server->sendMessageToClient(buffer, index, monitors[j].getSocketAddress());
             }
     }
 }
@@ -220,9 +224,7 @@ void commHandler::handleAddBooking(char *buffer, int *index)
 
     if (status == 0)
     {
-        *index = 0;
-        setInt(buffer, index, 1);
-        handleUpdateMonitors(facility, buffer, index);
+        handleUpdateMonitors(facility, 1);
     }
 }
 
@@ -256,9 +258,7 @@ void commHandler::handleChangeBooking(char *buffer, int *index)
 
     if (status == 0)
     {
-        *index = 0;
-        setInt(buffer, index, 3);
-        handleUpdateMonitors(facility, buffer, index);
+        handleUpdateMonitors(facility, 3);
     }
 }
 
@@ -291,9 +291,7 @@ void commHandler::handleExtendBooking(char *buffer, int *index)
 
     if (status == 0)
     {
-        *index = 0;
-        setInt(buffer, index, 2);
-        handleUpdateMonitors(facility, buffer, index);
+        handleUpdateMonitors(facility, 2);
     }
 }
 
@@ -318,9 +316,7 @@ void commHandler::handleCancelBooking(char *buffer, int *index)
 
     if (status == 0)
     {
-        *index = 0;
-        setInt(buffer, index, 4);
-        handleUpdateMonitors(facility, buffer, index);
+        handleUpdateMonitors(facility, 4);
     }
 }
 

@@ -27,7 +27,7 @@ class commHandler
 
     public:
     commHandler(udpServer* server, facilityManager* facility_manager);
-    void handleUpdateMonitors(facility* facility, char * buffer, int* index);
+    void handleUpdateMonitors(facility *facility, int function);
     void handleGetFaciltiyNames(char * buffer, int* index);
     void handleAddMonitor(char * buffer, int* index);
     void handleGetAvailability(char * buffer, int* index);

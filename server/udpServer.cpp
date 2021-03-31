@@ -1,6 +1,7 @@
 #include "udpServer.h"
 #include <stdio.h>
 #include <iostream>
+#include <cstdlib>
 // #include <arpa/inet.h>
 
 using namespace std;
@@ -14,6 +15,7 @@ using namespace std;
  */
 udpServer::udpServer(int port, bool invocation, double failureRate)
 {
+    srand(time(nullptr));
 
     atMostOnce = invocation;
     atLeastOnce = !invocation;
@@ -89,8 +91,9 @@ int udpServer::recieveMessage(char* buffer, int bufferSize, int timeout)
  */
 void udpServer::sendMessage(const char *buffer, int bufferSize)
 {
-    srand(time(0));
-    if (static_cast <float> (rand()) / RAND_MAX > failureRate)
+    float failure = (float) (rand()) / (float) (RAND_MAX);
+    cout << "Failure : " << failure << endl;
+    if (failure > failureRate)
     {
 
         cout << "Sending Message to " << getClientIP() << endl;
