@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     marshalInt(0, marshalledMsgType);
 
     if (argc != 3) {
-        cout << "Usage: ./Client [SERVER_ADDRESS] [PORT]" << endl;
+        cout << "Usage: .\\Client [SERVER_ADDRESS] [PORT]" << endl;
         exit(1);
     }
 
