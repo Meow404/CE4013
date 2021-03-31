@@ -10,6 +10,7 @@ using namespace std;
  * @brief  Parse and display server response to Query Availability
  * @param  day Day of availabilities returned from server
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleQueryRes(int day, char buffer[MAX_BUFFSIZE], int reqId)
@@ -61,6 +62,7 @@ void handleQueryRes(int day, char buffer[MAX_BUFFSIZE], int reqId)
 /**
  * @brief  Parse and display server response to New Booking operation
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleNewBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
@@ -105,6 +107,7 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 /**
  * @brief  Parse and display server response to Shift Booking Time
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleShiftBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
@@ -149,6 +152,7 @@ void handleShiftBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 /**
  * @brief  Parse and display server response to Cancel Booking operation
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleCancelBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
@@ -184,6 +188,7 @@ void handleCancelBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 /**
  * @brief  Parse and display server response to Extend Booking Time
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleExtendBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
@@ -228,6 +233,7 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 /**
  * @brief  Parse and display server response to Monitor operation
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleNewMonitorRes(char buffer[MAX_BUFFSIZE], int reqId)
@@ -323,6 +329,7 @@ void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
 /**
  * @brief  Parse and display server response to Get Facility Names operation
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleGetFacNames(char buffer[MAX_BUFFSIZE], int reqId) {
@@ -350,6 +357,7 @@ void handleGetFacNames(char buffer[MAX_BUFFSIZE], int reqId) {
  * @brief  Select handler for server response according to operation command code
  * @param  command Operation code
  * @param  buffer Server response buffer
+ * @param  reqId ID of the request message server is replying to
  * @retval None
  */
 void handleResponse(int command, char buffer[MAX_BUFFSIZE], int reqId)

@@ -21,19 +21,25 @@ int main(int argc, char *argv[]) {
                            "[7] Monitor Facility Availability\n"    \
                            "[8] Exit\n"   \
                            "Input Command: ";
-    int command;
+    int command, timeout;
     char buffer[MAX_BUFFSIZE];
     char marshalledMsgType[4];
     marshalInt(0, marshalledMsgType);
 
-    if (argc != 3) {
-        cout << "Usage: .\\Client [SERVER_ADDRESS] [PORT]" << endl;
+    if (argc < 3) {
+        cout << "Usage: .\\Client [SERVER_ADDRESS] [PORT] [(Optional) TIMEOUT_IN_MS]" << endl;
         exit(1);
     }
+    if (argc == 3) {
+        timeout = DEFAULT_TIMEOUT;
+    }
+    if (argc > 3) {
+        timeout = stoi(argv[3]);
+    }
+    cout << "TIMEOUT SET TO " << timeout << "ms" << endl;
 
     hostname = argv[1];
     portno = argv[2];
-    cout << hostname << " " << portno << endl;
     ClientSocket clientSock(hostname, portno);
 
     while (command != EXIT) {
@@ -106,7 +112,7 @@ int main(int argc, char *argv[]) {
         }
 
         res = 0;
-        res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, CLIENT_TIMEOUT);
+        res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeout);
         if (res <= 0) {
             cerr << "ERROR: Timeout Occurred. Resending...\n";
             goto retransmit;
@@ -132,7 +138,7 @@ int main(int argc, char *argv[]) {
             auto t = std::chrono::system_clock::to_time_t(monitorEnd);
             while (timeToEnd > 0) {
                     res = 0;
-                    res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60);
+                    res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeToEnd * 60 * 1000);
                     if (res <= 0) {
                         cerr << "ERROR: Timeout Occurred\n";
                         goto skipMonitorNotify;

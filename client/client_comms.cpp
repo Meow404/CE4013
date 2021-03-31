@@ -86,7 +86,7 @@ int ClientSocket::sendMsg(char *msg, int len) {
  */
 int ClientSocket::recvMsg(char *buffer, int len, int timeout) {
     if (timeout > 0) {
-        DWORD dw = timeout * 1000;
+        DWORD dw = timeout;
         setsockopt(this->clientSocket, SOL_SOCKET, SO_RCVTIMEO, (char *) &dw, sizeof(dw));
     }
 
