@@ -6,6 +6,12 @@
 
 using namespace std;
 
+/**
+ * @brief  Parse and display server response to Query Availability
+ * @param  day Day of availabilities returned from server
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleQueryRes(int day, char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -41,6 +47,11 @@ void handleQueryRes(int day, char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to New Booking operation
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleNewBookingRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -69,6 +80,11 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to Shift Booking Time
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleShiftBookingRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -97,6 +113,11 @@ void handleShiftBookingRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to Cancel Booking operation
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleCancelBookingRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -116,6 +137,11 @@ void handleCancelBookingRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to Extend Booking Time
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleExtendBookingRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -144,6 +170,11 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to Monitor operation
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleNewMonitorRes(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0, resCode;
@@ -167,6 +198,11 @@ void handleNewMonitorRes(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server Monitor Update message
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
 {
     int ind = 0;
@@ -212,6 +248,11 @@ void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
     }
 }
 
+/**
+ * @brief  Parse and display server response to Get Facility Names operation
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleGetFacNames(char buffer[MAX_BUFFSIZE]) {
     int ind = 0, numFac;
     cout << "\nFACILITIES:" << endl;;
@@ -222,6 +263,12 @@ void handleGetFacNames(char buffer[MAX_BUFFSIZE]) {
     cout << endl;
 }
 
+/**
+ * @brief  Select handler for server response according to operation command code
+ * @param  command Operation code
+ * @param  buffer Server response buffer
+ * @retval None
+ */
 void handleResponse(int command, char buffer[MAX_BUFFSIZE])
 {
     switch (command)
