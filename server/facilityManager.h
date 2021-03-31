@@ -29,7 +29,7 @@ public:
     std::vector<daytime::duration> getFacilityAvailability(facility* facility, int day);
     std::vector<std::vector<daytime::duration>> getFacilityAvailability(facility* facility, std::vector<int> days);
 
-    int addMonitorForFacility(facility* facility, struct sockaddr_in clientAddress, int day, int hours, int minutes);
+    int addMonitorForFacility(facility* facility, int reqId, struct sockaddr_in clientAddress, int day, int hours, int minutes);
     int extendMonitorForFacility(facility* facility, std::string ipAddress, int day, int hours, int minutes);
 
     int addFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute);

@@ -4,14 +4,16 @@ using namespace std;
 
 /**
  * @brief  Monitor constructor
+ * @param reqId: Request ID for addition of monitor
  * @param  clientAddress: socket address of client
  * @param  duration: duration of monitoring period
  * @retval None
  */
-monitor::monitor(sockaddr_in clientAddress, daytime::duration duration)
+monitor::monitor(int reqId, sockaddr_in clientAddress, daytime::duration duration)
 {
     this->clientAddress = clientAddress;
     this->duration = duration;
+    this->reqId = reqId;
 }
 
 /**
@@ -31,6 +33,10 @@ string monitor::getIpAddress()
 {
     char *ip = inet_ntoa(clientAddress.sin_addr);
     return (string)ip;
+}
+
+int monitor::getReqId(){
+    return reqId;
 }
 
 /**

@@ -159,13 +159,14 @@ std::vector<std::vector<daytime::duration>> facilityManager::getFacilityAvailabi
 /**
  * @brief  Add a monitor for a particular facility
  * @param  facility: facility for which monitor is to be added
+ * @param reqId: Request ID
  * @param  clientAddress: socked adderss of client
  * @param  day: number of days for monitoring
  * @param  hours: number of hours for monitoring
  * @param  minutes: number of minuted for monitoring
  * @retval 0 if all requirements are met
  */
-int facilityManager::addMonitorForFacility(facility *facility, struct sockaddr_in clientAddress, int day, int hours, int minutes)
+int facilityManager::addMonitorForFacility(facility *facility, int reqId, struct sockaddr_in clientAddress, int day, int hours, int minutes)
 {
     if (!facility)
         return 1;
@@ -186,7 +187,7 @@ int facilityManager::addMonitorForFacility(facility *facility, struct sockaddr_i
     duration.endTime.hour %= 24;
     duration.endDate = daytime::getFutureDate(day, hours, minutes);
 
-    facility->addMonitor(clientAddress, duration);
+    facility->addMonitor(reqId, clientAddress, duration);
 
     return 0;
 }

@@ -511,13 +511,14 @@ string convertFacilityType(facilityType ftype)
 
 /**
  * @brief  Add a monitor to the facility
+ * @param reqId: Request ID for addition of monitor
  * @param  clientAddress: Socket address of monitoring client
  * @param  duration: duration of monitoring period
  * @retval None
  */
-void facility::addMonitor(sockaddr_in clientAddress, daytime::duration duration)
+void facility::addMonitor(int reqId, sockaddr_in clientAddress, daytime::duration duration)
 {
-    monitor monitor(clientAddress, duration);
+    monitor monitor(reqId, clientAddress, duration);
     monitor.print();
     monitors.push_back(monitor);
 }

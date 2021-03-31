@@ -58,7 +58,7 @@ public:
     bool extendBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
     void printBookings();
 
-    void addMonitor(sockaddr_in clientAddress, daytime::duration duration);
+    void addMonitor(int reqId, sockaddr_in clientAddress, daytime::duration duration);
     std::vector<monitor> getMonitors();
     void updateMonitors();
     bool isMonitor(std::string ipAddress);

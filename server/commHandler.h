@@ -28,13 +28,13 @@ class commHandler
     public:
     commHandler(udpServer* server, facilityManager* facility_manager);
     void handleUpdateMonitors(facility *facility, int function);
-    void handleGetFaciltiyNames(char * buffer, int* index);
-    void handleAddMonitor(char * buffer, int* index);
-    void handleGetAvailability(char * buffer, int* index);
-    void handleAddBooking(char * buffer, int* index);
-    void handleChangeBooking(char * buffer, int* index);
-    void handleExtendBooking(char * buffer, int* index);
-    void handleCancelBooking(char * buffer, int* index);
+    void handleGetFaciltiyNames(int reqId, char * buffer, int* index);
+    void handleAddMonitor(int reqId, char * buffer, int* index);
+    void handleGetAvailability(int reqId, char * buffer, int* index);
+    void handleAddBooking(int reqId, char * buffer, int* index);
+    void handleChangeBooking(int reqId, char * buffer, int* index);
+    void handleExtendBooking(int reqId, char * buffer, int* index);
+    void handleCancelBooking(int reqId, char * buffer, int* index);
     void handleAllFunctions(void);
     void start();
 
