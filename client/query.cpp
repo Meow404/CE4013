@@ -5,6 +5,12 @@
 
 #include "query.h"
 
+/**
+ * @brief  Store user input for query operation
+ * @param  facilityName String to store facility name input
+ * @param  queryDays Deque to store days to query availability
+ * @retval None
+ */
 void getQueryInput(std::string &facilityName, std::deque<int> &queryDays) {
     std::string dayPrompt =
     "\n[DAY] -> 0 = Mon, 1 = Tues, 2 = Wed, 3 = Thurs, 4 = Fri, 5 = Sat, 6 = Sun\n"  \
@@ -31,8 +37,12 @@ void getQueryInput(std::string &facilityName, std::deque<int> &queryDays) {
     }
 }
 
-/** Request Format:
- *  <facility name size><facility name><list of days>
+/**
+ * @brief  Write a request message for Query Availability to payload buffer
+ * @param  payload Buffer to store request message
+ * @param  facilityName Name of facility to query availability
+ * @param  day Day to query availability
+ * @retval None
  */
 void craftQueryReq(std::vector<char> &payload, std::string facilityName, int day) {
     char facNameSize[4];
