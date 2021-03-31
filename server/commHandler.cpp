@@ -102,6 +102,7 @@ void commHandler::handleUpdateMonitors(facility *facility, int function)
 {   
     int index = 0;
     char buffer[BUFFER_SIZE];
+    setInt(buffer, &index, 1);
     setInt(buffer, &index, function);
 
     int startIndex = index;
@@ -222,6 +223,8 @@ void commHandler::handleAddBooking(int reqId, char *buffer, int *index)
     status = FM->addFacilityBooking(genRandom(12), &confirmationId, facility, s_day, s_hour, s_minute, e_day, e_hour, e_minute);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, status);
     if (status == 0)
     {
@@ -257,6 +260,8 @@ void commHandler::handleChangeBooking(int reqId, char *buffer, int *index)
     status = FM->changeFacilityBooking(genRandom(12), &confirmationId, facility, days, hours, minutes);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, status);
     if (status == 0)
     {
@@ -291,6 +296,8 @@ void commHandler::handleExtendBooking(int reqId, char *buffer, int *index)
     status = FM->extendFacilityBooking(genRandom(12), &confirmationId, facility, days, hours, minutes);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, status);
     if (status == 0)
     {
@@ -321,6 +328,8 @@ void commHandler::handleCancelBooking(int reqId, char *buffer, int *index)
     status = FM->cancelFacilityBooking(confirmationId, facility);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, status);
     server->sendMessage(buffer, *index);
 
@@ -341,6 +350,8 @@ void commHandler::handleGetFaciltiyNames(int reqId, char *buffer, int *index)
 {
     vector<string> facilityNames = FM->getFacilityNames();
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, facilityNames.size());
     for (int i = 0; i < facilityNames.size(); i++)
         setString(buffer, index, facilityNames[i]);
