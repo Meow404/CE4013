@@ -35,7 +35,7 @@ public:
     int addFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int s_day, int s_hour, int s_minute, int e_day, int e_hour, int e_minute);
     int changeFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int day, int hours, int minutes);
     int extendFacilityBooking(std::string ipAddress, std::string* confirmationId, facility* facility, int day, int hours, int minutes);
-    bool cancelFacilityBooking(std::string confirmationId, facility* facility);
+    int cancelFacilityBooking(std::string confirmationId, facility* facility);
     void updateAllFacilityBookings();
     std::vector<std::string> getFacilityNames();
 };

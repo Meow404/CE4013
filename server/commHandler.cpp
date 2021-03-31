@@ -306,7 +306,7 @@ void commHandler::handleExtendBooking(char *buffer, int *index)
 void commHandler::handleCancelBooking(char *buffer, int *index)
 {
     string confirmationId;
-    bool status;
+    int status;
 
     confirmationId = getString(buffer, index);
     facility *facility = FM->getBookingFacility(confirmationId);

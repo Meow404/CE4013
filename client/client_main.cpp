@@ -124,7 +124,7 @@ int main(int argc, char *argv[]) {
                                 monitorEnd - now
                             )
                             .count();
-            cout << "Monitoring for " << timeToEnd << "more minutes..." << endl;
+            cout << "\nMonitoring for " << timeToEnd << " more minutes..." << endl;
             auto n = std::chrono::system_clock::to_time_t(now);
             auto t = std::chrono::system_clock::to_time_t(monitorEnd);
             while (timeToEnd > 0) {
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
                 now = std::chrono::system_clock::now();
                 timeToEnd = std::chrono::duration_cast<std::chrono::minutes>(monitorEnd - now)
                             .count();
-                cout << "Monitoring for " << timeToEnd << "more minutes..." << endl;
+                cout << "\nMonitoring for " << timeToEnd << " more minutes..." << endl;
                 auto n = std::chrono::system_clock::to_time_t(now);
                 auto t = std::chrono::system_clock::to_time_t(monitorEnd);
             }
