@@ -137,11 +137,12 @@ void commHandler::handleUpdateMonitors(facility *facility, int function)
 
 /**
  * @brief  Add monitor for the facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleAddMonitor(char *buffer, int *index)
+void commHandler::handleAddMonitor(int reqId, char *buffer, int *index)
 {
     int status, days, hours, minutes;
     string facility_name;
@@ -152,20 +153,23 @@ void commHandler::handleAddMonitor(char *buffer, int *index)
     minutes = getInt(buffer, index);
 
     facility *facility = FM->getFacility(facility_name);
-    status = FM->addMonitorForFacility(facility, server->getClientSocketAddress(), days, hours, minutes);
+    status = FM->addMonitorForFacility(facility, reqId, server->getClientSocketAddress(), days, hours, minutes);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     setInt(buffer, index, status);
     server->sendMessage(buffer, *index);
 }
 
 /**
  * @brief  Get availabilities of a facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleGetAvailability(char *buffer, int *index)
+void commHandler::handleGetAvailability(int reqId, char *buffer, int *index)
 {
     int status, day;
     string facility_name, confirmationId;
@@ -174,6 +178,8 @@ void commHandler::handleGetAvailability(char *buffer, int *index)
     day = getInt(buffer, index);
 
     *index = 0;
+    setInt(buffer, index, 1);
+    setInt(buffer, index, reqId);
     if (FM->isFacility(facility_name))
     {
         facility *facility = FM->getFacility(facility_name);
@@ -194,11 +200,12 @@ void commHandler::handleGetAvailability(char *buffer, int *index)
 
 /**
  * @brief  Add a booking for a facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleAddBooking(char *buffer, int *index)
+void commHandler::handleAddBooking(int reqId, char *buffer, int *index)
 {
     int status, s_day, s_hour, s_minute, e_day, e_hour, e_minute;
     string facility_name, confirmationId;
@@ -224,17 +231,18 @@ void commHandler::handleAddBooking(char *buffer, int *index)
 
     if (status == 0)
     {
-        handleUpdateMonitors(facility, 1);
+       handleUpdateMonitors(facility, 2);
     }
 }
 
 /**
  * @brief  Change a booking of a facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleChangeBooking(char *buffer, int *index)
+void commHandler::handleChangeBooking(int reqId, char *buffer, int *index)
 {
     int status, days, hours, minutes;
     string confirmationId;
@@ -264,11 +272,12 @@ void commHandler::handleChangeBooking(char *buffer, int *index)
 
 /**
  * @brief  extend the booking of a facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleExtendBooking(char *buffer, int *index)
+void commHandler::handleExtendBooking(int reqId, char *buffer, int *index)
 {
     int status, days, hours, minutes;
     string confirmationId;
@@ -297,11 +306,12 @@ void commHandler::handleExtendBooking(char *buffer, int *index)
 
 /**
  * @brief  cancel booking of a facility 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleCancelBooking(char *buffer, int *index)
+void commHandler::handleCancelBooking(int reqId, char *buffer, int *index)
 {
     string confirmationId;
     int status;
@@ -322,11 +332,12 @@ void commHandler::handleCancelBooking(char *buffer, int *index)
 
 /**
  * @brief  Get names of all facilities 
+ * @param  reqId: Request ID
  * @param  buffer: to store message
  * @param  index: index from which message is to be stored
  * @retval None
  */
-void commHandler::handleGetFaciltiyNames(char *buffer, int *index)
+void commHandler::handleGetFaciltiyNames(int reqId, char *buffer, int *index)
 {
     vector<string> facilityNames = FM->getFacilityNames();
     *index = 0;
@@ -359,25 +370,25 @@ void commHandler::handleAllFunctions()
         switch (funNum)
         {
         case 1:
-            handleGetFaciltiyNames(buffer, &index);
+            handleGetFaciltiyNames(reqId, buffer, &index);
             break;
         case 2:
-            handleGetAvailability(buffer, &index);
+            handleGetAvailability(reqId, buffer, &index);
             break;
         case 3:
-            handleAddBooking(buffer, &index);
+            handleAddBooking(reqId, buffer, &index);
             break;
         case 4:
-            handleChangeBooking(buffer, &index);
+            handleChangeBooking(reqId, buffer, &index);
             break;
         case 5:
-            handleExtendBooking(buffer, &index);
+            handleExtendBooking(reqId, buffer, &index);
             break;
         case 6:
-            handleCancelBooking(buffer, &index);
+            handleCancelBooking(reqId, buffer, &index);
             break;
         case 7:
-            handleAddMonitor(buffer, &index);
+            handleAddMonitor(reqId, buffer, &index);
             break;
         default:
             cout << "Incorrect Handler sent!" << endl;
