@@ -12,9 +12,20 @@ using namespace std;
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleQueryRes(int day, char buffer[MAX_BUFFSIZE])
+void handleQueryRes(int day, char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -52,9 +63,20 @@ void handleQueryRes(int day, char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleNewBookingRes(char buffer[MAX_BUFFSIZE])
+void handleNewBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -85,9 +107,20 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleShiftBookingRes(char buffer[MAX_BUFFSIZE])
+void handleShiftBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -118,9 +151,20 @@ void handleShiftBookingRes(char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleCancelBookingRes(char buffer[MAX_BUFFSIZE])
+void handleCancelBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -142,9 +186,20 @@ void handleCancelBookingRes(char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleExtendBookingRes(char buffer[MAX_BUFFSIZE])
+void handleExtendBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -175,9 +230,20 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleNewMonitorRes(char buffer[MAX_BUFFSIZE])
+void handleNewMonitorRes(char buffer[MAX_BUFFSIZE], int reqId)
 {
-    int ind = 0, resCode;
+    int ind = 0, msgType, resId, resCode;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
 
     resCode = getInt(buffer, &ind);
     if (resCode == 0)
@@ -205,9 +271,15 @@ void handleNewMonitorRes(char buffer[MAX_BUFFSIZE])
  */
 void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
 {
-    int ind = 0;
-    int resCode = getInt(buffer, &ind);
+    int ind = 0, msgType, resCode;
+    msgType = getInt(buffer, &ind);
 
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+
+    resCode = getInt(buffer, &ind);
     if (resCode == 1)
     {
         cout << "\nA NEW BOOKING WAS ADDED" << endl;
@@ -253,8 +325,19 @@ void handleMonitorNotify(char buffer[MAX_BUFFSIZE])
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleGetFacNames(char buffer[MAX_BUFFSIZE]) {
-    int ind = 0, numFac;
+void handleGetFacNames(char buffer[MAX_BUFFSIZE], int reqId) {
+    int ind = 0, msgType, resId, numFac;
+    msgType = getInt(buffer, &ind);
+    resId = getInt(buffer, &ind);
+
+    if (msgType != 1) {
+        cerr << "Message Received Is Not Response." << endl;
+        return;
+    }
+    if (resId != reqId) {
+        cerr << "Response ID and request ID do not match." << endl;
+        return;
+    }
     cout << "\nFACILITIES:" << endl;;
     numFac = getInt(buffer, &ind);
     for (int i = 0; i < numFac; i++) {
@@ -269,27 +352,27 @@ void handleGetFacNames(char buffer[MAX_BUFFSIZE]) {
  * @param  buffer Server response buffer
  * @retval None
  */
-void handleResponse(int command, char buffer[MAX_BUFFSIZE])
+void handleResponse(int command, char buffer[MAX_BUFFSIZE], int reqId)
 {
     switch (command)
     {
     case GET_FAC:
-        handleGetFacNames(buffer);
+        handleGetFacNames(buffer, reqId);
         break;
     case NEW_BOOK:
-        handleNewBookingRes(buffer);
+        handleNewBookingRes(buffer, reqId);
         break;
     case SHIFT_BOOK:
-        handleShiftBookingRes(buffer);
+        handleShiftBookingRes(buffer, reqId);
         break;
     case NEW_MONITOR:
-        handleNewMonitorRes(buffer);
+        handleNewMonitorRes(buffer, reqId);
         break;
     case CANCEL_BOOK:
-        handleCancelBookingRes(buffer);
+        handleCancelBookingRes(buffer, reqId);
         break;
     case EXTEND_BOOK:
-        handleExtendBookingRes(buffer);
+        handleExtendBookingRes(buffer, reqId);
         break;
     default:
         std::cerr << "ERROR: Unknown response" << std::endl;

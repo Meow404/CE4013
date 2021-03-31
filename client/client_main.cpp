@@ -101,21 +101,21 @@ int main(int argc, char *argv[]) {
         retransmit:
         res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
         if (res < 0) {
-            cerr << "ERROR: Failed to send request.\n";
-            continue;
+            cerr << "ERROR: Failed to send request.Resending...\n";
+            goto retransmit;
         }
 
         res = 0;
         res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, CLIENT_TIMEOUT);
         if (res <= 0) {
-            cerr << "ERROR: Timeout Occurred\n";
+            cerr << "ERROR: Timeout Occurred. Resending...\n";
             goto retransmit;
         }
 
         if (command == QUERY) {
-            handleQueryRes(day, buffer);
+            handleQueryRes(day, buffer, reqId);
         } else {
-            handleResponse(command, buffer);
+            handleResponse(command, buffer, reqId);
         }
         if (!queryDays.empty()) {
             reqId++;
