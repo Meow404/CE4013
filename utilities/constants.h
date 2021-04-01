@@ -16,5 +16,6 @@
 #define EXIT 8
 
 #define DEFAULT_TIMEOUT 5000
+#define DEFAULT_FAILURE 0.0
 
 #endif

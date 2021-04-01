@@ -67,12 +67,20 @@ ClientSocket::ClientSocket(char *hostname, char *portno) {
  * @brief  Send message through socket
  * @param  msg Message to send through socket
  * @param  len Length of message to send through socket
+ * @param  failureRate Rate of simulated request loss
  * @retval None
  */
-int ClientSocket::sendMsg(char *msg, int len) {
-    int res = sendto(this->clientSocket, msg, len, 0, (struct sockaddr *) &serverAddr, serverLen);
-    if (res == SOCKET_ERROR) {
-        printf("Error sending message with error code %d", WSAGetLastError());
+int ClientSocket::sendMsg(char *msg, int len, double failureRate) {
+    double failVal = ((double) rand()) / ((double) RAND_MAX);
+    int res = 0;
+
+    if (failVal > failureRate) {
+        int res = sendto(this->clientSocket, msg, len, 0, (struct sockaddr *) &serverAddr, serverLen);
+        if (res == SOCKET_ERROR) {
+            printf("Error sending message with error code %d", WSAGetLastError());
+        }
+    } else {
+        std::cout << "\nREQUEST MESSAGE LOSS SIMULATED" << std::endl;
     }
     return res;
 }

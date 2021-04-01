@@ -25,7 +25,7 @@ class ClientSocket {
 
     public:
     ClientSocket(char *hostname, char *portno);
-    int sendMsg(char *msg, int len);
+    int sendMsg(char *msg, int len, double failureRate);
     int recvMsg(char *buffer, int len, int timeout);
 };
 

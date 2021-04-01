@@ -21,26 +21,27 @@ int main(int argc, char *argv[]) {
                            "[7] Monitor Facility Availability\n"    \
                            "[8] Exit\n"   \
                            "Input Command: ";
-    int command, timeout;
+    int command, timeout = DEFAULT_TIMEOUT;
+    double failureRate = DEFAULT_FAILURE;
     char buffer[MAX_BUFFSIZE];
     char marshalledMsgType[4];
     marshalInt(0, marshalledMsgType);
 
-    if (argc < 3) {
-        cout << "Usage: .\\Client [SERVER_ADDRESS] [PORT] [(Optional) TIMEOUT_IN_MS]" << endl;
+    if (argc < 4) {
+        cout << "Usage: .\\Client [SERVER_ADDRESS] [PORT] [TIMEOUT_IN_MS] [(Optional) FAILURE_RATE_DECIMAL]" << endl;
         exit(1);
     }
-    if (argc == 3) {
-        timeout = DEFAULT_TIMEOUT;
-    }
-    if (argc > 3) {
-        timeout = stoi(argv[3]);
-    }
-    cout << "TIMEOUT SET TO " << timeout << "ms" << endl;
 
     hostname = argv[1];
     portno = argv[2];
+    timeout = stoi(argv[3]);
+    if (argc > 4) {
+        failureRate = stod(argv[4]);
+    }
     ClientSocket clientSock(hostname, portno);
+
+    cout << "TIMEOUT SET TO " << timeout << "ms" << endl;
+    cout << "FAILURE RATE SET TO " << failureRate << endl;
 
     while (command != EXIT) {
         cout << promptMessage;
@@ -105,7 +106,7 @@ int main(int argc, char *argv[]) {
         requestMsg.insert(requestMsg.end(), payload.begin(), payload.end());
 
         retransmit:
-        res = clientSock.sendMsg(requestMsg.data(), requestMsg.size());
+        res = clientSock.sendMsg(requestMsg.data(), requestMsg.size(), failureRate);
         if (res < 0) {
             cerr << "ERROR: Failed to send request.Resending...\n";
             goto retransmit;
@@ -113,7 +114,7 @@ int main(int argc, char *argv[]) {
 
         res = 0;
         res = clientSock.recvMsg(buffer, MAX_BUFFSIZE, timeout);
-        if (res <= 0) {
+        if (res < 0) {
             cerr << "ERROR: Timeout Occurred. Resending...\n";
             goto retransmit;
         }
