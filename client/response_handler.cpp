@@ -92,7 +92,7 @@ void handleNewBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
     }
     else if (resCode == 2)
     {
-        cout << "\nBOOKING FAILED: Facility is unavailable." << endl;
+        cout << "\nBOOKING FAILED: Facility is unavailable, overlaps with other bookings" << endl;
     }
     else if (resCode == 3)
     {
