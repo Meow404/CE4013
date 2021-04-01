@@ -234,7 +234,7 @@ void commHandler::handleAddBooking(int reqId, char *buffer, int *index)
 
     if (status == 0)
     {
-       handleUpdateMonitors(facility, 2);
+       handleUpdateMonitors(facility, 1);
     }
 }
 
