@@ -23,13 +23,6 @@ void ClientSocket::createRemoteServerAddr(char *hostname, char *portno) {
     this->serverAddr.sin_family = AF_INET;
     this->serverAddr.sin_port = htons(atoi(portno));
     this->serverAddr.sin_addr.s_addr = inet_addr(hostname);
-
-    // int iResult = getaddrinfo(hostname, portno, &serverAddr, &result);
-    // if (iResult != 0) {
-    //     printf("getaddrinfo failed with error: %d\n", iResult);
-    //     WSACleanup();
-    //     return 1;
-    // }
 }
 
 /**
