@@ -263,10 +263,7 @@ int facilityManager::changeFacilityBooking(std::string ipAddress, string *confir
     if (!checkDayTime(days, hours, minutes))
         return 3;
 
-    if (!facility->changeBooking(ipAddress, confirmationId, days, hours, minutes))
-        return 2;
-    else
-        return 0;
+    return facility->changeBooking(ipAddress, confirmationId, days, hours, minutes);
 }
 
 /**
@@ -286,10 +283,8 @@ int facilityManager::extendFacilityBooking(std::string ipAddress, string *confir
 
     if (!checkDayTime(days, hours, minutes))
         return 3;
-    if (!facility->extendBooking(ipAddress, confirmationId, days, hours, minutes))
-        return 2;
-    else
-        return 0;
+
+    return facility->extendBooking(ipAddress, confirmationId, days, hours, minutes)
 }
 
 /**

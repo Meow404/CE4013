@@ -419,9 +419,9 @@ bool facility::checkChange(daytime::duration duration, int days, int hours, int 
  * @param  days: days by which booking is to offset
  * @param  hours: hours by which booking is to be offset
  * @param  minutes: minutes by which booking is to be offset
- * @retval true if booking is sucessfully changed
+ * @retval 0 if booking is sucessfully changed
  */
-bool facility::changeBooking(string clientId, string* bookingId, int days, int hours, int minutes)
+int facility::changeBooking(string clientId, string* bookingId, int days, int hours, int minutes)
 {
     cout << "CHANGE BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -430,7 +430,7 @@ bool facility::changeBooking(string clientId, string* bookingId, int days, int h
     {
         daytime::duration p_duration = p_booking->getDuration();
         if (!checkChange(p_duration, days, hours, minutes))
-            return false;
+            return 4;
 
         booking *new_booking = new booking(clientId, *bookingId, p_duration);
         new_booking->change(days, hours, minutes);
@@ -445,11 +445,10 @@ bool facility::changeBooking(string clientId, string* bookingId, int days, int h
             return true;
         }
         else
-            return false;
+            return 2;
     }
     else
-        return false;
-    return true;
+        return 1;
 }
 
 /**
@@ -459,9 +458,9 @@ bool facility::changeBooking(string clientId, string* bookingId, int days, int h
  * @param  days: days by which booking is to be extended
  * @param  hours: hours by which booking is to be extended
  * @param  minutes: minutes by which booking is to be extended
- * @retval true if booking is successfully extended
+ * @retval 0 if booking is successfully extended
  */
-bool facility::extendBooking(string clientId, string* bookingId, int days, int hours, int minutes)
+int facility::extendBooking(string clientId, string* bookingId, int days, int hours, int minutes)
 {
     cout << "EXTEND BOOKING" << endl;
     booking *p_booking = getBooking(bookingId);
@@ -470,7 +469,7 @@ bool facility::extendBooking(string clientId, string* bookingId, int days, int h
     {
         daytime::duration p_duration = p_booking->getDuration();
         if (!checkChange(p_duration, days, hours, minutes))
-            return false;
+            return 3;
         // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
         booking *new_booking = new booking(clientId, *bookingId, p_duration);
         new_booking->extend(days, hours, minutes);
@@ -484,11 +483,10 @@ bool facility::extendBooking(string clientId, string* bookingId, int days, int h
             return true;
         }
         else
-            return false;
+            return 2;
     }
     else
-        return false;
-    return true;
+        return 1;
 }
 
 /**

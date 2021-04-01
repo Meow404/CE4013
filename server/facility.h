@@ -55,8 +55,8 @@ public:
 
     bool checkBookingPossible(daytime::duration duration, std::string confirmationId = std::string());
     std::string addBooking(std::string ipAddress, daytime::duration duration);
-    bool changeBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
-    bool extendBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
+    int changeBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
+    int extendBooking(std::string ipAddress, std::string* bookingId, int days, int hours, int minutes);
     void printBookings();
 
     void addMonitor(int reqId, sockaddr_in clientAddress, daytime::duration duration);
