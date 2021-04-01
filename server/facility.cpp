@@ -395,6 +395,24 @@ bool facility::cancelBooking(string bookingId)
 }
 
 /**
+ * @brief  Checks if change or extend of time is possible  
+ * @param  duration: duration of booking
+ * @param  days: days by which booking is to offset
+ * @param  hours: hours by which booking is to be offset
+ * @param  minutes: minutes by which booking is to be offset
+ * @retval true if change is possible
+ */
+bool facility::checkChange(daytime::duration duration, int days, int hours, int minutes)
+{
+    daytime::day today = daytime::getDay();
+    int newday = (duration.endDay + 7 - today) + days + (hours + duration.endTime.hour + (minutes + duration.endTime.minute)/60)/24;
+    cout << "NEW DAY : "<< newday << endl;
+    if (newday >= 7)
+        return false;
+    return true;
+}
+
+/**
  * @brief  Change booking be given number of days, hour & minutes 
  * @param  clientId: Unique ID for each client
  * @param  bookingId: Confirmation ID linked to each booking
@@ -410,10 +428,13 @@ bool facility::changeBooking(string clientId, string* bookingId, int days, int h
 
     if (p_booking)
     {
-        // cout << "change Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
-        booking *new_booking = new booking(clientId, *bookingId, p_booking->getDuration());
+        daytime::duration p_duration = p_booking->getDuration();
+        if (!checkChange(p_duration, days, hours, minutes))
+            return false;
+
+        booking *new_booking = new booking(clientId, *bookingId, p_duration);
         new_booking->change(days, hours, minutes);
-        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
+        cout << "change Booking from : " << daytime::getDurationStr(p_duration) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
         if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {
@@ -447,10 +468,13 @@ bool facility::extendBooking(string clientId, string* bookingId, int days, int h
 
     if (p_booking)
     {
+        daytime::duration p_duration = p_booking->getDuration();
+        if (!checkChange(p_duration, days, hours, minutes))
+            return false;
         // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
-        booking *new_booking = new booking(clientId, *bookingId, p_booking->getDuration());
+        booking *new_booking = new booking(clientId, *bookingId, p_duration);
         new_booking->extend(days, hours, minutes);
-        cout << "change Booking from : " << daytime::getDurationStr(p_booking->getDuration()) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
+        cout << "change Booking from : " << daytime::getDurationStr(p_duration) << " to :" << daytime::getDurationStr(new_booking->getDuration()) << endl;
 
         if (checkBookingPossible(new_booking->getDuration(), *bookingId))
         {

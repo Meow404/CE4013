@@ -32,6 +32,7 @@ class facility
     std::string addBooking(booking *new_booking);
     void removeBooking(booking* booking);
     std::string getFacilityType(facilityType ftype);
+    bool checkChange(daytime::duration duration, int days, int hours, int minutes);
 
 public:
     facility(std::string facilityName, facilityType facilityType);
