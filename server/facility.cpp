@@ -442,7 +442,7 @@ int facility::changeBooking(string clientId, string* bookingId, int days, int ho
             removeBooking(p_booking);
             addBooking(new_booking);
             printBookings();
-            return true;
+            return 0;
         }
         else
             return 2;
@@ -480,7 +480,7 @@ int facility::extendBooking(string clientId, string* bookingId, int days, int ho
             removeBooking(p_booking);
             addBooking(new_booking);
             printBookings();
-            return true;
+            return 0;
         }
         else
             return 2;
