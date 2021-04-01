@@ -137,11 +137,15 @@ void handleShiftBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
     }
     else if (resCode == 2)
     {
-        cout << "\nBOOKING SHIFT FAILED: Facility is unavailable." << endl;
+        cout << "\nBOOKING SHIFT FAILED: Facility is unavailable, shift time overlaps with other bookings." << endl;
     }
     else if (resCode == 3)
     {
-        cout << "\nBOOKING FAILED FAILED: Invalid time values." << endl;
+        cout << "\nBOOKING SHIFT FAILED: Invalid time values." << endl;
+    }
+    else if (resCode == 4)
+    {
+        cout << "\nBOOKING SHIFT FAILED: Attempting to shift beyond current 7-day period." << endl;
     }
     else
     {
@@ -218,11 +222,15 @@ void handleExtendBookingRes(char buffer[MAX_BUFFSIZE], int reqId)
     }
     else if (resCode == 2)
     {
-        cout << "\nBOOKING EXTEND FAILED: Facility is unavailable." << endl;
+        cout << "\nBOOKING EXTEND FAILED: Facility is unavailable, extended time overlaps with other bookings." << endl;
     }
     else if (resCode == 3)
     {
         cout << "\nBOOKING EXTEND FAILED: Invalid time values." << endl;
+    }
+    else if (resCode == 4)
+    {
+        cout << "\nBOOKING EXTEND FAILED: Attempting to extend beyond current 7-day period." << endl;
     }
     else
     {
