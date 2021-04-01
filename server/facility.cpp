@@ -469,7 +469,7 @@ int facility::extendBooking(string clientId, string* bookingId, int days, int ho
     {
         daytime::duration p_duration = p_booking->getDuration();
         if (!checkChange(p_duration, days, hours, minutes))
-            return 3;
+            return 4;
         // cout << "extend Booking : " << daytime::getDurationStr(p_booking->getDuration()) << endl;
         booking *new_booking = new booking(clientId, *bookingId, p_duration);
         new_booking->extend(days, hours, minutes);

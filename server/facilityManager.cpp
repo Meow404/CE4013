@@ -284,7 +284,7 @@ int facilityManager::extendFacilityBooking(std::string ipAddress, string *confir
     if (!checkDayTime(days, hours, minutes))
         return 3;
 
-    return facility->extendBooking(ipAddress, confirmationId, days, hours, minutes)
+    return facility->extendBooking(ipAddress, confirmationId, days, hours, minutes);
 }
 
 /**
