@@ -405,7 +405,7 @@ bool facility::cancelBooking(string bookingId)
 bool facility::checkChange(daytime::duration duration, int days, int hours, int minutes)
 {
     daytime::day today = daytime::getDay();
-    int newday = (duration.endDay + 7 - today) + days + (hours + duration.endTime.hour + (minutes + duration.endTime.minute)/60)/24;
+    int newday = (duration.endDay + 7 - today)%7 + days + (hours + duration.endTime.hour + (minutes + duration.endTime.minute)/60)/24;
     cout << "NEW DAY : "<< newday << endl;
     if (newday >= 7)
         return false;
